@@ -5,7 +5,7 @@ pragma solidity 0.8.18;
 import {Script} from "forge-std/Script.sol";
 import {NodeManager} from "../src/Protocol/NodeManager.sol";
 
-contract DeployFundMe is Script {
+contract NodeManagerScript is Script {
     NodeManager public nodeManager;
 
     function run() external returns (NodeManager) {

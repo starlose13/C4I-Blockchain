@@ -13,7 +13,7 @@ contract NodeManager {
 
     function registerNode() external {
         if (msg.sender != PROXY_ADMIN) {
-            revert Errors.CALLER_NOT_IS_VALID_NODE();
+            revert Errors.CALLER_IS_NOT_VALID_NODE();
         }
         DataTypes.RegisteredNodes memory registeredNodes = DataTypes
             .RegisteredNodes({node: msg.sender, currentPosition: ""});
