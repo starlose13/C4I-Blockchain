@@ -3,10 +3,13 @@ pragma solidity 0.8.18;
 
 interface INodeManager {
     // Function for registering a new node
-    function registerNode() external;
+    function registerNode(
+        address _nodeAddress,
+        string memory _currentPosition
+    ) external;
 
     // Function for removing a registered node
-    function removeNode(address _nodeAddress) external;
+    function unRegisterNode(address _nodeAddress) external;
 
     // Function for updating the number of expeditionary forces allocated to a mission
     function updateExpeditionaryForces(uint256 _expeditionaryForces) external;

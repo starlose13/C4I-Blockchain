@@ -23,9 +23,9 @@ contract NodeManagerTest is Test {
         vm.deal(THIRD_COMMANDER, 100 ether);
     }
 
-    function testRegisterNode() public {
+    function testRegisterNode(string memory _currentPositon) public {
         vm.expectRevert();
         vm.prank(FIRST_COMMANDER);
-        nodeManager.registerNode();
+        nodeManager.registerNode(FIRST_COMMANDER, _currentPositon);
     }
 }

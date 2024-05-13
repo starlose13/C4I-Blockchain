@@ -5,18 +5,50 @@ import {DataTypes} from "../Helper/DataTypes.sol";
 import {Errors} from "../Helper/Errors.sol";
 
 contract NodeManager {
-    //proxy admin user that can change the structure of current smart contract later
-    address constant PROXY_ADMIN = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+    //Contract Admin that can change the structure of current smart contract later and manage the current system
+    address immutable CONTRACT_ADMIN;
     mapping(address => DataTypes.RegisteredNodes) private s_registeredNodes;
+    mapping(address => bool) private s_ExistingNodes;
 
-    constructor() {}
+    // mapping()
+    constructor() {
+        CONTRACT_ADMIN = msg.sender;
+    }
 
-    function registerNode() external {
-        if (msg.sender != PROXY_ADMIN) {
+    modifier onlyContractAdmin() {
+        if (msg.sender != CONTRACT_ADMIN) {
             revert Errors.CALLER_IS_NOT_VALID_NODE();
         }
+        _;
+    }
+
+    function registerNode(
+        address _nodeAddress,
+        string memory _currentPosition
+    ) external onlyContractAdmin {
         DataTypes.RegisteredNodes memory registeredNodes = DataTypes
-            .RegisteredNodes({node: msg.sender, currentPosition: ""});
+            .RegisteredNodes({
+                node: _nodeAddress,
+                currentPosition: _currentPosition
+            });
         s_registeredNodes[msg.sender] = (registeredNodes);
+        s_ExistingNodes[_nodeAddress] = true;
+    }
+
+    function unRegisterNode() external onlyContractAdmin {}
+
+    function isNodeRegistered(
+        address _nodeAddress
+    ) external view returns (bool) {
+        if (s_ExistingNodes[_nodeAddress] == true) {
+            return true;
+        }
+        return false;
+    }
+
+    function updateExpeditionaryForces(
+        string memory _expeditionaryForces
+    ) external {
+        s_registeredNodes[msg.sender].currentPosition = _expeditionaryForces;
     }
 }
