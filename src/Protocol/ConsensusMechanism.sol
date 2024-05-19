@@ -35,7 +35,9 @@ contract ConsensusMechanism {
 
     function checkConsensusReached() external {}
 
-    function hasNodeParticipated() public view returns (bool) {}
+    function hasNodeParticipated() public view returns (bool) {
+        return s_target[msg.sender].reported[msg.sender]; // i think if you delete this function nothing will happen
+    }
 
     function checkUpkeep(
         bytes calldata /* checkData */
