@@ -11,4 +11,13 @@ library DataTypes {
         address node;
         string currentPosition;
     }
+
+    // Proposal structure to manage node proposals
+    struct TargetLocation {
+        string location;
+        address reportedBy; // ID of the node that reported this location
+        uint256 timestamp; // Time when the location was reported
+        mapping(address => bool) reported; // to track if a node has voted
+        bool isActive; // to mark if the proposal is still active
+    }
 }

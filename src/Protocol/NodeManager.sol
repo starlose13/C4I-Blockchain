@@ -24,12 +24,12 @@ contract NodeManager {
 
     function registerNode(
         address _nodeAddress,
-        string memory _currentPosition
+        string memory currentPosition
     ) external onlyContractAdmin {
         DataTypes.RegisteredNodes memory registeredNodes = DataTypes
             .RegisteredNodes({
                 node: _nodeAddress,
-                currentPosition: _currentPosition
+                currentPosition: currentPosition
             });
         s_registeredNodes[msg.sender] = (registeredNodes);
         s_ExistingNodes[_nodeAddress] = true;
@@ -38,17 +38,17 @@ contract NodeManager {
     function unRegisterNode() external onlyContractAdmin {}
 
     function isNodeRegistered(
-        address _nodeAddress
+        address nodeAddress
     ) external view returns (bool) {
-        if (s_ExistingNodes[_nodeAddress] == true) {
+        if (s_ExistingNodes[nodeAddress] == true) {
             return true;
         }
         return false;
     }
 
     function updateExpeditionaryForces(
-        string memory _expeditionaryForces
+        string memory expeditionaryForces
     ) external {
-        s_registeredNodes[msg.sender].currentPosition = _expeditionaryForces;
+        s_registeredNodes[msg.sender].currentPosition = expeditionaryForces;
     }
 }

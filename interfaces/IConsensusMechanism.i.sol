@@ -2,6 +2,12 @@
 pragma solidity 0.8.18;
 
 interface IConsensusMechanism {
+    enum location {
+        first,
+        second,
+        third
+    }
+
     // Function to initiate the consensus process
     function initiateConsensus() external;
 
