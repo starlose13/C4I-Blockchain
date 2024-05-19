@@ -14,6 +14,7 @@ contract ConsensusMechanism {
     uint private counter;
 
     mapping(address => DataTypes.TargetLocation) public s_target;
+    address[] public s_nodes;
 
     constructor(uint _i_interval) {
         s_lastTimeStamp = block.timestamp;
@@ -29,6 +30,7 @@ contract ConsensusMechanism {
         s_target[msg.sender].timestamp = block.timestamp; // Time when the location was reported
         s_target[msg.sender].reported[msg.sender] = true; // to track if a node has voted
         s_target[msg.sender].isActive = true; //to mark if the proposal is still active
+        s_nodes.push(msg.sender); // node address
     }
 
     function initiateConsensusAttack() external {}
@@ -37,6 +39,10 @@ contract ConsensusMechanism {
 
     function hasNodeParticipated() public view returns (bool) {
         return s_target[msg.sender].reported[msg.sender]; // i think if you delete this function nothing will happen
+    }
+
+    function Nodeslength() external view returns (uint count) {
+        return count = s_nodes.length;
     }
 
     function checkUpkeep(
