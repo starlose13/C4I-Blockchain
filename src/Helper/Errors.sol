@@ -8,4 +8,6 @@ pragma solidity ^0.8.0;
  */
 library Errors {
     error CALLER_IS_NOT_VALID_NODE(); // 'The caller of the function is not a commander that can participate in the mission'
+    error ConsensusMechanism__NodeVoted();
+    error ConsensusMechanism__NodeNotRegistered();
 }

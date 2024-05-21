@@ -3,14 +3,13 @@ pragma solidity 0.8.18;
 
 import {Errors} from "../Helper/Errors.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
-import {NodeManager} from "./NodeManager.sol";
+import {INodeManager} from "../../interfaces/INodeManager.sol";
 
 contract ConsensusMechanism {
-    error ConsensusMechanism__NodeVoted();
     // Threshold for consensus
     uint256 public constant CONSENSUS_THRESHOLD = 3; // example threshold
 
-    NodeManager public nodeManager;
+    INodeManager public nodeManager;
 
     uint private s_lastTimeStamp;
     uint private immutable i_interval;
@@ -19,15 +18,18 @@ contract ConsensusMechanism {
     mapping(address => DataTypes.TargetLocation) public s_target;
     address[] public s_nodes;
 
-    constructor(uint _i_interval, address _nodeManager) {
+    constructor(uint _i_interval, address _nodeManagerAddress) {
         s_lastTimeStamp = block.timestamp;
         i_interval = _i_interval;
-        nodeManager = NodeManager(_nodeManager);
+        nodeManager = INodeManager(_nodeManagerAddress);
     }
 
     function reportTargetLocation(string memory _announceTarget) external {
+        if (nodeManager.isNodeRegistered(msg.sender) == false) {
+            revert Errors.ConsensusMechanism__NodeNotRegistered();
+        }
         if (hasNodeParticipated() == true) {
-            revert ConsensusMechanism__NodeVoted();
+            revert Errors.ConsensusMechanism__NodeVoted();
         }
         s_target[msg.sender].location = _announceTarget; // Location of target (lat & long) that reported
         s_target[msg.sender].reportedBy = msg.sender; // Address of the node that reported this location

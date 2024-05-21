@@ -4,7 +4,7 @@ import {INodeManager} from "../../interfaces/INodeManager.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
 import {Errors} from "../Helper/Errors.sol";
 
-contract NodeManager {
+contract NodeManager is INodeManager {
     //Contract Admin that can change the structure of current smart contract later and manage the current system
     address immutable CONTRACT_ADMIN;
     mapping(address => DataTypes.RegisteredNodes) private s_registeredNodes;
@@ -54,9 +54,7 @@ contract NodeManager {
         s_ExistingNodes[_nodeAddress] = true;
     }
 
-    function isNodeRegistered(
-        address nodeAddress
-    ) external view returns (bool) {
+    function isNodeRegistered(address nodeAddress) public view returns (bool) {
         if (s_ExistingNodes[nodeAddress] == true) {
             return true;
         }
