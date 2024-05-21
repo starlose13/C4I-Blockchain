@@ -10,8 +10,19 @@ contract NodeManagerScript is Script {
 
     function run() external returns (NodeManager) {
         vm.startBroadcast();
-        nodeManager = new NodeManager();
+        // Assuming you have valid addresses
+        address[] memory initialAddresses = new address[](2);
+
+        initialAddresses[0] = makeAddr("ALICE Commander"); // Replace with actual address 1
+        initialAddresses[1] = makeAddr("BOB Commander"); // Replace with actual address 2
+
+        string[] memory initialPositions = new string[](2);
+        initialPositions[0] = "Position 1";
+        initialPositions[1] = "Position 2";
+
+        nodeManager = new NodeManager(initialAddresses, initialPositions);
         vm.stopBroadcast();
+
         return nodeManager;
     }
 }

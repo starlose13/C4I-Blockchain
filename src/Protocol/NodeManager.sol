@@ -11,8 +11,12 @@ contract NodeManager {
     mapping(address => bool) private s_ExistingNodes;
 
     // mapping()
-    constructor() {
+    constructor(
+        address[] memory _nodeAddress,
+        string[] memory _currentPosition
+    ) {
         CONTRACT_ADMIN = msg.sender;
+        initializeNodes(_nodeAddress, _currentPosition);
     }
 
     modifier onlyContractAdmin() {
@@ -22,7 +26,22 @@ contract NodeManager {
         _;
     }
 
-    function registerNode(
+    function initializeNodes(
+        address[] memory _nodeAddress,
+        string[] memory _currentPosition
+    ) private {
+        for (uint i = 0; i < _nodeAddress.length; i++) {
+            DataTypes.RegisteredNodes memory registeredNodes = DataTypes
+                .RegisteredNodes({
+                    node: _nodeAddress[i],
+                    currentPosition: _currentPosition[i]
+                });
+            s_registeredNodes[_nodeAddress[i]] = (registeredNodes);
+            s_ExistingNodes[_nodeAddress[i]] = true;
+        }
+    }
+
+    function registerNewNode(
         address _nodeAddress,
         string memory currentPosition
     ) external onlyContractAdmin {
@@ -34,8 +53,6 @@ contract NodeManager {
         s_registeredNodes[msg.sender] = (registeredNodes);
         s_ExistingNodes[_nodeAddress] = true;
     }
-
-    function unRegisterNode() external onlyContractAdmin {}
 
     function isNodeRegistered(
         address nodeAddress
