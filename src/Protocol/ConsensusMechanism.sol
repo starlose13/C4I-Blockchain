@@ -4,6 +4,7 @@ pragma solidity 0.8.18;
 import {Errors} from "../Helper/Errors.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
 import {INodeManager} from "../../interfaces/INodeManager.sol";
+import {IConsensusMechanism} from "../../interfaces/IConsensusMechanism.sol";
 
 contract ConsensusMechanism {
     // Threshold for consensus
@@ -18,6 +19,8 @@ contract ConsensusMechanism {
     mapping(address => DataTypes.TargetLocation) public s_target;
     address[] public s_nodes;
 
+    event TargetLocationReported(address indexed node, string announceTarget);
+
     constructor(uint _i_interval, address _nodeManagerAddress) {
         s_lastTimeStamp = block.timestamp;
         i_interval = _i_interval;
@@ -26,17 +29,18 @@ contract ConsensusMechanism {
 
     function reportTargetLocation(string memory _announceTarget) external {
         if (nodeManager.isNodeRegistered(msg.sender) == false) {
-            revert Errors.ConsensusMechanism__NodeNotRegistered();
+            revert Errors.ConsensusMechanism__NODE_NOT_REGISTERED();
         }
         if (hasNodeParticipated() == true) {
-            revert Errors.ConsensusMechanism__NodeVoted();
+            revert Errors.ConsensusMechanism__NODE_ALREADY_VOTED();
         }
         s_target[msg.sender].location = _announceTarget; // Location of target (lat & long) that reported
         s_target[msg.sender].reportedBy = msg.sender; // Address of the node that reported this location
         s_target[msg.sender].timestamp = block.timestamp; // Time when the location was reported
         s_target[msg.sender].reported[msg.sender] = true; // to track if a node has voted
         s_target[msg.sender].isActive = true; //to mark if the proposal is still active
-        s_nodes.push(msg.sender); // node address
+        s_nodes.push(msg.sender); // add node address
+        emit TargetLocationReported(msg.sender, _announceTarget);
     }
 
     function initiateConsensusAttack() external {}

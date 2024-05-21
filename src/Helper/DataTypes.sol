@@ -20,4 +20,5 @@ library DataTypes {
         mapping(address => bool) reported; // to track if a node has voted
         bool isActive; // to mark if the proposal is still active
     }
+    event NodeRegistered(address indexed nodeAddress, string currentPosition);
 }
