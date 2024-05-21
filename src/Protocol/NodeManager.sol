@@ -39,16 +39,6 @@ contract NodeManager is INodeManager {
         }
     }
 
-    function registerNewNode(
-        address _nodeAddress,
-        string memory currentPosition
-    ) external onlyContractAdmin {
-        if (_isNodeRegistered(_nodeAddress)) {
-            revert Errors.NodeManager__NODE_ALREADY_EXIST();
-        }
-        _registerNode(_nodeAddress, currentPosition);
-    }
-
     function _registerNode(
         address _nodeAddress,
         string memory currentPosition
@@ -57,7 +47,7 @@ contract NodeManager is INodeManager {
             node: _nodeAddress,
             currentPosition: currentPosition
         });
-        s_existingNodes[_nodeAddress] = true;
+        s_ExistingNodes[_nodeAddress] = true;
         emit NodeRegistered(_nodeAddress, currentPosition);
     }
 
@@ -70,17 +60,27 @@ contract NodeManager is INodeManager {
         }
     }
 
+    // function registerNewNode(
+    //     address _nodeAddress,
+    //     string memory currentPosition
+    // ) external onlyContractAdmin {
+    //     DataTypes.RegisteredNodes memory registeredNodes = DataTypes
+    //         .RegisteredNodes({
+    //             node: _nodeAddress,
+    //             currentPosition: currentPosition
+    //         });
+    //     s_registeredNodes[msg.sender] = (registeredNodes);
+    //     s_ExistingNodes[_nodeAddress] = true;
+    //     emit NodeRegistered(_nodeAddress, currentPosition);
+    // }
     function registerNewNode(
         address _nodeAddress,
         string memory currentPosition
     ) external onlyContractAdmin {
-        DataTypes.RegisteredNodes memory registeredNodes = DataTypes
-            .RegisteredNodes({
-                node: _nodeAddress,
-                currentPosition: currentPosition
-            });
-        s_registeredNodes[msg.sender] = (registeredNodes);
-        s_ExistingNodes[_nodeAddress] = true;
+        if (isNodeRegistered(_nodeAddress)) {
+            revert Errors.NodeManager__NODE_ALREADY_EXIST();
+        }
+        _registerNode(_nodeAddress, currentPosition);
         emit NodeRegistered(_nodeAddress, currentPosition);
     }
 

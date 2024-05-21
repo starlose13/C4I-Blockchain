@@ -50,6 +50,7 @@ interface INodeManager {
     function isNodeRegistered(address nodeAddress) external view returns (bool);
 
     // // Events
+    event NodeRegistered(address indexed nodeAddress, string currentPosition);
 
     // // Event emitted when a new node is registered
     // event NodeRegistered(address indexed nodeAddress);
