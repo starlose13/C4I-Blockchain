@@ -7,6 +7,13 @@ import {INodeManager} from "../../interfaces/INodeManager.sol";
 import {IConsensusMechanism} from "../../interfaces/IConsensusMechanism.sol";
 
 contract ConsensusMechanism {
+    enum Region {
+        North,
+        South,
+        East,
+        West,
+        Central
+    }
     // Threshold for consensus
     uint256 public constant CONSENSUS_THRESHOLD = 3; // example threshold
 

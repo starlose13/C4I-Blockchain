@@ -6,18 +6,12 @@ import {Errors} from "../Helper/Errors.sol";
 
 contract NodeManager is INodeManager {
     //Contract Admin that can change the structure of current smart contract later and manage the current system
-    enum Region {
-        North,
-        South,
-        East,
-        West,
-        Central
-    }
+
     address immutable CONTRACT_ADMIN;
+    // mapping()
     mapping(address => DataTypes.RegisteredNodes) private s_registeredNodes;
     mapping(address => bool) private s_ExistingNodes;
 
-    // mapping()
     constructor(
         address[] memory _nodeAddress,
         string[] memory _currentPosition
