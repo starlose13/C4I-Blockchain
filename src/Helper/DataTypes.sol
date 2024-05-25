@@ -7,28 +7,35 @@ pragma solidity ^0.8.0;
  * @notice Defines the essential structs that worked with the different contracts of the BLOCKCHAINENVIROCOMM protocol
  */
 library DataTypes {
-    enum Region {
+    enum NodeRegion {
         North,
         South,
         East,
         West,
         Central
     }
+
+    enum TargetZone {
+        lat,
+        long
+    }
+
     struct RegisteredNodes {
-        address node;
-        string currentPosition;
+        address nodeAddress;
+        NodeRegion currentPosition;
+        string IPFSData;
     }
 
     // Proposal structure to manage node proposals
     struct TargetLocation {
-        Region location;
+        TargetZone zone;
         address reportedBy; // ID of the node that reported this location
         uint256 timestamp; // Time when the location was reported
-        mapping(address => bool) reported; // to track if a node has voted
         bool isActive; // to mark if the proposal is still active
     }
+
     event TargetLocationReported(
         address indexed node,
-        DataTypes.Region announceTarget
+        TargetZone announceTarget
     );
 }

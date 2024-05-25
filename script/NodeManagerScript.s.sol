@@ -4,6 +4,7 @@ pragma solidity 0.8.18;
 
 import {Script} from "forge-std/Script.sol";
 import {NodeManager} from "../src/Protocol/NodeManager.sol";
+import {DataTypes} from "../src/Helper/DataTypes.sol";
 
 contract NodeManagerScript is Script {
     NodeManager public nodeManager;
@@ -16,11 +17,15 @@ contract NodeManagerScript is Script {
         initialAddresses[0] = makeAddr("ALICE Commander"); // Replace with actual address 1
         initialAddresses[1] = makeAddr("BOB Commander"); // Replace with actual address 2
 
-        string[] memory initialPositions = new string[](2);
-        initialPositions[0] = "Position 1";
-        initialPositions[1] = "Position 2";
+        string[] memory IPFS = new string[](2);
+        IPFS[0] = "Position 1";
+        IPFS[1] = "Position 2";
 
-        nodeManager = new NodeManager(initialAddresses, initialPositions);
+        DataTypes.NodeRegion[] memory Type = new DataTypes.NodeRegion[](2);
+        Type[0] = DataTypes.NodeRegion.North;
+        Type[1] = DataTypes.NodeRegion.North;
+
+        nodeManager = new NodeManager(initialAddresses, Type, IPFS);
         vm.stopBroadcast();
 
         return nodeManager;

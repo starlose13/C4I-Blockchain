@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.18;
+import {DataTypes} from "../src/Helper/DataTypes.sol";
 
 interface INodeManager {
     // Function for registering a new node
@@ -49,8 +50,15 @@ interface INodeManager {
 
     function isNodeRegistered(address nodeAddress) external view returns (bool);
 
+    function numberOfPresentNodes() external view returns (uint);
+
+    function retrieveAddressByIndex(uint index) external view returns (address);
+
     // // Events
-    event NodeRegistered(address indexed nodeAddress, string currentPosition);
+    event NodeRegistered(
+        address indexed nodeAddress,
+        DataTypes.NodeRegion currentPosition
+    );
 
     // // Event emitted when a new node is registered
     // event NodeRegistered(address indexed nodeAddress);

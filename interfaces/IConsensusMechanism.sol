@@ -3,12 +3,6 @@ pragma solidity 0.8.18;
 import {DataTypes} from "../src/Helper/DataTypes.sol";
 
 interface IConsensusMechanism {
-    enum location {
-        first,
-        second,
-        third
-    }
-
     // Function to initiate the consensus process
     function initiateConsensus() external;
 
