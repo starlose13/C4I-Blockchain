@@ -5,12 +5,13 @@ import {Errors} from "../Helper/Errors.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
 import {INodeManager} from "../../interfaces/INodeManager.sol";
 import {IConsensusMechanism} from "../../interfaces/IConsensusMechanism.sol";
+import {Utils} from "./../Helper/Utils.sol";
 
 contract ConsensusMechanism {
     INodeManager public nodeManager;
 
     uint8 private constant CONSENSUS_EPOCH = 2;
-    uint8 private s_consensusThreshold; // threshold for having a consensus
+    uint8 private s_consensusThreshold = 1; // threshold for having a consensus
     uint private s_lastTimeStamp; // chainlink auto-execution time
     uint private immutable i_interval; // chainlink interval
 
@@ -23,14 +24,16 @@ contract ConsensusMechanism {
     }
 
     function reportTargetLocation(
+        address _nodeAddress,
         DataTypes.TargetZone _announceTarget
     ) external {
-        if (nodeManager.isNodeRegistered(msg.sender) == false) {
-            revert Errors.ConsensusMechanism__NODE_NOT_REGISTERED();
-        }
-        if (hasNodeParticipated() == true) {
+        if (hasNodeParticipated(_nodeAddress) == true) {
             revert Errors.ConsensusMechanism__NODE_ALREADY_VOTED();
         }
+        if (nodeManager.isNodeRegistered(_nodeAddress) == false) {
+            revert Errors.ConsensusMechanism__NODE_NOT_REGISTERED();
+        }
+
         s_target[msg.sender].zone = DataTypes.TargetZone(_announceTarget); // Location of target (lat & long) that reported
         s_target[msg.sender].reportedBy = msg.sender; // Address of the node that reported this location
         s_target[msg.sender].timestamp = block.timestamp; // Time when the location was reported
@@ -40,10 +43,32 @@ contract ConsensusMechanism {
 
     function initiateConsensusAttack() external {}
 
-    function checkConsensusReached() external {}
+    function checkConsensusReached() external view returns (uint) {
+        uint[] memory enumSelected = new uint[](
+            uint(type(DataTypes.TargetZone).max) + 1
+        );
+        // Loop through participations (replace with your data source)
+        for (uint i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
+            // locationCounts[participations[i]]++;
+            address targetAddress = nodeManager.retrieveAddressByIndex(i);
+            if (s_target[targetAddress].zone == DataTypes.TargetZone.lat) {
+                enumSelected[1] += 1; // index of DataTypes.TargetZone of 1 (lat) it can be changed if the inputs of targetZone have been changed
+            } else if (
+                s_target[targetAddress].zone == DataTypes.TargetZone.long
+            ) {
+                enumSelected[2] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
+            }
+        }
+        return
+            Utils.maxUnique(enumSelected) >= s_consensusThreshold
+                ? Utils.maxUnique(enumSelected)
+                : 0;
+    }
 
-    function hasNodeParticipated() public view returns (bool) {
-        return (s_target[msg.sender].reportedBy != address(0));
+    function hasNodeParticipated(
+        address _nodeAddress
+    ) public view returns (bool) {
+        return (s_target[_nodeAddress].reportedBy != address(0));
     }
 
     function resetEpoch() external {
