@@ -12,7 +12,7 @@ contract NodeManager is INodeManager {
     mapping(address => DataTypes.RegisteredNodes) private s_registeredNodes;
     mapping(address => bool) private s_ExistingNodes;
 
-    address[] public s_nodes;
+    address[] private s_nodes;
 
     constructor(
         address[] memory _nodeAddresses,
