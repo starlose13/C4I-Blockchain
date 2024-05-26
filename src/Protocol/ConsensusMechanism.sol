@@ -9,10 +9,9 @@ import {Utils} from "./../Helper/Utils.sol";
 
 contract ConsensusMechanism {
     INodeManager public nodeManager;
-    uint8 private immutable i_consensusThreshold; // threshold for having a consensus
-
-    uint private constant CONSENSUS_NOT_REACHED = 0;
-    uint8 private constant CONSENSUS_EPOCH = 2;
+    uint64 private immutable i_consensusThreshold; // threshold for having a consensus
+    uint64 private constant CONSENSUS_NOT_REACHED = 0;
+    uint128 private constant CONSENSUS_EPOCH_TIME = 10 minutes;
     uint256 private s_lastTimeStamp; // chainlink auto-execution time
     uint256 private i_interval; // chainlink interval
 
@@ -112,7 +111,7 @@ contract ConsensusMechanism {
         // We don't use the checkData in this example. The checkData is defined when the Upkeep was registered.
     }
 
-    function fetchConsensusThreshold() external view returns (uint8) {
+    function fetchConsensusThreshold() external view returns (uint64) {
         return i_consensusThreshold;
     }
 
