@@ -7,34 +7,29 @@ pragma solidity ^0.8.0;
  * @notice math library
  */
 library Utils {
-    function max(uint256[] memory numbers) external pure returns (uint256) {
-        require(numbers.length > 0); // throw an exception if the condition is not met
-        uint256 maxNumber; // default 0, the lowest value of `uint256`
-
-        for (uint256 i = 0; i < numbers.length; i++) {
-            if (numbers[i] > maxNumber) {
-                maxNumber = i;
-            }
-        }
-
-        return maxNumber;
-    }
-
-    function maxUnique(uint256[] memory numbers) public pure returns (uint256) {
+    function findMaxUniqueValueWithCount(
+        uint256[] memory numbers
+    ) public pure returns (uint256, uint256) {
         require(numbers.length > 0, "Array must not be empty");
 
         uint256 maxNumber;
+        uint256 maxIndex;
         bool hasDuplicates = false;
 
         for (uint256 i = 0; i < numbers.length; i++) {
             if (numbers[i] > maxNumber) {
-                maxNumber = i;
+                maxNumber = numbers[i];
+                maxIndex = i;
                 hasDuplicates = false;
             } else if (numbers[i] == maxNumber) {
                 hasDuplicates = true;
             }
         }
 
-        return (hasDuplicates ? 0 : maxNumber);
+        if (hasDuplicates) {
+            return (0, 0);
+        } else {
+            return (maxIndex, maxNumber);
+        }
     }
 }

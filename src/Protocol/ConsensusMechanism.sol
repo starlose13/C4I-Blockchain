@@ -9,24 +9,31 @@ import {Utils} from "./../Helper/Utils.sol";
 
 contract ConsensusMechanism {
     INodeManager public nodeManager;
+    uint8 private immutable i_consensusThreshold; // threshold for having a consensus
 
+    uint private constant CONSENSUS_NOT_REACHED = 0;
     uint8 private constant CONSENSUS_EPOCH = 2;
-    uint8 private s_consensusThreshold = 1; // threshold for having a consensus
-    uint private s_lastTimeStamp; // chainlink auto-execution time
-    uint private immutable i_interval; // chainlink interval
+    uint256 private s_lastTimeStamp; // chainlink auto-execution time
+    uint256 private i_interval; // chainlink interval
 
     mapping(address => DataTypes.TargetLocation) public s_target;
 
-    constructor(uint _i_interval, address _nodeManagerAddress) {
+    constructor(
+        uint8 _i_consensusThreshold,
+        address _nodeManagerContractAddress
+    ) {
         s_lastTimeStamp = block.timestamp;
-        i_interval = _i_interval;
-        nodeManager = INodeManager(_nodeManagerAddress);
+        i_consensusThreshold = _i_consensusThreshold;
+        nodeManager = INodeManager(_nodeManagerContractAddress);
     }
 
     function reportTargetLocation(
         address _nodeAddress,
         DataTypes.TargetZone _announceTarget
     ) external {
+        if (msg.sender != _nodeAddress) {
+            revert Errors.ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER();
+        }
         if (hasNodeParticipated(_nodeAddress) == true) {
             revert Errors.ConsensusMechanism__NODE_ALREADY_VOTED();
         }
@@ -43,26 +50,31 @@ contract ConsensusMechanism {
 
     function initiateConsensusAttack() external {}
 
-    function checkConsensusReached() external view returns (uint) {
-        uint[] memory enumSelected = new uint[](
-            uint(type(DataTypes.TargetZone).max) + 1
+    function checkConsensusReached() external view returns (uint256) {
+        uint256[] memory zoneCounts = new uint256[](
+            uint256(type(DataTypes.TargetZone).max) + 1
         );
         // Loop through participations (replace with your data source)
-        for (uint i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
+        uint256 numberOfNodes = nodeManager.numberOfPresentNodes();
+        for (uint256 i = 0; i < numberOfNodes; i++) {
             // locationCounts[participations[i]]++;
-            address targetAddress = nodeManager.retrieveAddressByIndex(i);
-            if (s_target[targetAddress].zone == DataTypes.TargetZone.lat) {
-                enumSelected[1] += 1; // index of DataTypes.TargetZone of 1 (lat) it can be changed if the inputs of targetZone have been changed
-            } else if (
-                s_target[targetAddress].zone == DataTypes.TargetZone.long
-            ) {
-                enumSelected[2] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
+            address nodeAddress = nodeManager.retrieveAddressByIndex(i);
+            DataTypes.TargetZone zone = s_target[nodeAddress].zone;
+            if (zone == DataTypes.TargetZone.lat) {
+                zoneCounts[uint256(DataTypes.TargetZone.lat)] += 1; // index of DataTypes.TargetZone of 1 (lat) it can be changed if the inputs of targetZone have been changed
+            } else if (zone == DataTypes.TargetZone.long) {
+                zoneCounts[uint256(DataTypes.TargetZone.long)] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
             }
         }
+        // Find the zone with the maximum unique count using an external utility function
+        (uint maxZoneIndex, uint maxCount) = Utils.findMaxUniqueValueWithCount(
+            zoneCounts
+        );
+        // Check if the count meets the consensus threshold
         return
-            Utils.maxUnique(enumSelected) >= s_consensusThreshold
-                ? Utils.maxUnique(enumSelected)
-                : 0;
+            (maxCount >= i_consensusThreshold)
+                ? maxZoneIndex
+                : CONSENSUS_NOT_REACHED;
     }
 
     function hasNodeParticipated(
@@ -72,7 +84,7 @@ contract ConsensusMechanism {
     }
 
     function resetEpoch() external {
-        for (uint i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
+        for (uint256 i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
             address targetAddress = nodeManager.retrieveAddressByIndex(i);
             s_target[targetAddress] = DataTypes.TargetLocation({
                 zone: DataTypes.TargetZone(0), // Assuming 0 is a valid default value for TargetZone
@@ -85,7 +97,7 @@ contract ConsensusMechanism {
 
     function resetAllTargetLocations() public {
         // Iterate over all addresses in the mapping
-        for (uint i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
+        for (uint256 i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
             address targetAddress = nodeManager.retrieveAddressByIndex(i);
 
             // Nullify the TargetLocation struct for the current address
@@ -101,7 +113,7 @@ contract ConsensusMechanism {
     }
 
     function fetchConsensusThreshold() external view returns (uint8) {
-        return s_consensusThreshold;
+        return i_consensusThreshold;
     }
 
     function performUpkeep(bytes calldata /* performData */) external {

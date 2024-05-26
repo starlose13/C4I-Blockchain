@@ -12,4 +12,5 @@ library Errors {
     error ConsensusMechanism__NODE_NOT_REGISTERED();
     error NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL();
     error NodeManager__NODE_ALREADY_EXIST();
+    error ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER();
 }
