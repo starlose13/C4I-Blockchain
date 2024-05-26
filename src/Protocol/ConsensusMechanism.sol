@@ -11,7 +11,8 @@ contract ConsensusMechanism {
     INodeManager public nodeManager;
     uint64 private immutable i_consensusThreshold; // threshold for having a consensus
     uint64 private constant CONSENSUS_NOT_REACHED = 0;
-    uint128 private constant CONSENSUS_EPOCH_TIME = 10 minutes;
+    uint256 private s_startTime;
+    uint256 private constant CONSENSUS_EPOCH_TIME = 10 minutes;
     uint256 private s_lastTimeStamp; // chainlink auto-execution time
     uint256 private i_interval; // chainlink interval
 
@@ -23,6 +24,7 @@ contract ConsensusMechanism {
     ) {
         s_lastTimeStamp = block.timestamp;
         i_consensusThreshold = _i_consensusThreshold;
+        s_startTime = block.timestamp;
         nodeManager = INodeManager(_nodeManagerContractAddress);
     }
 
@@ -47,9 +49,20 @@ contract ConsensusMechanism {
         emit DataTypes.TargetLocationReported(msg.sender, _announceTarget);
     }
 
-    function initiateConsensusAttack() external {}
+    function consensusAutomationExecution() external returns (bool isReached) {
+        if (
+            s_startTime + CONSENSUS_EPOCH_TIME >= block.timestamp &&
+            checkConsensusReached() != 0
+        ) {
+            resetToDefaults();
+            return isReached = true;
+        } else {
+            resetToDefaults();
+            return isReached = false;
+        }
+    }
 
-    function checkConsensusReached() external view returns (uint256) {
+    function checkConsensusReached() internal view virtual returns (uint256) {
         uint256[] memory zoneCounts = new uint256[](
             uint256(type(DataTypes.TargetZone).max) + 1
         );
@@ -82,25 +95,21 @@ contract ConsensusMechanism {
         return (s_target[_nodeAddress].reportedBy != address(0));
     }
 
-    function resetEpoch() external {
-        for (uint256 i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
-            address targetAddress = nodeManager.retrieveAddressByIndex(i);
-            s_target[targetAddress] = DataTypes.TargetLocation({
-                zone: DataTypes.TargetZone(0), // Assuming 0 is a valid default value for TargetZone
-                reportedBy: address(0),
-                timestamp: 0,
-                isActive: false
-            });
-        }
+    function deleteTargetLocation(uint index) internal virtual {
+        address targetAddress = nodeManager.retrieveAddressByIndex(index);
+        // Nullify the TargetLocation struct for the current address
+        delete s_target[targetAddress];
     }
 
-    function resetAllTargetLocations() public {
+    function resetToDefaults() internal {
+        s_startTime = block.timestamp;
+        resetAllTargetLocations();
+    }
+
+    function resetAllTargetLocations() internal {
         // Iterate over all addresses in the mapping
         for (uint256 i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
-            address targetAddress = nodeManager.retrieveAddressByIndex(i);
-
-            // Nullify the TargetLocation struct for the current address
-            delete s_target[targetAddress];
+            deleteTargetLocation(i);
         }
     }
 
