@@ -9,7 +9,8 @@ import {Utils} from "./../Helper/Utils.sol";
 
 contract ConsensusMechanism {
     INodeManager public nodeManager;
-    uint64 private immutable i_consensusThreshold; // threshold for having a consensus
+    address private immutable POLICY_CUSTODIAN;
+    uint64 private s_consensusThreshold; // threshold for having a consensus
     uint64 private constant CONSENSUS_NOT_REACHED = 0;
     uint256 private constant CONSENSUS_EPOCH_TIME = 10 minutes;
     uint256 private s_startTime;
@@ -19,13 +20,21 @@ contract ConsensusMechanism {
     mapping(address => DataTypes.TargetLocation) public s_target;
 
     constructor(
-        uint8 _i_consensusThreshold,
+        uint8 _s_consensusThreshold,
         address _nodeManagerContractAddress
     ) {
+        POLICY_CUSTODIAN = msg.sender;
         s_lastTimeStamp = block.timestamp;
-        i_consensusThreshold = _i_consensusThreshold;
+        s_consensusThreshold = _s_consensusThreshold;
         s_startTime = block.timestamp;
         nodeManager = INodeManager(_nodeManagerContractAddress);
+    }
+
+    modifier onlyPolicyCustodian() {
+        if (msg.sender != POLICY_CUSTODIAN) {
+            revert Errors.ConsensusMechanism__ONLY_POLICY_CUSTODIAN();
+        }
+        _;
     }
 
     function reportTargetLocation(
@@ -84,9 +93,15 @@ contract ConsensusMechanism {
         );
         // Check if the count meets the consensus threshold
         return
-            (maxCount >= i_consensusThreshold)
+            (maxCount >= s_consensusThreshold)
                 ? maxZoneIndex
                 : CONSENSUS_NOT_REACHED;
+    }
+
+    function modifyConsensusThreshold(
+        uint64 _newValue
+    ) external onlyPolicyCustodian {
+        s_consensusThreshold = _newValue;
     }
 
     function hasNodeParticipated(
@@ -121,7 +136,7 @@ contract ConsensusMechanism {
     }
 
     function fetchConsensusThreshold() external view returns (uint64) {
-        return i_consensusThreshold;
+        return s_consensusThreshold;
     }
 
     function performUpkeep(bytes calldata /* performData */) external {
