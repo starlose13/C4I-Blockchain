@@ -16,8 +16,11 @@ library DataTypes {
     }
 
     enum TargetZone {
-        lat,
-        long
+        None,
+        EnemyBunkers,
+        ArtilleryEmplacements,
+        CommunicationTowers,
+        ObservationPosts
     }
 
     struct RegisteredNodes {

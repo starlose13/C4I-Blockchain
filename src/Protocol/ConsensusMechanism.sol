@@ -14,10 +14,10 @@ contract ConsensusMechanism {
     uint64 private s_consensusThreshold; // threshold for having a consensus
     uint128 private s_epochCounter;
     uint256 private consensusEpochTimeDuration = 10 minutes;
-    uint256 private s_startTime; // starting time for the each epoch lof consensus process
+    uint256 private s_startTime; // starting time for the each epoch of consensus process
     uint256 private s_lastTimeStamp; // chainlink auto-execution time
     uint256 private s_interval; // chainlink interval
-    bool isEpochStarted;
+    bool public isEpochStarted;
 
     mapping(address => DataTypes.TargetLocation) public s_target;
     mapping(address => mapping(uint128 => DataTypes.EpochConsensusData))
@@ -126,16 +126,24 @@ contract ConsensusMechanism {
         uint256[] memory zoneCounts = new uint256[](
             uint256(type(DataTypes.TargetZone).max) + 1
         );
-        // Loop through participations (replace with your data source)
+
         uint256 numberOfNodes = nodeManager.numberOfPresentNodes();
         for (uint256 i = 0; i < numberOfNodes; i++) {
             // locationCounts[participations[i]]++;
             address nodeAddress = nodeManager.retrieveAddressByIndex(i);
             DataTypes.TargetZone zone = s_target[nodeAddress].zone;
-            if (zone == DataTypes.TargetZone.lat) {
-                zoneCounts[uint256(DataTypes.TargetZone.lat)] += 1; // index of DataTypes.TargetZone of 1 (lat) it can be changed if the inputs of targetZone have been changed
-            } else if (zone == DataTypes.TargetZone.long) {
-                zoneCounts[uint256(DataTypes.TargetZone.long)] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
+            if (zone == DataTypes.TargetZone.EnemyBunkers) {
+                zoneCounts[uint256(DataTypes.TargetZone.EnemyBunkers)] += 1; // index of DataTypes.TargetZone of 1 (lat) it can be changed if the inputs of targetZone have been changed
+            } else if (zone == DataTypes.TargetZone.ArtilleryEmplacements) {
+                zoneCounts[
+                    uint256(DataTypes.TargetZone.ArtilleryEmplacements)
+                ] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
+            } else if (zone == DataTypes.TargetZone.CommunicationTowers) {
+                zoneCounts[
+                    uint256(DataTypes.TargetZone.CommunicationTowers)
+                ] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
+            } else if (zone == DataTypes.TargetZone.ObservationPosts) {
+                zoneCounts[uint256(DataTypes.TargetZone.ObservationPosts)] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
             }
         }
         // Find the zone with the maximum unique count using an external utility function
@@ -230,5 +238,17 @@ contract ConsensusMechanism {
 
         // Return node addresses and their corresponding target zones
         return (nodes, zones);
+    }
+
+    function fetchPolicyCustodian() external view returns (address) {
+        return POLICY_CUSTODIAN;
+    }
+
+    function fetchNumberOfEpoch() external view returns (uint256) {
+        return s_epochCounter;
+    }
+
+    function fetchConsensusEpochTimeDuration() external view returns (uint256) {
+        return consensusEpochTimeDuration;
     }
 }
