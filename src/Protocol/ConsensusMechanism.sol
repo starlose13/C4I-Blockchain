@@ -17,6 +17,7 @@ contract ConsensusMechanism {
     uint256 private s_startTime; // starting time for the each epoch lof consensus process
     uint256 private s_lastTimeStamp; // chainlink auto-execution time
     uint256 private s_interval; // chainlink interval
+    bool isEpochStarted;
 
     mapping(address => DataTypes.TargetLocation) public s_target;
     mapping(address => mapping(uint128 => DataTypes.EpochConsensusData))
@@ -69,6 +70,7 @@ contract ConsensusMechanism {
     {
         persistData(msg.sender, announceTarget);
         chronicleEpoch(msg.sender, announceTarget);
+        isEpochStarted = true;
         emit DataTypes.TargetLocationReported(msg.sender, announceTarget);
     }
 
@@ -101,12 +103,16 @@ contract ConsensusMechanism {
             s_startTime + consensusEpochTimeDuration <= block.timestamp,
             "It is not time to run yet,Execution Failed!"
         );
+        if (!isEpochStarted) {
+            revert Errors.ConsensusMechanism__VOTING_IS_INPROGRESS();
+        }
         uint consensusResult = computeConsensusOutcome();
         if (consensusResult != 0) {
             isReached = true;
             s_epochCounter += 1;
         }
         resetToDefaults();
+        isEpochStarted = false;
         return (isReached, consensusResult);
     }
 
