@@ -248,6 +248,7 @@ contract ConsensusMechanism {
         return s_epochCounter;
     }
 
+    //comment
     function fetchConsensusEpochTimeDuration() external view returns (uint256) {
         return consensusEpochTimeDuration;
     }
