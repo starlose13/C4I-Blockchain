@@ -12,14 +12,14 @@ contract ConsensusMechanism {
     address private immutable POLICY_CUSTODIAN;
     uint64 private constant CONSENSUS_NOT_REACHED = 0;
     uint64 private s_consensusThreshold; // threshold for having a consensus
+    uint128 private s_epochCounter;
     uint256 private consensusEpochTimeDuration = 10 minutes;
     uint256 private s_startTime; // starting time for the each epoch lof consensus process
     uint256 private s_lastTimeStamp; // chainlink auto-execution time
     uint256 private s_interval; // chainlink interval
-    uint256 private s_epochCounter;
 
     mapping(address => DataTypes.TargetLocation) public s_target;
-    mapping(address => mapping(uint256 => DataTypes.EpochConsensusData))
+    mapping(address => mapping(uint128 => DataTypes.EpochConsensusData))
         public s_epochResolution;
 
     constructor(
@@ -68,7 +68,7 @@ contract ConsensusMechanism {
         onlyRegisteredNodes(agent)
     {
         persistData(msg.sender, announceTarget);
-        chronicleEpoch(msg.sender, s_epochCounter, announceTarget);
+        chronicleEpoch(msg.sender, announceTarget);
         emit DataTypes.TargetLocationReported(msg.sender, announceTarget);
     }
 
@@ -84,13 +84,13 @@ contract ConsensusMechanism {
 
     function chronicleEpoch(
         address agent,
-        uint256 epoch,
         DataTypes.TargetZone _reportedZone
     ) private {
-        s_epochResolution[agent][epoch] = DataTypes.EpochConsensusData({
-            zone: DataTypes.TargetZone(_reportedZone),
-            timestamp: block.timestamp
-        });
+        s_epochResolution[agent][s_epochCounter] = DataTypes
+            .EpochConsensusData({
+                zone: DataTypes.TargetZone(_reportedZone),
+                timestamp: block.timestamp
+            });
     }
 
     function consensusAutomationExecution()
