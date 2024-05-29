@@ -34,6 +34,11 @@ library DataTypes {
         bool isActive; // to mark if the proposal is still active
     }
 
+    struct EpochConsensusData {
+        TargetZone zone;
+        uint256 timestamp; // Time when the vote was committed
+    }
+
     event TargetLocationReported(
         address indexed node,
         TargetZone announceTarget

@@ -14,4 +14,5 @@ library Errors {
     error NodeManager__NODE_ALREADY_EXIST();
     error ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER();
     error ConsensusMechanism__ONLY_POLICY_CUSTODIAN();
+    error ConsensusMechanism__THRESHOLD_EXCEEDS_NODES();
 }

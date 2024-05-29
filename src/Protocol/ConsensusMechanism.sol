@@ -10,14 +10,17 @@ import {Utils} from "./../Helper/Utils.sol";
 contract ConsensusMechanism {
     INodeManager public nodeManager;
     address private immutable POLICY_CUSTODIAN;
-    uint64 private s_consensusThreshold; // threshold for having a consensus
     uint64 private constant CONSENSUS_NOT_REACHED = 0;
+    uint64 private s_consensusThreshold; // threshold for having a consensus
     uint256 private constant CONSENSUS_EPOCH_TIME = 10 minutes;
-    uint256 private s_startTime;
+    uint256 private s_startTime; // starting time for the each epoch lof consensus process
     uint256 private s_lastTimeStamp; // chainlink auto-execution time
     uint256 private s_interval; // chainlink interval
+    uint256 private s_epochCounter;
 
     mapping(address => DataTypes.TargetLocation) public s_target;
+    mapping(address => mapping(uint256 => DataTypes.EpochConsensusData))
+        public s_epochResolution;
 
     constructor(
         uint8 _s_consensusThreshold,
@@ -36,42 +39,77 @@ contract ConsensusMechanism {
         }
         _;
     }
-
-    function reportTargetLocation(
-        address _nodeAddress,
-        DataTypes.TargetZone _announceTarget
-    ) external {
-        if (msg.sender != _nodeAddress) {
+    modifier ensureCorrectSender(address _agent) {
+        if (msg.sender != _agent) {
             revert Errors.ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER();
         }
-        if (hasNodeParticipated(_nodeAddress) == true) {
+        _;
+    }
+    modifier preventDoubleVoting(address _agent) {
+        if (hasNodeParticipated(_agent) == true) {
             revert Errors.ConsensusMechanism__NODE_ALREADY_VOTED();
         }
-        if (nodeManager.isNodeRegistered(_nodeAddress) == false) {
+        _;
+    }
+    modifier onlyRegisteredNodes(address _agent) {
+        if (nodeManager.isNodeRegistered(_agent) == false) {
             revert Errors.ConsensusMechanism__NODE_NOT_REGISTERED();
         }
+        _;
+    }
 
-        s_target[msg.sender].zone = DataTypes.TargetZone(_announceTarget); // Location of target (lat & long) that reported
-        s_target[msg.sender].reportedBy = msg.sender; // Address of the node that reported this location
-        s_target[msg.sender].timestamp = block.timestamp; // Time when the location was reported
-        s_target[msg.sender].isActive = true; //to mark if the proposal is still active
+    function reportTargetLocation(
+        address _agent,
+        DataTypes.TargetZone _announceTarget
+    )
+        external
+        ensureCorrectSender(_agent)
+        preventDoubleVoting(_agent)
+        onlyRegisteredNodes(_agent)
+    {
+        persistData(msg.sender, _announceTarget);
+        chronicleEpoch(msg.sender, s_epochCounter, _announceTarget);
         emit DataTypes.TargetLocationReported(msg.sender, _announceTarget);
     }
 
-    function consensusAutomationExecution() external returns (bool isReached) {
-        if (
-            s_startTime + CONSENSUS_EPOCH_TIME >= block.timestamp &&
-            checkConsensusReached() != 0
-        ) {
-            resetToDefaults();
-            return isReached = true;
-        } else {
-            resetToDefaults();
-            return isReached = false;
-        }
+    function persistData(
+        address _agent,
+        DataTypes.TargetZone _announceTarget
+    ) private {
+        s_target[msg.sender].zone = DataTypes.TargetZone(_announceTarget); // Location of target (lat & long) that reported
+        s_target[msg.sender].reportedBy = _agent; // Address of the node that reported this location
+        s_target[msg.sender].timestamp = block.timestamp; // Time when the location was reported
+        s_target[msg.sender].isActive = true; //to mark if the proposal is still active
     }
 
-    function checkConsensusReached() internal view virtual returns (uint256) {
+    function chronicleEpoch(
+        address _agent,
+        uint256 _epoch,
+        DataTypes.TargetZone _reportedZone
+    ) private {
+        s_epochResolution[_agent][_epoch] = DataTypes.EpochConsensusData({
+            zone: DataTypes.TargetZone(_reportedZone),
+            timestamp: block.timestamp
+        });
+    }
+
+    function consensusAutomationExecution()
+        external
+        returns (bool isReached, uint target)
+    {
+        uint consensusResult = computeConsensusOutcome();
+        if (
+            s_startTime + CONSENSUS_EPOCH_TIME >= block.timestamp &&
+            consensusResult != 0
+        ) {
+            isReached = true;
+            s_epochCounter += 1;
+        }
+        resetToDefaults();
+        return (isReached, consensusResult);
+    }
+
+    function computeConsensusOutcome() internal view virtual returns (uint256) {
         uint256[] memory zoneCounts = new uint256[](
             uint256(type(DataTypes.TargetZone).max) + 1
         );
@@ -101,13 +139,15 @@ contract ConsensusMechanism {
     function modifyConsensusThreshold(
         uint64 _newValue
     ) external onlyPolicyCustodian {
+        uint256 numberOfNodes = nodeManager.numberOfPresentNodes();
+        if (_newValue > numberOfNodes) {
+            revert Errors.ConsensusMechanism__THRESHOLD_EXCEEDS_NODES();
+        }
         s_consensusThreshold = _newValue;
     }
 
-    function hasNodeParticipated(
-        address _nodeAddress
-    ) public view returns (bool) {
-        return (s_target[_nodeAddress].reportedBy != address(0));
+    function hasNodeParticipated(address _agent) public view returns (bool) {
+        return (s_target[_agent].reportedBy != address(0));
     }
 
     function deleteTargetLocation(uint index) internal virtual {
