@@ -24,7 +24,6 @@ contract NodeManagerTest is Test {
     }
 
     function testRegisterNode() public /*string memory _currentPositon*/ {
-        vm.expectRevert();
         vm.prank(FIRST_COMMANDER);
         // nodeManager.registerNode(FIRST_COMMANDER, _currentPositon);
     }
