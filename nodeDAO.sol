@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 contract NodeConsensus {
-
     // Node structure to hold information about nodes
     struct Node {
         address addr;
@@ -33,8 +32,17 @@ contract NodeConsensus {
     uint256 public proposalCount;
 
     // Events for logging actions
-    event NodeProposed(address indexed proposer, address indexed nodeAddress, bool isAddition, uint256 proposalId);
-    event VoteCast(address indexed voter, uint256 indexed proposalId, bool voteFor);
+    event NodeProposed(
+        address indexed proposer,
+        address indexed nodeAddress,
+        bool isAddition,
+        uint256 proposalId
+    );
+    event VoteCast(
+        address indexed voter,
+        uint256 indexed proposalId,
+        bool voteFor
+    );
     event ProposalExecuted(uint256 indexed proposalId, bool success);
 
     constructor(address[] memory initialNodes) {
@@ -44,7 +52,10 @@ contract NodeConsensus {
     }
 
     modifier onlyActiveNode() {
-        require(isActiveNode(msg.sender), "Only active nodes can call this function");
+        require(
+            isActiveNode(msg.sender),
+            "Only active nodes can call this function"
+        );
         _;
     }
 
@@ -57,7 +68,10 @@ contract NodeConsensus {
         return false;
     }
 
-    function proposeNode(address nodeAddress, bool isAddition) external onlyActiveNode {
+    function proposeNode(
+        address nodeAddress,
+        bool isAddition
+    ) external onlyActiveNode {
         proposalCount++;
         Proposal storage newProposal = proposals[proposalCount];
         newProposal.proposer = msg.sender;
@@ -68,7 +82,10 @@ contract NodeConsensus {
         emit NodeProposed(msg.sender, nodeAddress, isAddition, proposalCount);
     }
 
-    function voteOnProposal(uint256 proposalId, bool voteFor) external onlyActiveNode {
+    function voteOnProposal(
+        uint256 proposalId,
+        bool voteFor
+    ) external onlyActiveNode {
         Proposal storage proposal = proposals[proposalId];
 
         require(proposal.isActive, "Proposal is not active");
@@ -132,7 +149,9 @@ contract NodeConsensus {
         return activeNodes;
     }
 
-    function getProposalDetails(uint256 proposalId) external view returns (address, address, bool, uint256, uint256, bool) {
+    function getProposalDetails(
+        uint256 proposalId
+    ) external view returns (address, address, bool, uint256, uint256, bool) {
         Proposal storage proposal = proposals[proposalId];
         return (
             proposal.proposer,
