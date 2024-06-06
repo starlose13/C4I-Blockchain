@@ -15,7 +15,7 @@ contract ConsensusMechanism {
     uint128 private s_epochCounter;
     uint256 private consensusEpochTimeDuration = 10 minutes;
     uint256 private s_startTime; // starting time for the each epoch of consensus process
-    uint256 private s_lastTimeStamp; // chainlink auto-execution time
+    uint256 public s_lastTimeStamp; // chainlink auto-execution time
     uint256 private s_interval; // chainlink interval
     bool public isEpochStarted;
 
@@ -251,5 +251,11 @@ contract ConsensusMechanism {
     //comment
     function fetchConsensusEpochTimeDuration() external view returns (uint256) {
         return consensusEpochTimeDuration;
+    }
+
+    function fetchTargetLocation(
+        address agent
+    ) external view returns (DataTypes.TargetLocation memory) {
+        return s_target[agent];
     }
 }
