@@ -16,4 +16,5 @@ library Errors {
     error ConsensusMechanism__ONLY_POLICY_CUSTODIAN();
     error ConsensusMechanism__THRESHOLD_EXCEEDS_NODES();
     error ConsensusMechanism__VOTING_IS_INPROGRESS();
+    error NodeManager__NODE_NOT_FOUND();
 }

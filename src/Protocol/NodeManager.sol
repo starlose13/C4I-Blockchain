@@ -106,4 +106,23 @@ contract NodeManager is INodeManager {
     ) external view returns (address) {
         return s_nodes[index];
     }
+
+    function retrieveNodeDataByAddress(
+        address _nodeAddress
+    ) external view returns (DataTypes.RegisteredNodes memory) {
+        if (!isNodeRegistered(_nodeAddress)) {
+            revert Errors.NodeManager__NODE_NOT_FOUND();
+        }
+        return s_registeredNodes[_nodeAddress];
+    }
+
+    function updateNodeIPFSData(
+        address _nodeAddress,
+        string memory newIPFS
+    ) external onlyContractAdmin {
+        if (!isNodeRegistered(_nodeAddress)) {
+            revert Errors.NodeManager__NODE_NOT_FOUND();
+        }
+        s_registeredNodes[_nodeAddress].IPFSData = newIPFS;
+    }
 }

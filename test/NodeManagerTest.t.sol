@@ -17,13 +17,13 @@ contract NodeManagerTest is Test {
     string private ipfs1 = "QmNode1";
     string private ipfs2 = "QmNode2";
     NodeManager nodeManager;
-    NodeManagerScript deplpoyNodeManager;
+    NodeManagerScript public nodeMangerScript;
 
     //third person who exercises authority chief officer; leader. the commissioned officer in command of a military unit
 
     function setUp() public {
-        deplpoyNodeManager = new NodeManagerScript();
-        nodeManager = deplpoyNodeManager.run();
+        nodeMangerScript = new NodeManagerScript();
+        nodeManager = nodeMangerScript.run();
 
         vm.deal(FIRST_COMMANDER, 100 ether);
         vm.deal(SECOND_COMMANDER, 100 ether);
@@ -121,5 +121,57 @@ contract NodeManagerTest is Test {
 
         assertEq(retrievedNode1, FIRST_COMMANDER);
         assertEq(retrievedNode2, SECOND_COMMANDER);
+    }
+
+    function testRegisterMultipleNewNodes() public {
+        address newNode1 = address(0x1ABC);
+        address newNode2 = address(0x2ABC);
+        DataTypes.NodeRegion newRegion1 = DataTypes.NodeRegion.East;
+        DataTypes.NodeRegion newRegion2 = DataTypes.NodeRegion.West;
+        string memory newIpfs1 = "QmNewNode1";
+        string memory newIpfs2 = "QmNewNode2";
+
+        vm.prank(admin);
+        nodeManager.registerNewNode(newNode1, newRegion1, newIpfs1);
+
+        vm.prank(admin);
+        nodeManager.registerNewNode(newNode2, newRegion2, newIpfs2);
+
+        DataTypes.RegisteredNodes[] memory nodes = nodeManager
+            .retrieveAllRegisteredNodeData();
+        assertEq(nodes.length, 4);
+        assertEq(nodes[2].nodeAddress, newNode1);
+        assertEq(uint(nodes[2].currentPosition), uint(newRegion1));
+        assertEq(nodes[2].IPFSData, newIpfs1);
+        assertEq(nodes[3].nodeAddress, newNode2);
+        assertEq(uint(nodes[3].currentPosition), uint(newRegion2));
+        assertEq(nodes[3].IPFSData, newIpfs2);
+    }
+
+    function testRetrieveNodeDataByAddress() public {
+        DataTypes.RegisteredNodes memory nodeData = nodeManager
+            .retrieveNodeDataByAddress(FIRST_COMMANDER);
+        assertEq(nodeData.nodeAddress, FIRST_COMMANDER);
+        assertEq(uint(nodeData.currentPosition), uint(region1));
+        assertEq(nodeData.IPFSData, ipfs1);
+    }
+
+    function testRetrieveNodeDataByAddressNotFound() public {
+        vm.expectRevert(Errors.NodeManager__NODE_NOT_FOUND.selector);
+        nodeManager.retrieveNodeDataByAddress(address(0x9999));
+    }
+
+    function testRetrieveAddressByIndexOutOfBounds() public {
+        vm.expectRevert();
+        nodeManager.retrieveAddressByIndex(999);
+    }
+
+    function testUpdateNodeIPFSData() public {
+        string memory newIpfs = "QmUpdatedNode";
+        vm.prank(admin);
+        nodeManager.updateNodeIPFSData(FIRST_COMMANDER, newIpfs);
+        DataTypes.RegisteredNodes memory nodeData = nodeManager
+            .retrieveNodeDataByAddress(FIRST_COMMANDER);
+        assertEq(nodeData.IPFSData, newIpfs);
     }
 }
