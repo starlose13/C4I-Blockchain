@@ -148,22 +148,9 @@ contract NodeManagerTest is Test {
         assertEq(nodes[3].IPFSData, newIpfs2);
     }
 
-    function testRetrieveNodeDataByAddress() public {
-        DataTypes.RegisteredNodes memory nodeData = nodeManager
-            .retrieveNodeDataByAddress(FIRST_COMMANDER);
-        assertEq(nodeData.nodeAddress, FIRST_COMMANDER);
-        assertEq(uint(nodeData.currentPosition), uint(region1));
-        assertEq(nodeData.IPFSData, ipfs1);
-    }
-
     function testRetrieveNodeDataByAddressNotFound() public {
         vm.expectRevert(Errors.NodeManager__NODE_NOT_FOUND.selector);
         nodeManager.retrieveNodeDataByAddress(address(0x9999));
-    }
-
-    function testRetrieveAddressByIndexOutOfBounds() public {
-        vm.expectRevert();
-        nodeManager.retrieveAddressByIndex(999);
     }
 
     function testUpdateNodeIPFSData() public {
@@ -173,5 +160,169 @@ contract NodeManagerTest is Test {
         DataTypes.RegisteredNodes memory nodeData = nodeManager
             .retrieveNodeDataByAddress(FIRST_COMMANDER);
         assertEq(nodeData.IPFSData, newIpfs);
+    }
+
+    function testInitializationMismatchedArrayLengths() public {
+        address[] memory nodes = new address[](3);
+        nodes[0] = FIRST_COMMANDER;
+        nodes[1] = SECOND_COMMANDER;
+        nodes[2] = THIRD_COMMANDER;
+
+        DataTypes.NodeRegion[] memory regions = new DataTypes.NodeRegion[](2);
+        regions[0] = region1;
+        regions[1] = region2;
+
+        string[] memory ipfsData = new string[](2);
+        ipfsData[0] = ipfs1;
+        ipfsData[1] = ipfs2;
+
+        vm.expectRevert(
+            Errors.NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL.selector
+        );
+        vm.prank(admin);
+        nodeManager = new NodeManager(nodes, regions, ipfsData);
+    }
+
+    function testUpdateNonExistentNode() public {
+        DataTypes.NodeRegion newRegion = DataTypes.NodeRegion.Central;
+        address nonExistentNode = address(0x12345);
+
+        vm.prank(nonExistentNode);
+        vm.expectRevert();
+        nodeManager.updateExpeditionaryForces(newRegion, nonExistentNode);
+    }
+
+    function testRetrieveNodeDataByAddress() public {
+        DataTypes.RegisteredNodes memory nodeData = nodeManager
+            .retrieveNodeDataByAddress(FIRST_COMMANDER);
+        assertEq(nodeData.nodeAddress, FIRST_COMMANDER);
+        assertEq(uint(nodeData.currentPosition), uint(region1));
+        assertEq(nodeData.IPFSData, ipfs1);
+    }
+
+    function testRegisterNodeAlreadyExists() public {
+        vm.prank(admin);
+        vm.expectRevert(Errors.NodeManager__NODE_ALREADY_EXIST.selector);
+        nodeManager.registerNewNode(FIRST_COMMANDER, region1, ipfs1);
+    }
+
+    function testNodeNotRegistered() public {
+        address nonExistentNode = address(0x5678);
+        bool isRegistered = nodeManager.isNodeRegistered(nonExistentNode);
+        assertFalse(isRegistered);
+    }
+
+    function testRegisterMultipleNodes() public {
+        address newNode1 = address(0x9ABC);
+        address newNode2 = address(0xDEF0);
+        DataTypes.NodeRegion newRegion1 = DataTypes.NodeRegion.East;
+        DataTypes.NodeRegion newRegion2 = DataTypes.NodeRegion.West;
+        string memory newIpfs1 = "QmNewNode1";
+        string memory newIpfs2 = "QmNewNode2";
+
+        vm.prank(admin);
+        nodeManager.registerNewNode(newNode1, newRegion1, newIpfs1);
+        vm.prank(admin);
+        nodeManager.registerNewNode(newNode2, newRegion2, newIpfs2);
+
+        DataTypes.RegisteredNodes[] memory nodes = nodeManager
+            .retrieveAllRegisteredNodeData();
+        assertEq(nodes.length, 4);
+        assertEq(nodes[2].nodeAddress, newNode1);
+        assertEq(uint(nodes[2].currentPosition), uint(newRegion1));
+        assertEq(nodes[2].IPFSData, newIpfs1);
+        assertEq(nodes[3].nodeAddress, newNode2);
+        assertEq(uint(nodes[3].currentPosition), uint(newRegion2));
+        assertEq(nodes[3].IPFSData, newIpfs2);
+    }
+
+    function testOnlyContractAdmin() public {
+        DataTypes.NodeRegion newRegion = DataTypes.NodeRegion.Central;
+        address newNode = address(0x9ABC);
+        string memory newIpfs = "QmNewNode";
+
+        // Test registerNewNode with non-admin
+        vm.prank(FIRST_COMMANDER);
+        vm.expectRevert(Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED.selector);
+        nodeManager.registerNewNode(newNode, newRegion, newIpfs);
+
+        // Test updateExpeditionaryForces with non-admin
+        vm.prank(FIRST_COMMANDER);
+        vm.expectRevert(Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED.selector);
+        nodeManager.updateExpeditionaryForces(newRegion, FIRST_COMMANDER);
+    }
+
+    function testConstructorArrayLengthMismatch() public {
+        address[] memory nodes = new address[](2);
+        nodes[0] = FIRST_COMMANDER;
+        nodes[1] = SECOND_COMMANDER;
+
+        DataTypes.NodeRegion[] memory regions = new DataTypes.NodeRegion[](1);
+        regions[0] = region1;
+
+        string[] memory ipfsData = new string[](2);
+        ipfsData[0] = ipfs1;
+        ipfsData[1] = ipfs2;
+
+        vm.expectRevert(
+            Errors.NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL.selector
+        );
+        new NodeManager(nodes, regions, ipfsData);
+    }
+
+    function testRegisterNodeInternalFunction() public {
+        address newNode = address(0x9ABC);
+        DataTypes.NodeRegion newRegion = DataTypes.NodeRegion.East;
+        string memory newIpfs = "QmNewNode";
+
+        vm.prank(admin);
+        nodeManager.registerNewNode(newNode, newRegion, newIpfs);
+
+        DataTypes.RegisteredNodes memory nodeData = nodeManager
+            .retrieveNodeDataByAddress(newNode);
+        assertEq(nodeData.nodeAddress, newNode);
+        assertEq(uint(nodeData.currentPosition), uint(newRegion));
+        assertEq(nodeData.IPFSData, newIpfs);
+    }
+
+    function testIsNodeRegistered() public {
+        bool isRegistered = nodeManager.isNodeRegistered(FIRST_COMMANDER);
+        assertTrue(isRegistered);
+
+        address nonExistentNode = address(0x5678);
+        isRegistered = nodeManager.isNodeRegistered(nonExistentNode);
+        assertFalse(isRegistered);
+    }
+
+    function testRetrieveAllRegisteredNodeDataWithZeroNodes() public {
+        address[] memory initialAddresses = new address[](0);
+        string[] memory IPFS = new string[](0);
+        DataTypes.NodeRegion[] memory Type = new DataTypes.NodeRegion[](0);
+        NodeManager emptyNodeManager = new NodeManager(
+            initialAddresses,
+            Type,
+            IPFS
+        );
+        DataTypes.RegisteredNodes[] memory nodes = emptyNodeManager
+            .retrieveAllRegisteredNodeData();
+        assertEq(nodes.length, 0);
+    }
+
+    function testNumberOfPresentNodesWithZeroNodes() public {
+        address[] memory initialAddresses = new address[](0);
+        string[] memory IPFS = new string[](0);
+        DataTypes.NodeRegion[] memory Type = new DataTypes.NodeRegion[](0);
+        NodeManager emptyNodeManager = new NodeManager(
+            initialAddresses,
+            Type,
+            IPFS
+        );
+        uint count = emptyNodeManager.numberOfPresentNodes();
+        assertEq(count, 0);
+    }
+
+    function testRetrieveAddressByIndexOutOfBounds() public {
+        vm.expectRevert();
+        nodeManager.retrieveAddressByIndex(10);
     }
 }
