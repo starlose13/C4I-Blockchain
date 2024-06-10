@@ -6,6 +6,7 @@ import {Errors} from "../Helper/Errors.sol";
 
 /**
  * @title NodeManager
+ * @author SunAir institue, University of Ferdowsi
  * @dev This contract manages the registration and data of nodes within a decentralized system.
  */
 contract NodeManager is INodeManager {

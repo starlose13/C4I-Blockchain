@@ -7,6 +7,11 @@ import {INodeManager} from "../../interfaces/INodeManager.sol";
 import {IConsensusMechanism} from "../../interfaces/IConsensusMechanism.sol";
 import {Utils} from "./../Helper/Utils.sol";
 
+/**
+ * @title ConsensusMechanism
+ * @author SunAir institue, University of Ferdowsi
+ * @dev Manages the consensus process among nodes for various operations.
+ */
 contract ConsensusMechanism {
     INodeManager public nodeManager;
     address private immutable POLICY_CUSTODIAN;
