@@ -90,6 +90,12 @@ contract ConsensusMechanism {
         _;
     }
 
+    /**
+     * @dev Reports a target location by a node agent.
+     * @param agent Address of the reporting node.
+     * @param announceTarget Target zone being reported.
+     */
+
     function reportTargetLocation(
         address agent,
         DataTypes.TargetZone announceTarget
@@ -105,6 +111,11 @@ contract ConsensusMechanism {
         emit DataTypes.TargetLocationReported(msg.sender, announceTarget);
     }
 
+    /**
+     * @dev Persists the reported target location data.
+     * @param agent Address of the reporting node.
+     * @param announceTarget Target zone being reported.
+     */
     function persistData(
         address agent,
         DataTypes.TargetZone announceTarget
@@ -114,6 +125,12 @@ contract ConsensusMechanism {
         s_target[msg.sender].timestamp = block.timestamp; // Time when the location was reported
         s_target[msg.sender].isActive = true; //to mark if the proposal is still active
     }
+
+    /**
+     * @dev Chronicles the epoch data with the reported target zone.
+     * @param agent Address of the reporting node.
+     * @param _reportedZone Target zone being reported.
+     */
 
     function chronicleEpoch(
         address agent,
@@ -126,6 +143,11 @@ contract ConsensusMechanism {
             });
     }
 
+    /**
+     * @dev Executes the consensus automation and checks if consensus is reached.
+     * @return isReached Boolean indicating if consensus was reached.
+     * @return target Target zone with the consensus.
+     */
     function consensusAutomationExecution()
         external
         returns (bool isReached, uint target)
@@ -147,11 +169,21 @@ contract ConsensusMechanism {
         return (isReached, consensusResult);
     }
 
+    /**
+     * @dev Modifies the duration of each consensus epoch.
+     * @param newEpochTimeDurationInMinute New epoch duration in minutes.
+     */
+
     function modifyEpochDuration(
         uint newEpochTimeDurationInMinute
     ) external onlyPolicyCustodian {
         consensusEpochTimeDuration = (newEpochTimeDurationInMinute * 1 minutes);
     }
+
+    /**
+     * @dev Computes the outcome of the consensus process.
+     * @return The index of the target zone with the maximum votes.
+     */
 
     function computeConsensusOutcome() internal view virtual returns (uint256) {
         uint256[] memory zoneCounts = new uint256[](
@@ -188,6 +220,10 @@ contract ConsensusMechanism {
                 : CONSENSUS_NOT_REACHED;
     }
 
+    /**
+     * @dev Modifies the consensus threshold.
+     * @param newThreshold New consensus threshold.
+     */
     function modifyConsensusThreshold(
         uint64 newThreshold
     ) external onlyPolicyCustodian {
@@ -217,17 +253,27 @@ contract ConsensusMechanism {
         return (s_target[agent].reportedBy != address(0));
     }
 
+    /**
+     * @dev Deletes the target location data for a specific node.
+     * @param index Index of the node in the node manager.
+     */
     function deleteTargetLocation(uint index) internal virtual {
         address targetAddress = nodeManager.retrieveAddressByIndex(index);
         // Nullify the TargetLocation struct for the current address
         delete s_target[targetAddress];
     }
 
+    /**
+     * @dev Resets the state to defaults for the next epoch.
+     */
     function resetToDefaults() internal {
         s_startTime = block.timestamp;
         resetAllTargetLocations();
     }
 
+    /**
+     * @dev Resets all target locations to defaults.
+     */
     function resetAllTargetLocations() internal {
         // Iterate over all addresses in the mapping
         for (uint256 i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
@@ -235,6 +281,10 @@ contract ConsensusMechanism {
         }
     }
 
+    /**
+     * @dev Checks if upkeep is needed for the automation process.
+     * @return upkeepNeeded Boolean indicating if upkeep is needed.
+     */
     function checkUpkeep(
         bytes calldata /* checkData */
     ) external view returns (bool upkeepNeeded /* performData */) {
@@ -242,10 +292,18 @@ contract ConsensusMechanism {
         // We don't use the checkData in this example. The checkData is defined when the Upkeep was registered.
     }
 
+    /**
+     * @dev Fetches the current consensus threshold.
+     * @return The current consensus threshold.
+     */
     function fetchConsensusThreshold() external view returns (uint64) {
         return s_consensusThreshold;
     }
 
+    /**
+     * @dev Performs upkeep for the automation process.
+     * param performData Data for performing upkeep (not used in this example).
+     */
     function performUpkeep(bytes calldata /* performData */) external {
         if ((block.timestamp - s_lastTimeStamp) > s_interval) {
             s_lastTimeStamp = block.timestamp;
@@ -253,6 +311,12 @@ contract ConsensusMechanism {
         // We don't use the performData in this example. The performData is generated by the Automation Node's call to your checkUpkeep function
     }
 
+    /**
+     * @dev Fetches consensus zones for a specific epoch.
+     * @param epochCounter The epoch counter to fetch data for.
+     * @return nodes Array of node addresses.
+     * @return zones Array of target zones reported by nodes.
+     */
     function fetchEpochConsensusZones(
         uint128 epochCounter
     )
@@ -286,19 +350,35 @@ contract ConsensusMechanism {
         return (nodes, zones);
     }
 
+    /**
+     * @dev Fetches the policy custodian address.
+     * @return The policy custodian address.
+     */
     function fetchPolicyCustodian() external view returns (address) {
         return POLICY_CUSTODIAN;
     }
 
+    /**
+     * @dev Fetches the number of epochs.
+     * @return The number of epochs.
+     */
     function fetchNumberOfEpoch() external view returns (uint256) {
         return s_epochCounter;
     }
 
-    //comment
+    /**
+     * @dev Fetches the duration of the consensus epoch.
+     * @return The consensus epoch duration.
+     */
     function fetchConsensusEpochTimeDuration() external view returns (uint256) {
         return consensusEpochTimeDuration;
     }
 
+    /**
+     * @dev Fetches the target location reported by a specific agent.
+     * @param agent The address of the agent.
+     * @return The target location data.
+     */
     function fetchTargetLocation(
         address agent
     ) external view returns (DataTypes.TargetLocation memory) {
