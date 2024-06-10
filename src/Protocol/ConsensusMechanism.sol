@@ -16,18 +16,26 @@ contract ConsensusMechanism {
     INodeManager public nodeManager;
     address private immutable POLICY_CUSTODIAN;
     uint64 private constant CONSENSUS_NOT_REACHED = 0;
-    uint64 private s_consensusThreshold; // threshold for having a consensus
+    uint64 private s_consensusThreshold; // Threshold for reaching consensus
     uint128 private s_epochCounter;
     uint256 private consensusEpochTimeDuration = 10 minutes;
-    uint256 private s_startTime; // starting time for the each epoch of consensus process
-    uint256 public s_lastTimeStamp; // chainlink auto-execution time
-    uint256 private s_interval; // chainlink interval
+    uint256 private s_startTime; // Start time for each consensus epoch
+    uint256 public s_lastTimeStamp; // Timestamp for Chainlink auto-execution
+    uint256 private s_interval; // Chainlink interval
     bool public isEpochStarted;
 
+    // Mapping to store target locations reported by nodes
     mapping(address => DataTypes.TargetLocation) public s_target;
+
+    // Mapping to store consensus data for each epoch
     mapping(address => mapping(uint128 => DataTypes.EpochConsensusData))
         public s_epochResolution;
 
+    /**
+     * @dev Initializes the contract with initial consensus threshold and node manager address.
+     * @param _s_consensusThreshold Initial consensus threshold.
+     * @param nodeManagerContractAddress Address of the NodeManager contract.
+     */
     constructor(
         uint8 _s_consensusThreshold,
         address nodeManagerContractAddress
@@ -39,24 +47,42 @@ contract ConsensusMechanism {
         nodeManager = INodeManager(nodeManagerContractAddress);
     }
 
+    /**
+     * @dev Modifier to restrict function access to the policy custodian.
+     */
+
     modifier onlyPolicyCustodian() {
         if (msg.sender != POLICY_CUSTODIAN) {
             revert Errors.ConsensusMechanism__ONLY_POLICY_CUSTODIAN();
         }
         _;
     }
+
+    /**
+     * @dev Modifier to ensure the correct sender is calling the function.
+     * @param agent The expected sender address.
+     */
     modifier ensureCorrectSender(address agent) {
         if (msg.sender != agent) {
             revert Errors.ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER();
         }
         _;
     }
+
+    /**
+     * @dev Modifier to prevent double voting by the same node.
+     * @param agent The address of the node.
+     */
     modifier preventDoubleVoting(address agent) {
         if (hasNodeParticipated(agent) == true) {
             revert Errors.ConsensusMechanism__NODE_ALREADY_VOTED();
         }
         _;
     }
+    /**
+     * @dev Modifier to restrict function access to registered nodes.
+     * @param agent The address of the node.
+     */
     modifier onlyRegisteredNodes(address agent) {
         if (nodeManager.isNodeRegistered(agent) == false) {
             revert Errors.ConsensusMechanism__NODE_NOT_REGISTERED();
@@ -172,6 +198,21 @@ contract ConsensusMechanism {
         s_consensusThreshold = newThreshold;
     }
 
+    /**
+     * @dev Sets the consensus threshold.
+     * @param newThreshold The new consensus threshold.
+     */
+    function setConsensusThreshold(
+        uint8 newThreshold
+    ) external onlyPolicyCustodian {
+        s_consensusThreshold = newThreshold;
+    }
+
+    /**
+     * @dev Checks if a node has already participated in the current epoch.
+     * @param agent The address of the node.
+     * @return Boolean indicating if the node has participated.
+     */
     function hasNodeParticipated(address agent) public view returns (bool) {
         return (s_target[agent].reportedBy != address(0));
     }

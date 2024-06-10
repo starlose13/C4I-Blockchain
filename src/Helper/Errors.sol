@@ -2,9 +2,8 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title Errors library
- * @author SunAir
- * @notice Defines the error messages emitted by the different contracts of the BLOCKCHAINENVIROCOMM protocol
+ * @title Errors
+ * @dev Defines custom error messages used in the contracts.
  */
 library Errors {
     error NodeManager__CALLER_IS_NOT_AUTHORIZED(); // 'The caller of the function is not a commander that can manuplate the mission'
