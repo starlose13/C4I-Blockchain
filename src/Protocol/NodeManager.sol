@@ -4,16 +4,32 @@ import {INodeManager} from "../../interfaces/INodeManager.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
 import {Errors} from "../Helper/Errors.sol";
 
+/**
+ * @title NodeManager
+ * @dev This contract manages the registration and data of nodes within a decentralized system.
+ */
 contract NodeManager is INodeManager {
-    //Contract Admin that can change the structure of current smart contract later and manage the current system
-
+    // Contract Admin who can modify the contract and manage the system
     address immutable CONTRACT_ADMIN;
-    // mapping()
+
+    ////////////////// MAPPINGS  /////////////////////////
+
+    // Mapping to store registered nodes and their data
     mapping(address => DataTypes.RegisteredNodes) private s_registeredNodes;
+
+    // Mapping to check if a node is already registered
     mapping(address => bool) private s_ExistingNodes;
 
+    // Array to store all node addresses
     address[] private s_nodes;
 
+    /**
+     * @dev Constructor to initialize the contract with initial nodes.
+     * @param _nodeAddresses Array of node addresses to be registered initially.
+     * @param _currentPosition Array of node regions corresponding to the addresses.
+     * @param IPFS Array of IPFS hashes corresponding to the node data. this IPFS contains the details of
+     * the nodes data consisting of the type of weapons and the name of the weapon
+     */
     constructor(
         address[] memory _nodeAddresses,
         DataTypes.NodeRegion[] memory _currentPosition,
@@ -26,12 +42,22 @@ contract NodeManager is INodeManager {
         _initializeNodes(_nodeAddresses, _currentPosition, IPFS);
     }
 
+    /**
+     * @dev Modifier to restrict functions to only the contract admin.
+     */
     modifier onlyContractAdmin() {
         if (msg.sender != CONTRACT_ADMIN) {
             revert Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED();
         }
         _;
     }
+
+    /**
+     * @dev Internal function to initialize nodes during contract deployment.
+     * @param _nodeAddress Array of node addresses to be registered.
+     * @param _currentPosition Array of node regions corresponding to the addresses.
+     * @param IPFS Array of IPFS hashes corresponding to the node data.
+     */
 
     function _initializeNodes(
         address[] memory _nodeAddress,
@@ -42,6 +68,13 @@ contract NodeManager is INodeManager {
             _registerNode(_nodeAddress[i], _currentPosition[i], IPFS[i]);
         }
     }
+
+    /**
+     * @dev Internal function to register a node.
+     * @param _nodeAddress Address of the node to be registered.
+     * @param currentPosition Region of the node.
+     * @param IPFS IPFS hash of the node data.
+     */
 
     function _registerNode(
         address _nodeAddress,
@@ -58,6 +91,10 @@ contract NodeManager is INodeManager {
         emit NodeRegistered(_nodeAddress, currentPosition);
     }
 
+    /**
+     * @dev Retrieves data of all registered nodes.
+     * @return Array of RegisteredNodes structs.
+     */
     function retrieveAllRegisteredNodeData()
         external
         view
@@ -71,6 +108,13 @@ contract NodeManager is INodeManager {
         return result;
     }
 
+    /**
+     * @dev Registers a new node if it's not already registered.
+     * @param _nodeAddress Address of the new node.
+     * @param _currentPosition Position of the new node.
+     * @param IPFS IPFS data of the new node.
+     */
+
     function registerNewNode(
         address _nodeAddress,
         DataTypes.NodeRegion _currentPosition,
@@ -83,12 +127,24 @@ contract NodeManager is INodeManager {
         emit NodeRegistered(_nodeAddress, _currentPosition);
     }
 
+    /**
+     * @dev Checks if a node is already registered.
+     * @param nodeAddress Address of the node to check.
+     * @return Boolean indicating if the node is registered.
+     */
+
     function isNodeRegistered(address nodeAddress) public view returns (bool) {
         if (s_ExistingNodes[nodeAddress] == true) {
             return true;
         }
         return false;
     }
+
+    /**
+     * @dev Updates the position of a node.
+     * @param expeditionaryForces New position of the node.
+     * @param _nodeAddress Address of the node to update.
+     */
 
     function updateExpeditionaryForces(
         DataTypes.NodeRegion expeditionaryForces,
@@ -97,15 +153,31 @@ contract NodeManager is INodeManager {
         s_registeredNodes[_nodeAddress].currentPosition = expeditionaryForces;
     }
 
+    /**
+     * @dev Returns the number of registered nodes.
+     * @return count Count of registered nodes.
+     */
+
     function numberOfPresentNodes() external view returns (uint count) {
         return count = s_nodes.length;
     }
 
+    /**
+     * @dev Retrieves a node address by its index.
+     * @param index Index of the node address to retrieve.
+     * @return Address of the node.
+     */
     function retrieveAddressByIndex(
         uint index
     ) external view returns (address) {
         return s_nodes[index];
     }
+
+    /**
+     * @dev Retrieves node data by its address.
+     * @param _nodeAddress Address of the node to retrieve data for.
+     * @return RegisteredNodes struct containing node data.
+     */
 
     function retrieveNodeDataByAddress(
         address _nodeAddress
@@ -116,6 +188,11 @@ contract NodeManager is INodeManager {
         return s_registeredNodes[_nodeAddress];
     }
 
+    /**
+     * @dev Updates the IPFS data of a node.
+     * @param _nodeAddress Address of the node to update.
+     * @param newIPFS New IPFS data.
+     */
     function updateNodeIPFSData(
         address _nodeAddress,
         string memory newIPFS
