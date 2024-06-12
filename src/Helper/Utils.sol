@@ -7,9 +7,7 @@ pragma solidity ^0.8.0;
  * @notice math library
  */
 library Utils {
-    function findMaxUniqueValueWithCount(
-        uint256[] memory numbers
-    ) public pure returns (uint256, uint256) {
+    function findMaxUniqueValueWithCount(uint256[] memory numbers) public pure returns (uint256, uint256) {
         require(numbers.length > 0, "Array must not be empty");
 
         uint256 maxNumber;

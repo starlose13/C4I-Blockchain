@@ -31,6 +31,7 @@ library DataTypes {
     /**
      * @dev Struct to store data of a registered node.
      */
+
     struct RegisteredNodes {
         address nodeAddress;
         NodeRegion currentPosition;
@@ -49,6 +50,7 @@ library DataTypes {
     /**
      * @dev Struct to store consensus data for an epoch.
      */
+
     struct EpochConsensusData {
         TargetZone zone;
         uint256 timestamp; // Time when the vote was committed
