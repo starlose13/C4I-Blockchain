@@ -29,4 +29,17 @@ $(info NETWORK_ARGS: $(NETWORK_ARGS))
 deploy:
 	@forge script ./script/NodeManagerScript.s.sol:NodeManagerScript  $(NETWORK_ARGS)
 
+git-add:
+	@git add .
 
+git-commit:
+	@git commit -m "$(if $(m),$(m),Auto-commit)"
+
+git-push:
+	@git push $(if $(remote),$(remote),origin) $(if $(branch),$(branch),main)
+
+# Combined target to add, commit, and push changes
+git-add-commit-push: git-add git-commit git-push
+
+# Target to run deployment and then commit changes to git
+deploy-and-commit: deploy git-add-commit-push
