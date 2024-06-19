@@ -36,8 +36,7 @@ git-commit:
 	@git commit -m "$(if $(m),$(m),Auto-commit)"
 
 git-push:
-	@git push $(if $(remote),$(remote),origin) $(if $(branch),$(branch),main)
-
+	@git push origin master
 # Combined target to add, commit, and push changes
 git-add-commit-push: git-add git-commit git-push
 
