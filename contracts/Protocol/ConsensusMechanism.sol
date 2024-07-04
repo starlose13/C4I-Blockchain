@@ -28,14 +28,18 @@ contract ConsensusMechanism {
     mapping(address => DataTypes.TargetLocation) public s_target;
 
     // Mapping to store consensus data for each epoch
-    mapping(address => mapping(uint128 => DataTypes.EpochConsensusData)) public s_epochResolution;
+    mapping(address => mapping(uint128 => DataTypes.EpochConsensusData))
+        public s_epochResolution;
 
     /**
      * @dev Initializes the contract with initial consensus threshold and node manager address.
      * @param _s_consensusThreshold Initial consensus threshold.
      * @param nodeManagerContractAddress Address of the NodeManager contract.
      */
-    constructor(uint8 _s_consensusThreshold, address nodeManagerContractAddress) {
+    constructor(
+        uint8 _s_consensusThreshold,
+        address nodeManagerContractAddress
+    ) {
         POLICY_CUSTODIAN = msg.sender;
         s_lastTimeStamp = block.timestamp;
         s_consensusThreshold = _s_consensusThreshold;
@@ -93,7 +97,10 @@ contract ConsensusMechanism {
      * @param announceTarget Target zone being reported.
      */
 
-    function reportTargetLocation(address agent, DataTypes.TargetZone announceTarget)
+    function reportTargetLocation(
+        address agent,
+        DataTypes.TargetZone announceTarget
+    )
         external
         ensureCorrectSender(agent)
         preventDoubleVoting(agent)
@@ -110,7 +117,10 @@ contract ConsensusMechanism {
      * @param agent Address of the reporting node.
      * @param announceTarget Target zone being reported.
      */
-    function persistData(address agent, DataTypes.TargetZone announceTarget) private {
+    function persistData(
+        address agent,
+        DataTypes.TargetZone announceTarget
+    ) private {
         s_target[msg.sender].zone = DataTypes.TargetZone(announceTarget); // Location of target (lat & long) that reported
         s_target[msg.sender].reportedBy = agent; // Address of the node that reported this location
         s_target[msg.sender].timestamp = block.timestamp; // Time when the location was reported
@@ -123,9 +133,15 @@ contract ConsensusMechanism {
      * @param _reportedZone Target zone being reported.
      */
 
-    function chronicleEpoch(address agent, DataTypes.TargetZone _reportedZone) private {
-        s_epochResolution[agent][s_epochCounter] =
-            DataTypes.EpochConsensusData({zone: DataTypes.TargetZone(_reportedZone), timestamp: block.timestamp});
+    function chronicleEpoch(
+        address agent,
+        DataTypes.TargetZone _reportedZone
+    ) private {
+        s_epochResolution[agent][s_epochCounter] = DataTypes
+            .EpochConsensusData({
+                zone: DataTypes.TargetZone(_reportedZone),
+                timestamp: block.timestamp
+            });
     }
 
     /**
@@ -133,9 +149,13 @@ contract ConsensusMechanism {
      * @return isReached Boolean indicating if consensus was reached.
      * @return target Target zone with the consensus.
      */
-    function consensusAutomationExecution() external returns (bool isReached, uint256 target) {
+    function consensusAutomationExecution()
+        external
+        returns (bool isReached, uint256 target)
+    {
         require(
-            s_startTime + consensusEpochTimeDuration <= block.timestamp, "It is not time to run yet,Execution Failed!"
+            s_startTime + consensusEpochTimeDuration <= block.timestamp,
+            "It is not time to run yet,Execution Failed!"
         );
         if (!isEpochStarted) {
             revert Errors.ConsensusMechanism__VOTING_IS_INPROGRESS();
@@ -155,7 +175,9 @@ contract ConsensusMechanism {
      * @param newEpochTimeDurationInMinute New epoch duration in minutes.
      */
 
-    function modifyEpochDuration(uint256 newEpochTimeDurationInMinute) external onlyPolicyCustodian {
+    function modifyEpochDuration(
+        uint256 newEpochTimeDurationInMinute
+    ) external onlyPolicyCustodian {
         consensusEpochTimeDuration = (newEpochTimeDurationInMinute * 1 minutes);
     }
 
@@ -177,24 +199,34 @@ contract ConsensusMechanism {
             if (zone == DataTypes.TargetZone.EnemyBunkers) {
                 zoneCounts[uint256(DataTypes.TargetZone.EnemyBunkers)] += 1; // index of DataTypes.TargetZone of 1 (lat) it can be changed if the inputs of targetZone have been changed
             } else if (zone == DataTypes.TargetZone.ArtilleryEmplacements) {
-                zoneCounts[uint256(DataTypes.TargetZone.ArtilleryEmplacements)] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
+                zoneCounts[
+                    uint256(DataTypes.TargetZone.ArtilleryEmplacements)
+                ] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
             } else if (zone == DataTypes.TargetZone.CommunicationTowers) {
-                zoneCounts[uint256(DataTypes.TargetZone.CommunicationTowers)] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
+                zoneCounts[
+                    uint256(DataTypes.TargetZone.CommunicationTowers)
+                ] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
             } else if (zone == DataTypes.TargetZone.ObservationPosts) {
                 zoneCounts[uint256(DataTypes.TargetZone.ObservationPosts)] += 1; //index of DataTypes.TargetZone of 2 (long) it can be changed if the inputs of targetZone have been changed
             }
         }
         // Find the zone with the maximum unique count using an external utility function
-        (uint256 maxZoneIndex, uint256 maxCount) = Utils.findMaxUniqueValueWithCount(zoneCounts);
+        (uint256 maxZoneIndex, uint256 maxCount) = Utils
+            .findMaxUniqueValueWithCount(zoneCounts);
         // Check if the count meets the consensus threshold
-        return (maxCount >= s_consensusThreshold) ? maxZoneIndex : CONSENSUS_NOT_REACHED;
+        return
+            (maxCount >= s_consensusThreshold)
+                ? maxZoneIndex
+                : CONSENSUS_NOT_REACHED;
     }
 
     /**
      * @dev Modifies the consensus threshold.
      * @param newThreshold New consensus threshold.
      */
-    function modifyConsensusThreshold(uint64 newThreshold) external onlyPolicyCustodian {
+    function modifyConsensusThreshold(
+        uint64 newThreshold
+    ) external onlyPolicyCustodian {
         uint256 numberOfNodes = nodeManager.numberOfPresentNodes();
         if (newThreshold > numberOfNodes) {
             revert Errors.ConsensusMechanism__THRESHOLD_EXCEEDS_NODES();
@@ -206,7 +238,9 @@ contract ConsensusMechanism {
      * @dev Sets the consensus threshold.
      * @param newThreshold The new consensus threshold.
      */
-    function setConsensusThreshold(uint8 newThreshold) external onlyPolicyCustodian {
+    function setConsensusThreshold(
+        uint8 newThreshold
+    ) external onlyPolicyCustodian {
         s_consensusThreshold = newThreshold;
     }
 
@@ -251,11 +285,9 @@ contract ConsensusMechanism {
      * @dev Checks if upkeep is needed for the automation process.
      * @return upkeepNeeded Boolean indicating if upkeep is needed.
      */
-    function checkUpkeep(bytes calldata /* checkData */ )
-        external
-        view
-        returns (bool upkeepNeeded /* performData */ )
-    {
+    function checkUpkeep(
+        bytes calldata /* checkData */
+    ) external view returns (bool upkeepNeeded /* performData */) {
         upkeepNeeded = (block.timestamp - s_lastTimeStamp) > s_interval;
         // We don't use the checkData in this example. The checkData is defined when the Upkeep was registered.
     }
@@ -272,7 +304,7 @@ contract ConsensusMechanism {
      * @dev Performs upkeep for the automation process.
      * param performData Data for performing upkeep (not used in this example).
      */
-    function performUpkeep(bytes calldata /* performData */ ) external {
+    function performUpkeep(bytes calldata /* performData */) external {
         if ((block.timestamp - s_lastTimeStamp) > s_interval) {
             s_lastTimeStamp = block.timestamp;
         }
@@ -285,7 +317,9 @@ contract ConsensusMechanism {
      * @return nodes Array of node addresses.
      * @return zones Array of target zones reported by nodes.
      */
-    function fetchEpochConsensusZones(uint128 epochCounter)
+    function fetchEpochConsensusZones(
+        uint128 epochCounter
+    )
         public
         view
         returns (address[] memory nodes, DataTypes.TargetZone[] memory zones)
@@ -303,7 +337,9 @@ contract ConsensusMechanism {
             address nodeAddress = nodeManager.retrieveAddressByIndex(i);
 
             // Get target zone for the specified epoch and node
-            DataTypes.TargetZone zone = s_epochResolution[nodeAddress][epochCounter].zone;
+            DataTypes.TargetZone zone = s_epochResolution[nodeAddress][
+                epochCounter
+            ].zone;
 
             // Store node address and corresponding target zone
             nodes[i] = nodeAddress;
@@ -343,7 +379,9 @@ contract ConsensusMechanism {
      * @param agent The address of the agent.
      * @return The target location data.
      */
-    function fetchTargetLocation(address agent) external view returns (DataTypes.TargetLocation memory) {
+    function fetchTargetLocation(
+        address agent
+    ) external view returns (DataTypes.TargetLocation memory) {
         return s_target[agent];
     }
 }
