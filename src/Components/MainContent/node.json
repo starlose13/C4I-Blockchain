@@ -1,0 +1,102 @@
+[
+  {
+    "name": "1",
+    "shape": "circle",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.1045045045045,
+      0.3270637408568,
+      1
+    ]
+  },
+  {
+    "name": "2",
+    "shape": "circle",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.3519519519520,
+      0.1745036572623,
+      1
+    ]
+  },
+  {
+    "name": "3",
+    "shape": "circle",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.6714714714715,
+      0.1327063740857,
+      1
+    ]
+  },
+  {
+    "name": "4",
+    "shape": "circle",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.8462462462462,
+      0.4670846394984,
+      1
+    ]
+  },
+  {
+    "name": "5",
+    "shape": "circle",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.6732732732733,
+      0.8254963427377,
+      1
+    ]
+  },
+  {
+    "name": "6",
+    "shape": "circle",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.3585585585586,
+      0.8777429467085,
+      1
+    ]
+  },
+  {
+    "name": "7",
+    "shape": "circle",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.1927927927927,
+      0.6593521421107,
+      1
+    ]
+  },
+  {
+    "name": "8",
+    "shape": "circle",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.1927927927927,
+      0.6593521421107,
+      1
+    ]
+  }
+  ,
+  {
+    "name": "9",
+    "shape": "circle",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.1927927927927,
+      0.6593521421107,
+      1
+    ]
+  }
+]

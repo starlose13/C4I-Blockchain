@@ -32,7 +32,11 @@ contract NodeManager is INodeManager {
      * @param IPFS Array of IPFS hashes corresponding to the node data. this IPFS contains the details of
      * the nodes data consisting of the type of weapons and the name of the weapon
      */
-    constructor(address[] memory _nodeAddresses, DataTypes.NodeRegion[] memory _currentPosition, string[] memory IPFS) {
+    constructor(
+        address[] memory _nodeAddresses,
+        DataTypes.NodeRegion[] memory _currentPosition,
+        string[] memory IPFS
+    ) {
         if (_nodeAddresses.length != _currentPosition.length) {
             revert Errors.NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL();
         }
@@ -74,9 +78,16 @@ contract NodeManager is INodeManager {
      * @param IPFS IPFS hash of the node data.
      */
 
-    function _registerNode(address _nodeAddress, DataTypes.NodeRegion currentPosition, string memory IPFS) private {
-        s_registeredNodes[_nodeAddress] =
-            DataTypes.RegisteredNodes({nodeAddress: _nodeAddress, currentPosition: currentPosition, IPFSData: IPFS});
+    function _registerNode(
+        address _nodeAddress,
+        DataTypes.NodeRegion currentPosition,
+        string memory IPFS
+    ) private {
+        s_registeredNodes[_nodeAddress] = DataTypes.RegisteredNodes({
+            nodeAddress: _nodeAddress,
+            currentPosition: currentPosition,
+            IPFSData: IPFS
+        });
         s_nodes.push(_nodeAddress);
         s_ExistingNodes[_nodeAddress] = true;
         emit NodeRegistered(_nodeAddress, currentPosition);
@@ -86,8 +97,13 @@ contract NodeManager is INodeManager {
      * @dev Retrieves data of all registered nodes.
      * @return Array of RegisteredNodes structs.
      */
-    function retrieveAllRegisteredNodeData() external view returns (DataTypes.RegisteredNodes[] memory) {
-        DataTypes.RegisteredNodes[] memory result = new DataTypes.RegisteredNodes[](s_nodes.length);
+    function retrieveAllRegisteredNodeData()
+        external
+        view
+        returns (DataTypes.RegisteredNodes[] memory)
+    {
+        DataTypes.RegisteredNodes[]
+            memory result = new DataTypes.RegisteredNodes[](s_nodes.length);
         for (uint256 i; i < s_nodes.length; i++) {
             result[i] = s_registeredNodes[s_nodes[i]];
         }
@@ -101,10 +117,11 @@ contract NodeManager is INodeManager {
      * @param IPFS IPFS data of the new node.
      */
 
-    function registerNewNode(address _nodeAddress, DataTypes.NodeRegion _currentPosition, string memory IPFS)
-        external
-        onlyContractAdmin
-    {
+    function registerNewNode(
+        address _nodeAddress,
+        DataTypes.NodeRegion _currentPosition,
+        string memory IPFS
+    ) external onlyContractAdmin {
         if (isNodeRegistered(_nodeAddress)) {
             revert Errors.NodeManager__NODE_ALREADY_EXIST();
         }
@@ -131,10 +148,10 @@ contract NodeManager is INodeManager {
      * @param _nodeAddress Address of the node to update.
      */
 
-    function updateExpeditionaryForces(DataTypes.NodeRegion expeditionaryForces, address _nodeAddress)
-        external
-        onlyContractAdmin
-    {
+    function updateExpeditionaryForces(
+        DataTypes.NodeRegion expeditionaryForces,
+        address _nodeAddress
+    ) external onlyContractAdmin {
         s_registeredNodes[_nodeAddress].currentPosition = expeditionaryForces;
     }
 
@@ -152,7 +169,9 @@ contract NodeManager is INodeManager {
      * @param index Index of the node address to retrieve.
      * @return Address of the node.
      */
-    function retrieveAddressByIndex(uint256 index) external view returns (address) {
+    function retrieveAddressByIndex(
+        uint256 index
+    ) external view returns (address) {
         return s_nodes[index];
     }
 
@@ -162,7 +181,9 @@ contract NodeManager is INodeManager {
      * @return RegisteredNodes struct containing node data.
      */
 
-    function retrieveNodeDataByAddress(address _nodeAddress) external view returns (DataTypes.RegisteredNodes memory) {
+    function retrieveNodeDataByAddress(
+        address _nodeAddress
+    ) external view returns (DataTypes.RegisteredNodes memory) {
         if (!isNodeRegistered(_nodeAddress)) {
             revert Errors.NodeManager__NODE_NOT_FOUND();
         }
@@ -174,7 +195,10 @@ contract NodeManager is INodeManager {
      * @param _nodeAddress Address of the node to update.
      * @param newIPFS New IPFS data.
      */
-    function updateNodeIPFSData(address _nodeAddress, string memory newIPFS) external onlyContractAdmin {
+    function updateNodeIPFSData(
+        address _nodeAddress,
+        string memory newIPFS
+    ) external onlyContractAdmin {
         if (!isNodeRegistered(_nodeAddress)) {
             revert Errors.NodeManager__NODE_NOT_FOUND();
         }

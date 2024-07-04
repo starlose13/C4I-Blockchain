@@ -1,0 +1,23 @@
+.custom-scrollbar::-webkit-scrollbar {
+    width: 10px; /* Adjust width as needed */
+    height: 4px; /* Optional: adjust height for horizontal scrollbars */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #020e1b; /* Track background color */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #09131f; /* Thumb background color */
+    border-radius: 10px; /* Round corners */
+    border: 1px solid #000000; /* Thumb border color */
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
+    display: none; /* Remove the up and down arrows */
+}
+
+.custom-scrollbar {
+    scrollbar-width: thin; /* Firefox property for thin scrollbar */
+    scrollbar-color: rgba(41, 139, 254, 0.5) #010310; /* Thumb and track color for Firefox */
+}

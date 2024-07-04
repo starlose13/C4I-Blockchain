@@ -2,9 +2,9 @@
 pragma solidity 0.8.18;
 
 import {Test} from "forge-std/Test.sol";
-import {NodeManager} from "../src/Protocol/NodeManager.sol";
-import {DataTypes} from "../src/Helper/DataTypes.sol";
-import {Errors} from "../src/Helper/Errors.sol";
+import {NodeManager} from "../contracts/Protocol/NodeManager.sol";
+import {DataTypes} from "../contracts/Helper/DataTypes.sol";
+import {Errors} from "../contracts/Helper/Errors.sol";
 import {NodeManagerScript} from "../script/NodeManagerScript.s.sol";
 
 contract NodeManagerTest is Test {
@@ -44,15 +44,32 @@ contract NodeManagerTest is Test {
     }
 
     function testInitialization() public {
-        DataTypes.RegisteredNodes[] memory nodes = nodeManager.retrieveAllRegisteredNodeData();
+        DataTypes.RegisteredNodes[] memory nodes = nodeManager
+            .retrieveAllRegisteredNodeData();
         assertEq(nodes.length, 2, "Incorrect number of nodes registered");
 
-        assertEq(nodes[0].nodeAddress, FIRST_COMMANDER, "First node address mismatch");
-        assertEq(uint256(nodes[0].currentPosition), uint256(region1), "First node region mismatch");
+        assertEq(
+            nodes[0].nodeAddress,
+            FIRST_COMMANDER,
+            "First node address mismatch"
+        );
+        assertEq(
+            uint256(nodes[0].currentPosition),
+            uint256(region1),
+            "First node region mismatch"
+        );
         assertEq(nodes[0].IPFSData, ipfs1, "First node IPFS data mismatch");
 
-        assertEq(nodes[1].nodeAddress, SECOND_COMMANDER, "Second node address mismatch");
-        assertEq(uint256(nodes[1].currentPosition), uint256(region2), "Second node region mismatch");
+        assertEq(
+            nodes[1].nodeAddress,
+            SECOND_COMMANDER,
+            "Second node address mismatch"
+        );
+        assertEq(
+            uint256(nodes[1].currentPosition),
+            uint256(region2),
+            "Second node region mismatch"
+        );
         assertEq(nodes[1].IPFSData, ipfs2, "Second node IPFS data mismatch");
     }
 
@@ -64,11 +81,16 @@ contract NodeManagerTest is Test {
         vm.prank(admin);
         nodeManager.registerNewNode(newNode, newRegion, newIpfs);
 
-        DataTypes.RegisteredNodes[] memory nodes = nodeManager.retrieveAllRegisteredNodeData();
+        DataTypes.RegisteredNodes[] memory nodes = nodeManager
+            .retrieveAllRegisteredNodeData();
         assertEq(nodes.length, 3, "Node not added correctly");
 
         assertEq(nodes[2].nodeAddress, newNode, "New node address mismatch");
-        assertEq(uint256(nodes[2].currentPosition), uint256(newRegion), "New node region mismatch");
+        assertEq(
+            uint256(nodes[2].currentPosition),
+            uint256(newRegion),
+            "New node region mismatch"
+        );
         assertEq(nodes[2].IPFSData, newIpfs, "New node IPFS data mismatch");
     }
 
@@ -93,8 +115,13 @@ contract NodeManagerTest is Test {
         vm.prank(admin);
         nodeManager.updateExpeditionaryForces(newRegion, FIRST_COMMANDER);
 
-        DataTypes.RegisteredNodes[] memory nodes = nodeManager.retrieveAllRegisteredNodeData();
-        assertEq(uint256(nodes[0].currentPosition), uint256(newRegion), "Node region update failed");
+        DataTypes.RegisteredNodes[] memory nodes = nodeManager
+            .retrieveAllRegisteredNodeData();
+        assertEq(
+            uint256(nodes[0].currentPosition),
+            uint256(newRegion),
+            "Node region update failed"
+        );
     }
 
     function testUpdateExpeditionaryForcesNotAuthorized() public {
@@ -113,8 +140,16 @@ contract NodeManagerTest is Test {
         address retrievedNode1 = nodeManager.retrieveAddressByIndex(0);
         address retrievedNode2 = nodeManager.retrieveAddressByIndex(1);
 
-        assertEq(retrievedNode1, FIRST_COMMANDER, "First node retrieval mismatch");
-        assertEq(retrievedNode2, SECOND_COMMANDER, "Second node retrieval mismatch");
+        assertEq(
+            retrievedNode1,
+            FIRST_COMMANDER,
+            "First node retrieval mismatch"
+        );
+        assertEq(
+            retrievedNode2,
+            SECOND_COMMANDER,
+            "Second node retrieval mismatch"
+        );
     }
 
     function testRetrieveAddressByIndexOutOfBounds() public {
@@ -132,7 +167,8 @@ contract NodeManagerTest is Test {
         vm.prank(admin);
         nodeManager.updateNodeIPFSData(FIRST_COMMANDER, newIpfs);
 
-        DataTypes.RegisteredNodes memory nodeData = nodeManager.retrieveNodeDataByAddress(FIRST_COMMANDER);
+        DataTypes.RegisteredNodes memory nodeData = nodeManager
+            .retrieveNodeDataByAddress(FIRST_COMMANDER);
         assertEq(nodeData.IPFSData, newIpfs, "IPFS data update failed");
     }
 
@@ -148,7 +184,9 @@ contract NodeManagerTest is Test {
         ipfsData[0] = ipfs1;
         ipfsData[1] = ipfs2;
 
-        vm.expectRevert(Errors.NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL.selector);
+        vm.expectRevert(
+            Errors.NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL.selector
+        );
         new NodeManager(nodes, regions, ipfsData);
     }
 
@@ -187,7 +225,8 @@ contract NodeManagerTest is Test {
             IPFS
         );
 
-        DataTypes.RegisteredNodes[] memory nodes = emptyNodeManager.retrieveAllRegisteredNodeData();
+        DataTypes.RegisteredNodes[] memory nodes = emptyNodeManager
+            .retrieveAllRegisteredNodeData();
         assertEq(nodes.length, 0, "There should be no nodes registered");
     }
 
@@ -218,15 +257,40 @@ contract NodeManagerTest is Test {
         vm.prank(admin);
         nodeManager.registerNewNode(newNode2, newRegion2, newIpfs2);
 
-        DataTypes.RegisteredNodes[] memory nodes = nodeManager.retrieveAllRegisteredNodeData();
+        DataTypes.RegisteredNodes[] memory nodes = nodeManager
+            .retrieveAllRegisteredNodeData();
         assertEq(nodes.length, 4, "Incorrect number of nodes registered");
 
-        assertEq(nodes[2].nodeAddress, newNode1, "First new node address mismatch");
-        assertEq(uint256(nodes[2].currentPosition), uint256(newRegion1), "First new node region mismatch");
-        assertEq(nodes[2].IPFSData, newIpfs1, "First new node IPFS data mismatch");
+        assertEq(
+            nodes[2].nodeAddress,
+            newNode1,
+            "First new node address mismatch"
+        );
+        assertEq(
+            uint256(nodes[2].currentPosition),
+            uint256(newRegion1),
+            "First new node region mismatch"
+        );
+        assertEq(
+            nodes[2].IPFSData,
+            newIpfs1,
+            "First new node IPFS data mismatch"
+        );
 
-        assertEq(nodes[3].nodeAddress, newNode2, "Second new node address mismatch");
-        assertEq(uint256(nodes[3].currentPosition), uint256(newRegion2), "Second new node region mismatch");
-        assertEq(nodes[3].IPFSData, newIpfs2, "Second new node IPFS data mismatch");
+        assertEq(
+            nodes[3].nodeAddress,
+            newNode2,
+            "Second new node address mismatch"
+        );
+        assertEq(
+            uint256(nodes[3].currentPosition),
+            uint256(newRegion2),
+            "Second new node region mismatch"
+        );
+        assertEq(
+            nodes[3].IPFSData,
+            newIpfs2,
+            "Second new node IPFS data mismatch"
+        );
     }
 }
