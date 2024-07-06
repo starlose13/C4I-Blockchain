@@ -49,10 +49,7 @@ contract ConsensusMechanismTest is Test {
     }
 
     function testInitialization() public {
-        assertEq(
-            consensusMechanism.fetchConsensusThreshold(),
-            consensusThreshold
-        );
+        assertEq(consensusMechanism.fetchConsensusThreshold(), consensusThreshold);
         assertEq(consensusMechanism.fetchPolicyCustodian(), admin);
         assertEq(consensusMechanism.fetchNumberOfEpoch(), 0);
     }
@@ -67,68 +64,43 @@ contract ConsensusMechanismTest is Test {
 
     function testReportTargetLocation() public {
         vm.prank(node1);
-        consensusMechanism.reportTargetLocation(
-            node1,
-            DataTypes.TargetZone.EnemyBunkers
-        );
+        consensusMechanism.reportTargetLocation(node1, DataTypes.TargetZone.EnemyBunkers);
 
-        DataTypes.TargetLocation memory reportedLocation = consensusMechanism
-            .fetchTargetLocation(node1);
-        assertEq(
-            uint256(reportedLocation.zone),
-            uint256(DataTypes.TargetZone.EnemyBunkers)
-        );
+        DataTypes.TargetLocation memory reportedLocation = consensusMechanism.fetchTargetLocation(node1);
+        assertEq(uint256(reportedLocation.zone), uint256(DataTypes.TargetZone.EnemyBunkers));
         assertEq(reportedLocation.reportedBy, node1);
         assertTrue(reportedLocation.isActive);
     }
 
     function testReportTargetLocationNotAuthorized() public {
         vm.prank(node2);
-        vm.expectRevert(
-            Errors.ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER.selector
-        );
-        consensusMechanism.reportTargetLocation(
-            node1,
-            DataTypes.TargetZone.EnemyBunkers
-        );
+        vm.expectRevert(Errors.ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER.selector);
+        consensusMechanism.reportTargetLocation(node1, DataTypes.TargetZone.EnemyBunkers);
     }
 
     function testDoubleVotingNotAllowed() public {
         vm.prank(node1);
-        consensusMechanism.reportTargetLocation(
-            node1,
-            DataTypes.TargetZone.EnemyBunkers
-        );
+        consensusMechanism.reportTargetLocation(node1, DataTypes.TargetZone.EnemyBunkers);
 
         vm.prank(node1);
         vm.expectRevert(Errors.ConsensusMechanism__NODE_ALREADY_VOTED.selector);
-        consensusMechanism.reportTargetLocation(
-            node1,
-            DataTypes.TargetZone.EnemyBunkers
-        );
+        consensusMechanism.reportTargetLocation(node1, DataTypes.TargetZone.EnemyBunkers);
     }
 
     function testConsensusAutomationExecution() public {
         vm.prank(node1);
-        consensusMechanism.reportTargetLocation(
-            node1,
-            DataTypes.TargetZone.EnemyBunkers
-        );
+        consensusMechanism.reportTargetLocation(node1, DataTypes.TargetZone.EnemyBunkers);
 
         vm.warp(block.timestamp + 11 minutes);
 
-        (bool isReached, uint256 target) = consensusMechanism
-            .consensusAutomationExecution();
+        (bool isReached, uint256 target) = consensusMechanism.consensusAutomationExecution();
         assertTrue(isReached);
         assertEq(target, uint256(DataTypes.TargetZone.EnemyBunkers));
     }
 
     function testConsensusAutomationExecutionNotTime() public {
         vm.prank(node1);
-        consensusMechanism.reportTargetLocation(
-            node1,
-            DataTypes.TargetZone.EnemyBunkers
-        );
+        consensusMechanism.reportTargetLocation(node1, DataTypes.TargetZone.EnemyBunkers);
 
         vm.warp(block.timestamp + 5 minutes);
 
@@ -138,21 +110,14 @@ contract ConsensusMechanismTest is Test {
 
     function testConsensusAutomationExecutionNoConsensus() public {
         vm.prank(node1);
-        consensusMechanism.reportTargetLocation(
-            node1,
-            DataTypes.TargetZone.EnemyBunkers
-        );
+        consensusMechanism.reportTargetLocation(node1, DataTypes.TargetZone.EnemyBunkers);
 
         vm.prank(node2);
-        consensusMechanism.reportTargetLocation(
-            node2,
-            DataTypes.TargetZone.ArtilleryEmplacements
-        );
+        consensusMechanism.reportTargetLocation(node2, DataTypes.TargetZone.ArtilleryEmplacements);
 
         vm.warp(block.timestamp + 11 minutes);
 
-        (bool isReached, uint256 target) = consensusMechanism
-            .consensusAutomationExecution();
+        (bool isReached, uint256 target) = consensusMechanism.consensusAutomationExecution();
         assertFalse(isReached);
         assertEq(target, uint256(0));
     }
@@ -162,10 +127,7 @@ contract ConsensusMechanismTest is Test {
         vm.prank(admin);
         consensusMechanism.modifyEpochDuration(newDuration);
 
-        assertEq(
-            consensusMechanism.fetchConsensusEpochTimeDuration(),
-            newDuration * 1 minutes
-        );
+        assertEq(consensusMechanism.fetchConsensusEpochTimeDuration(), newDuration * 1 minutes);
     }
 
     function testModifyConsensusThreshold() public {
@@ -179,18 +141,13 @@ contract ConsensusMechanismTest is Test {
     function testModifyConsensusThresholdExceedsNodes() public {
         uint64 newThreshold = 4;
         vm.prank(admin);
-        vm.expectRevert(
-            Errors.ConsensusMechanism__THRESHOLD_EXCEEDS_NODES.selector
-        );
+        vm.expectRevert(Errors.ConsensusMechanism__THRESHOLD_EXCEEDS_NODES.selector);
         consensusMechanism.modifyConsensusThreshold(newThreshold);
     }
 
     function testHasNodeParticipated() public {
         vm.prank(node1);
-        consensusMechanism.reportTargetLocation(
-            node1,
-            DataTypes.TargetZone.EnemyBunkers
-        );
+        consensusMechanism.reportTargetLocation(node1, DataTypes.TargetZone.EnemyBunkers);
 
         bool hasParticipated = consensusMechanism.hasNodeParticipated(node1);
         assertTrue(hasParticipated);
@@ -201,10 +158,7 @@ contract ConsensusMechanismTest is Test {
 
     function testResetToDefaults() public {
         vm.prank(node1);
-        consensusMechanism.reportTargetLocation(
-            node1,
-            DataTypes.TargetZone.EnemyBunkers
-        );
+        consensusMechanism.reportTargetLocation(node1, DataTypes.TargetZone.EnemyBunkers);
 
         vm.warp(block.timestamp + 12 minutes);
         consensusMechanism.consensusAutomationExecution();
@@ -238,9 +192,6 @@ contract ConsensusMechanismTest is Test {
     }
 
     function testFetchConsensusEpochTimeDuration() public {
-        assertEq(
-            consensusMechanism.fetchConsensusEpochTimeDuration(),
-            10 minutes
-        );
+        assertEq(consensusMechanism.fetchConsensusEpochTimeDuration(), 10 minutes);
     }
 }

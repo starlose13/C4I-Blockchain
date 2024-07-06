@@ -13,12 +13,12 @@ import {Utils} from "./../Helper/Utils.sol";
  * @dev Manages the consensus process among nodes for various operations.
  */
 contract ConsensusMechanism {
-    INodeManager public nodeManager;
+    INodeManager private immutable nodeManager; // Address of NodeManager Smart Contract
     address private immutable POLICY_CUSTODIAN;
     uint64 private constant CONSENSUS_NOT_REACHED = 0;
     uint64 private s_consensusThreshold; // Threshold for reaching consensus
     uint128 private s_epochCounter;
-    uint256 private consensusEpochTimeDuration = 10 minutes;
+    uint256 private consensusEpochTimeDuration = 1 minutes;
     uint256 private s_startTime; // Start time for each consensus epoch
     uint256 public s_lastTimeStamp; // Timestamp for Chainlink auto-execution
     uint256 private s_interval; // Chainlink interval
@@ -31,6 +31,9 @@ contract ConsensusMechanism {
     mapping(address => mapping(uint128 => DataTypes.EpochConsensusData))
         public s_epochResolution;
 
+    // Mapping to store consensus result for each epoch
+    mapping(uint256 => uint256) private s_resultInEachEpoch;
+
     /**
      * @dev Initializes the contract with initial consensus threshold and node manager address.
      * @param _s_consensusThreshold Initial consensus threshold.
@@ -42,8 +45,8 @@ contract ConsensusMechanism {
     ) {
         POLICY_CUSTODIAN = msg.sender;
         s_lastTimeStamp = block.timestamp;
-        s_consensusThreshold = _s_consensusThreshold;
         s_startTime = block.timestamp;
+        s_consensusThreshold = _s_consensusThreshold;
         nodeManager = INodeManager(nodeManagerContractAddress);
     }
 
@@ -90,9 +93,28 @@ contract ConsensusMechanism {
         }
         _;
     }
+    /*
+     * @dev Modifier to ensure that an election is currently in progress.
+     *      This modifier checks if the current time is within the election period.
+     *      If the election period has ended, it reverts with an appropriate error.
+     *
+     * @notice The election period is determined by adding the consensus epoch time duration
+     *         to the start time (`s_startTime`). If the current block timestamp exceeds this
+     *         calculated end time, the election is considered finished.
+     *
+     */
+
+    modifier isElectionInProgress() {
+        if (hasElectionEnded() == true) {
+            revert Errors.ConsensusMechanism__ELECTION_IS_FINISHED();
+        }
+        _;
+    }
 
     /**
      * @dev Reports a target location by a node agent.
+        This function ensures that the caller is the agent, prevents double voting,
+        and only allows registered nodes to report.
      * @param agent Address of the reporting node.
      * @param announceTarget Target zone being reported.
      */
@@ -101,15 +123,71 @@ contract ConsensusMechanism {
         address agent,
         DataTypes.TargetZone announceTarget
     )
-        external
+        public
         ensureCorrectSender(agent)
         preventDoubleVoting(agent)
         onlyRegisteredNodes(agent)
+        isElectionInProgress
     {
-        persistData(msg.sender, announceTarget);
-        chronicleEpoch(msg.sender, announceTarget);
+        if (isEpochStarted == false) {
+            isEpochStarted = true;
+        }
+        persistData(agent, announceTarget);
+        chronicleEpoch(agent, announceTarget);
         isEpochStarted = true;
-        emit DataTypes.TargetLocationReported(msg.sender, announceTarget);
+        emit DataTypes.TargetLocationReported(agent, announceTarget);
+    }
+
+    /*
+     * @dev Simulates the reporting of target locations by multiple node agents.
+     *      This function is designed for testing and simulation purposes, allowing
+     *      bulk reporting of target locations in a single transaction. It ensures
+     *      that each agent is associated with a corresponding target zone.
+     *
+     * @param agents An array of addresses representing the node agents that are reporting.
+     *               Each address must correspond to a registered and valid node agent
+     *               as per the contract's requirements.
+     * @param announceTargets An array of TargetZone structs representing the target zones
+     *                        being reported. Each entry corresponds to the respective agent
+     *                        at the same index in the `agents` array.
+     *
+     * @notice The lengths of the `agents` and `announceTargets` arrays must be equal.
+     * @notice Only addresses in the `validAddresses` list can call this function.
+     */
+    function TargetLocationSimulation(
+        address[] memory agents,
+        DataTypes.TargetZone[] memory announceTargets
+    ) public {
+        if (agents.length != announceTargets.length) {
+            revert Errors.ARRAYS_LENGTH_IS_NOT_EQUAL();
+        }
+        for (uint i = 0; i < agents.length; i++) {
+            _reportTargetLocationBypassSender(agents[i], announceTargets[i]);
+        }
+    }
+
+    /*
+     * @dev Internal function to report target location for a specific agent.
+     *      This bypasses the ensureCorrectSender check but retains other checks.
+     *      It is intended to be called by TargetLocationSimulation for simulation purposes.
+     *
+     * @param agent The address of the agent reporting the target location.
+     * @param announceTarget The target zone being reported by the agent.
+     */
+
+    function _reportTargetLocationBypassSender(
+        address agent,
+        DataTypes.TargetZone announceTarget
+    )
+        internal
+        preventDoubleVoting(agent)
+        onlyRegisteredNodes(agent)
+        isElectionInProgress
+    {
+        persistData(agent, announceTarget);
+        chronicleEpoch(agent, announceTarget);
+        isEpochStarted = true;
+        emit DataTypes.TargetLocationReported(agent, announceTarget);
     }
 
     /**
@@ -121,10 +199,10 @@ contract ConsensusMechanism {
         address agent,
         DataTypes.TargetZone announceTarget
     ) private {
-        s_target[msg.sender].zone = DataTypes.TargetZone(announceTarget); // Location of target (lat & long) that reported
-        s_target[msg.sender].reportedBy = agent; // Address of the node that reported this location
-        s_target[msg.sender].timestamp = block.timestamp; // Time when the location was reported
-        s_target[msg.sender].isActive = true; //to mark if the proposal is still active
+        s_target[agent].zone = DataTypes.TargetZone(announceTarget); // Location of target (lat & long) that reported
+        s_target[agent].reportedBy = agent; // Address of the node that reported this location
+        s_target[agent].timestamp = block.timestamp; // Time when the location was reported
+        s_target[agent].isActive = true; //to mark if the proposal is still active
     }
 
     /**
@@ -144,6 +222,14 @@ contract ConsensusMechanism {
             });
     }
 
+    /*
+     * @dev Checks if the consensus epoch time duration has been reached.
+     * @return bool - Returns true if the election period has ended, false otherwise.
+     */
+    function hasElectionEnded() internal view returns (bool) {
+        return (s_startTime + consensusEpochTimeDuration <= block.timestamp);
+    }
+
     /**
      * @dev Executes the consensus automation and checks if consensus is reached.
      * @return isReached Boolean indicating if consensus was reached.
@@ -153,21 +239,35 @@ contract ConsensusMechanism {
         external
         returns (bool isReached, uint256 target)
     {
-        require(
-            s_startTime + consensusEpochTimeDuration <= block.timestamp,
-            "It is not time to run yet,Execution Failed!"
-        );
+        if (hasElectionEnded() == false) {
+            revert Errors.ConsensusMechanism__TIME_IS_NOT_REACHED();
+        }
         if (!isEpochStarted) {
             revert Errors.ConsensusMechanism__VOTING_IS_INPROGRESS();
         }
         uint256 consensusResult = computeConsensusOutcome();
         if (consensusResult != 0) {
             isReached = true;
+            s_resultInEachEpoch[s_epochCounter] = consensusResult;
             s_epochCounter += 1;
+        } else if (consensusResult == 0) {
+            deleteEpochData(s_epochCounter);
         }
         resetToDefaults();
         isEpochStarted = false;
         return (isReached, consensusResult);
+    }
+
+    /*
+     * @dev Deletes all data in the s_epochResolution mapping for a specific uint128 key.
+     * @param epoch The uint128 key for which all data should be deleted.
+     * @notice this function just delete epoch data when consensus not reached in the specific epoch
+     */
+    function deleteEpochData(uint128 epoch) internal {
+        for (uint i = 0; i < nodeManager.numberOfPresentNodes(); i++) {
+            address key = nodeManager.retrieveAddressByIndex(i);
+            delete s_epochResolution[key][epoch];
+        }
     }
 
     /**
@@ -383,5 +483,18 @@ contract ConsensusMechanism {
         address agent
     ) external view returns (DataTypes.TargetLocation memory) {
         return s_target[agent];
+    }
+
+    /*
+     * @dev Fetches the result of a specific epoch.
+     *
+     * @param epoch The epoch number for which the result is to be fetched.
+     * @return uint256 The result of the specified epoch.
+     */
+
+    function fetchResultOfEachEpoch(
+        uint256 epoch
+    ) public view returns (uint256) {
+        return s_resultInEachEpoch[epoch];
     }
 }

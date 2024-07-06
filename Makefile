@@ -41,4 +41,4 @@ git-push:
 git-add-commit-push: git-add git-commit git-push
 
 # Target to run deployment and then commit changes to git
-deploy-and-commit: deploy git-add-commit-push
+deploy-and-commit-nodeManager: deploy git-add-commit-push

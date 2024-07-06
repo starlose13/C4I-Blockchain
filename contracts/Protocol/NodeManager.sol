@@ -38,7 +38,7 @@ contract NodeManager is INodeManager {
         string[] memory IPFS
     ) {
         if (_nodeAddresses.length != _currentPosition.length) {
-            revert Errors.NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL();
+            revert Errors.ARRAYS_LENGTH_IS_NOT_EQUAL();
         }
         CONTRACT_ADMIN = msg.sender;
         _initializeNodes(_nodeAddresses, _currentPosition, IPFS);

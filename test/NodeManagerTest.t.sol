@@ -184,9 +184,7 @@ contract NodeManagerTest is Test {
         ipfsData[0] = ipfs1;
         ipfsData[1] = ipfs2;
 
-        vm.expectRevert(
-            Errors.NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL.selector
-        );
+        vm.expectRevert(Errors.ARRAYS_LENGTH_IS_NOT_EQUAL.selector);
         new NodeManager(nodes, regions, ipfsData);
     }
 
