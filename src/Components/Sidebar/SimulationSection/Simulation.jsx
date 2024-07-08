@@ -6,17 +6,28 @@ import toast, { Toaster } from 'react-hot-toast';
 import "./scrollbar.css";
 
 const Simulation = () => {
-  const { data, loading, error } = useAddressData();
+  const { data: initialData, loading, error } = useAddressData();
+  const [addressData, setAddressData] = useState(initialData || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitted } } = useForm();
+
+  useEffect(() => {
+    setAddressData(initialData);
+  }, [initialData]);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
   const onSubmit = (formData) => {
-    console.log(formData);
-    // Handle form submission logic
+    const newAddress = {
+      address: formData.Address,
+      location: formData.name,
+      latitude: parseFloat(formData.latitude),
+      longitude: parseFloat(formData.longitude)
+    };
+
+    setAddressData((prevData) => [...prevData, newAddress]);
     toggleModal(); // Close modal on submit
   };
 
@@ -73,7 +84,7 @@ const Simulation = () => {
         <h4 className="text-white mb-4 font-bold">Simulation</h4>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 h-72 w-[38rem] overflow-y-scroll">
-          {data.map((addressData, id) => (
+          {addressData.map((addressData, id) => (
             <AddressCard key={id} addressData={addressData} toggleModal={toggleModal} />
           ))}
         </div>

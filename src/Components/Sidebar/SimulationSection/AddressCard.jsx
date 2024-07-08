@@ -15,12 +15,18 @@ import PropTypes from 'prop-types';
 
 
 const AddressCard = ({ addressData, toggleModal }) => {
+
+    if (!addressData) {
+        return null; // or return a placeholder UI
+    }
+
     const { address, location, latitude, longitude } = addressData;
 
     return (
+        
         <div className="w-full p-2 bg-[#0d2f5c]" onClick={toggleModal}>
             <h3 className="text-sm text-[#dfeeff]">Address</h3>
-            <h4 className="text-xs text-[#5178a6]">{address}</h4>
+            <h4 className="text-xs text-[#5178a6]">0x13c857...a2297d22256</h4>
             <div className="pt-2">
                 <h3 className="text-sm text-[#dfeeff]">Position</h3>
                 <h2 className="text-xs text-[#5178a6]">Location: {location}</h2>
@@ -35,8 +41,8 @@ AddressCard.propTypes = {
     addressData: PropTypes.shape({
         address: PropTypes.string.isRequired,
         location: PropTypes.string.isRequired,
-        latitude: PropTypes.number.isRequired,
-        longitude: PropTypes.number.isRequired,
+        latitude: PropTypes.string.isRequired,
+        longitude: PropTypes.string.isRequired,
     }).isRequired,
     toggleModal: PropTypes.func.isRequired,
 };
