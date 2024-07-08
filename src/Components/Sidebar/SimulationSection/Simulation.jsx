@@ -3,19 +3,13 @@ import AddressCard from "./AddressCard";
 import useAddressData from "../../../hooks/useAddressData";
 import "./scrollbar.css";
 
-
-
-
 const Simulation = () => {
   const { data, loading, error } = useAddressData();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
-
 
   if (loading) return <div className="text-white">Loading...</div>;
   if (error) return <div className="text-red-500">Error: {error.message}</div>;
@@ -24,15 +18,12 @@ const Simulation = () => {
     <div>
       <div className="w-[40rem] p-4 custom-scrollbar">
         <h4 className="text-white mb-4 font-bold">Simulation</h4>
-        <div
-          onClick={toggleModal}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 h-72 w-[38rem] overflow-y-scroll"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 h-72 w-[38rem] overflow-y-scroll">
           {data.map((addressData, id) => (
-            <AddressCard key={id} addressData={addressData} />
+            <AddressCard key={id} addressData={addressData} toggleModal={toggleModal} />
           ))}
         </div>
-        <button className="w-full text-sm bg-[#298bfe] text-[#d7e6f7] h-10">
+        <button className="w-full text-sm bg-[#298bfe] text-[#d7e6f7] h-10" onClick={toggleModal}>
           Run Simulation
         </button>
       </div>
@@ -62,7 +53,7 @@ const Simulation = () => {
                       type="text"
                       name="name"
                       id="name"
-                      className="bg-sky-950 border border-sky-900 text-gray-100 text-sm rounded-lg block w-full p-2.5  placeholder-slate-400 text-red focus:outline-none"
+                      className="bg-sky-950 border border-sky-900 text-gray-100 text-sm rounded-lg block w-full p-2.5 placeholder-slate-400 text-red focus:outline-none"
                       placeholder="Eiffel Tower, Paris, France"
                       required
                     />
@@ -70,15 +61,15 @@ const Simulation = () => {
 
                   <div className="col-span-1">
                     <label
-                      htmlFor="name"
+                      htmlFor="latitude"
                       className="block mb-2 text-sm font-medium text-slate-400"
                     >
                       Latitude
                     </label>
                     <input
                       type="text"
-                      name="name"
-                      id="name"
+                      name="latitude"
+                      id="latitude"
                       className="bg-sky-950 border border-sky-900 text-gray-100 text-sm rounded-lg block w-full p-2.5 placeholder-slate-400 text-red focus:ring-sky-950 focus:border-sky-950 focus:outline-none"
                       placeholder="48.8584° N"
                       required
@@ -87,21 +78,21 @@ const Simulation = () => {
 
                   <div className="col-span-1">
                     <label
-                      htmlFor="name"
+                      htmlFor="longitude"
                       className="block mb-2 text-sm font-medium text-slate-400"
                     >
                       Longitude
                     </label>
                     <input
                       type="text"
-                      name="name"
-                      id="name"
+                      name="longitude"
+                      id="longitude"
                       className="bg-sky-950 border border-sky-900 text-gray-100 text-sm rounded-lg block w-full p-2.5 placeholder-slate-400 text-red focus:ring-sky-950 focus:border-sky-950 focus:outline-none"
                       placeholder="2.2945° E"
                       required
                     />
                   </div>
-                  </div>
+                </div>
 
                 <div className="flex justify-end mt-14">
                   <button
