@@ -26,6 +26,8 @@
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.52.1",
+    "react-hot-toast": "^2.4.1",
     "react-image-mapper": "^0.0.15",
     "react-router-dom": "^6.23.1",
     "react-scrollbars-custom": "^4.1.1",
