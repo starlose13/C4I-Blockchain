@@ -9,13 +9,11 @@ import PropTypes from 'prop-types';
  * @param {string} props.addressData.location - The location
  * @param {number} props.addressData.latitude - The latitude
  * @param {number} props.addressData.longitude - The longitude
- * @param {Function} props.toggleModal - Function to toggle the modal
+ * @param {Function} props.onEdit - Function to initiate editing
  * @returns {JSX.Element} The rendered component
  */
 
-
-const AddressCard = ({ addressData, toggleModal }) => {
-
+const AddressCard = ({ addressData, onEdit }) => {
     if (!addressData) {
         return null; // or return a placeholder UI
     }
@@ -23,10 +21,9 @@ const AddressCard = ({ addressData, toggleModal }) => {
     const { address, location, latitude, longitude } = addressData;
 
     return (
-        
-        <div className="w-full p-2 bg-[#0d2f5c]" onClick={toggleModal}>
+        <div className="w-full p-2 bg-[#0d2f5c]" onClick={onEdit}>
             <h3 className="text-sm text-[#dfeeff]">Address</h3>
-            <h4 className="text-xs text-[#5178a6]">0x13c857...a2297d22256</h4>
+            <h4 className="text-xs text-[#5178a6]">{address}</h4>
             <div className="pt-2">
                 <h3 className="text-sm text-[#dfeeff]">Position</h3>
                 <h2 className="text-xs text-[#5178a6]">Location: {location}</h2>
@@ -37,14 +34,15 @@ const AddressCard = ({ addressData, toggleModal }) => {
     );
 };
 
+
 AddressCard.propTypes = {
     addressData: PropTypes.shape({
         address: PropTypes.string.isRequired,
         location: PropTypes.string.isRequired,
-        latitude: PropTypes.string.isRequired,
-        longitude: PropTypes.string.isRequired,
+        latitude: PropTypes.number.isRequired,
+        longitude: PropTypes.number.isRequired,
     }).isRequired,
-    toggleModal: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
 };
 
 export default AddressCard;
