@@ -20,7 +20,7 @@ contract ConsensusMechanismTest is Test {
     string private ipfs1 = "QmNode1";
     string private ipfs2 = "QmNode2";
     string private ipfs3 = "QmNode3";
-    uint8 private consensusThreshold = 1;
+    uint8 private consensusThreshold = 2;
 
     function setUp() public {
         address[] memory nodes = new address[](3);
@@ -114,16 +114,38 @@ contract ConsensusMechanismTest is Test {
             node1,
             DataTypes.TargetZone.EnemyBunkers
         );
+        console.log("start time", consensusMechanism.fetchStartTime());
 
-        vm.warp(block.timestamp + 11 minutes);
+        vm.prank(node2);
+        consensusMechanism.reportTargetLocation(
+            node2,
+            DataTypes.TargetZone.EnemyBunkers
+        );
+        vm.prank(node3);
+        consensusMechanism.reportTargetLocation(
+            node3,
+            DataTypes.TargetZone.EnemyBunkers
+        );
 
+        vm.warp(block.timestamp + 2100 minutes);
+
+        console.log("start time", consensusMechanism.fetchStartTime());
+        console.log(
+            "consensusEpochTimeDuration",
+            consensusMechanism.fetchConsensusEpochTimeDuration()
+        );
+        assert(
+            consensusMechanism.fetchStartTime() +
+                consensusMechanism.fetchConsensusEpochTimeDuration() <=
+                block.timestamp
+        );
         (bool isReached, uint256 target) = consensusMechanism
             .consensusAutomationExecution();
         assertTrue(isReached);
         assertEq(target, uint256(DataTypes.TargetZone.EnemyBunkers));
     }
 
-    function testConsensusAutomationExecutionNotTime() public {
+    function testMakingConsensusAutomationExecutionNotAtTime() public {
         vm.prank(node1);
         consensusMechanism.reportTargetLocation(
             node1,
@@ -132,7 +154,6 @@ contract ConsensusMechanismTest is Test {
 
         vm.warp(block.timestamp + 30 seconds);
 
-        // vm.expectRevert(bytes("It is not time to run yet,Execution Failed!"));
         vm.expectRevert(
             abi.encodeWithSignature("ConsensusMechanism__TIME_IS_NOT_REACHED()")
         );
@@ -208,12 +229,18 @@ contract ConsensusMechanismTest is Test {
             node1,
             DataTypes.TargetZone.EnemyBunkers
         );
-
+        vm.prank(node2);
+        consensusMechanism.reportTargetLocation(
+            node2,
+            DataTypes.TargetZone.EnemyBunkers
+        );
         vm.warp(block.timestamp + 12 minutes);
-        consensusMechanism.consensusAutomationExecution();
-
+        (bool sucess, uint256 target) = consensusMechanism
+            .consensusAutomationExecution();
+        assertEq(sucess, true);
+        assertEq(target, uint256(DataTypes.TargetZone.EnemyBunkers));
         assertEq(consensusMechanism.fetchNumberOfEpoch(), 1);
-        assertFalse(consensusMechanism.isEpochStarted());
+        assertTrue(consensusMechanism.isEpochNotStarted());
     }
 
     function testFetchPolicyCustodian() public {
@@ -245,5 +272,98 @@ contract ConsensusMechanismTest is Test {
             consensusMechanism.fetchConsensusEpochTimeDuration(),
             1 minutes
         );
+    }
+
+    function testTargetLocationSimulation() external {
+        vm.startPrank(node1);
+        address[] memory nodes = new address[](3);
+        nodes[0] = node1;
+        nodes[1] = node2;
+        nodes[2] = node3;
+
+        DataTypes.TargetZone[] memory regions = new DataTypes.TargetZone[](3);
+        regions[0] = DataTypes.TargetZone.ArtilleryEmplacements;
+        regions[1] = DataTypes.TargetZone.ArtilleryEmplacements;
+        regions[2] = DataTypes.TargetZone.ObservationPosts;
+        consensusMechanism.TargetLocationSimulation(nodes, regions);
+
+        vm.warp(block.timestamp + 1000 minutes);
+
+        (bool isReached, uint256 target) = consensusMechanism
+            .consensusAutomationExecution();
+        assertTrue(isReached);
+        assertEq(target, uint256(DataTypes.TargetZone.ArtilleryEmplacements));
+        vm.stopPrank();
+    }
+
+    function testVotingOnConsensusAndAutomation() public {
+        address[] memory nodes = new address[](3);
+        nodes[0] = node1;
+        nodes[1] = node2;
+        nodes[2] = node3;
+
+        DataTypes.TargetZone[] memory regions = new DataTypes.TargetZone[](3);
+        regions[0] = DataTypes.TargetZone.ArtilleryEmplacements;
+        regions[1] = DataTypes.TargetZone.CommunicationTowers;
+        regions[2] = DataTypes.TargetZone.ObservationPosts;
+        vm.prank(node1);
+        consensusMechanism.TargetLocationSimulation(nodes, regions);
+        vm.warp(block.timestamp + 1000 minutes);
+
+        consensusMechanism.consensusAutomationExecution();
+    }
+
+    function testFailedReachingConsensus() external {
+        address[] memory nodes = new address[](3);
+        nodes[0] = node1;
+        nodes[1] = node2;
+        nodes[2] = node3;
+
+        DataTypes.TargetZone[] memory regions = new DataTypes.TargetZone[](3);
+        regions[0] = DataTypes.TargetZone.ArtilleryEmplacements;
+        regions[1] = DataTypes.TargetZone.CommunicationTowers;
+        regions[2] = DataTypes.TargetZone.ObservationPosts;
+
+        vm.prank(node1);
+        consensusMechanism.TargetLocationSimulation(nodes, regions);
+        vm.warp(block.timestamp + 1 minutes);
+
+        (bool isReached, uint256 target) = consensusMechanism
+            .consensusAutomationExecution();
+        console.log("show result of reach", isReached);
+        console.log("target result is", target);
+        console.log("target zone is", uint256(DataTypes.TargetZone.None));
+
+        assertEq(isReached, false);
+        assertEq(target, uint256(DataTypes.TargetZone.None));
+        vm.stopPrank();
+    }
+
+    function testFetechStartTime() external {
+        // console.log("Time is: ", consensusMechanism.fetchStartTime());
+        // assertEq(block.timestamp, consensusMechanism.fetchStartTime());
+        vm.warp(block.timestamp + 2 minutes);
+
+        // assert(
+        //     block.timestamp + 1 minutes >= consensusMechanism.fetchStartTime()
+        // );
+
+        address[] memory nodes = new address[](3);
+        nodes[0] = node1;
+        nodes[1] = node2;
+        nodes[2] = node3;
+
+        DataTypes.TargetZone[] memory regions = new DataTypes.TargetZone[](3);
+        regions[0] = DataTypes.TargetZone.ArtilleryEmplacements;
+        regions[1] = DataTypes.TargetZone.CommunicationTowers;
+        regions[2] = DataTypes.TargetZone.ObservationPosts;
+        vm.prank(node1);
+        consensusMechanism.TargetLocationSimulation(nodes, regions);
+        vm.warp(block.timestamp + 10000 minutes);
+
+        consensusMechanism.consensusAutomationExecution();
+        // console.log("Time is: ", consensusMechanism.fetchStartTime());
+        // console.log("Block.timestamp is equal: ", block.timestamp);
+        // assertEq(block.timestamp, consensusMechanism.fetchStartTime());
     }
 }

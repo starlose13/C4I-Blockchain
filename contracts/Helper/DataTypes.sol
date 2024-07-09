@@ -22,11 +22,11 @@ library DataTypes {
      */
 
     enum TargetZone {
-        None,
-        EnemyBunkers,
-        ArtilleryEmplacements,
-        CommunicationTowers,
-        ObservationPosts
+        None, // 0
+        EnemyBunkers, // 1
+        ArtilleryEmplacements, // 2
+        CommunicationTowers, // 3
+        ObservationPosts // 4
     }
     /**
      * @dev Struct to store data of a registered node.

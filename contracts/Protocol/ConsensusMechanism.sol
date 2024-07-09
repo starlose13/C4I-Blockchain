@@ -22,7 +22,7 @@ contract ConsensusMechanism {
     uint256 private s_startTime; // Start time for each consensus epoch
     uint256 public s_lastTimeStamp; // Timestamp for Chainlink auto-execution
     uint256 private s_interval; // Chainlink interval
-    bool public isEpochStarted;
+    bool public isEpochNotStarted = true;
 
     // Mapping to store target locations reported by nodes
     mapping(address => DataTypes.TargetLocation) public s_target;
@@ -45,7 +45,6 @@ contract ConsensusMechanism {
     ) {
         POLICY_CUSTODIAN = msg.sender;
         s_lastTimeStamp = block.timestamp;
-        s_startTime = block.timestamp;
         s_consensusThreshold = _s_consensusThreshold;
         nodeManager = INodeManager(nodeManagerContractAddress);
     }
@@ -93,6 +92,7 @@ contract ConsensusMechanism {
         }
         _;
     }
+
     /*
      * @dev Modifier to ensure that an election is currently in progress.
      *      This modifier checks if the current time is within the election period.
@@ -104,12 +104,12 @@ contract ConsensusMechanism {
      *
      */
 
-    modifier isElectionInProgress() {
-        if (hasElectionEnded() == true) {
-            revert Errors.ConsensusMechanism__ELECTION_IS_FINISHED();
-        }
-        _;
-    }
+    // modifier isElectionInProgress() {
+    //     {
+    //         revert Errors.ConsensusMechanism__ELECTION_IS_FINISHED();
+    //     }
+    //     _;
+    // }
 
     /**
      * @dev Reports a target location by a node agent.
@@ -127,14 +127,14 @@ contract ConsensusMechanism {
         ensureCorrectSender(agent)
         preventDoubleVoting(agent)
         onlyRegisteredNodes(agent)
-        isElectionInProgress
     {
-        if (isEpochStarted == false) {
-            isEpochStarted = true;
-        }
+        // require(
+        //     consensusEpochTimeDuration + s_startTime >= block.timestamp ||
+        //         isEpochNotStarted == true
+        // );
+        updateEpochStatus();
         persistData(agent, announceTarget);
         chronicleEpoch(agent, announceTarget);
-        isEpochStarted = true;
         emit DataTypes.TargetLocationReported(agent, announceTarget);
     }
 
@@ -164,6 +164,7 @@ contract ConsensusMechanism {
         for (uint i = 0; i < agents.length; i++) {
             _reportTargetLocationBypassSender(agents[i], announceTargets[i]);
         }
+        isEpochNotStarted = false;
     }
 
     /*
@@ -178,16 +179,22 @@ contract ConsensusMechanism {
     function _reportTargetLocationBypassSender(
         address agent,
         DataTypes.TargetZone announceTarget
-    )
-        internal
-        preventDoubleVoting(agent)
-        onlyRegisteredNodes(agent)
-        isElectionInProgress
-    {
+    ) internal preventDoubleVoting(agent) onlyRegisteredNodes(agent) {
+        updateEpochStatus();
+        //  require(
+        //     consensusEpochTimeDuration + s_startTime >= block.timestamp ||
+        //         isEpochReadyToStart == 1
+        // );
         persistData(agent, announceTarget);
         chronicleEpoch(agent, announceTarget);
-        isEpochStarted = true;
         emit DataTypes.TargetLocationReported(agent, announceTarget);
+    }
+
+    function updateEpochStatus() internal {
+        if (isEpochNotStarted) {
+            s_startTime = block.timestamp;
+            isEpochNotStarted = false;
+        }
     }
 
     /**
@@ -222,14 +229,6 @@ contract ConsensusMechanism {
             });
     }
 
-    /*
-     * @dev Checks if the consensus epoch time duration has been reached.
-     * @return bool - Returns true if the election period has ended, false otherwise.
-     */
-    function hasElectionEnded() internal view returns (bool) {
-        return (s_startTime + consensusEpochTimeDuration <= block.timestamp);
-    }
-
     /**
      * @dev Executes the consensus automation and checks if consensus is reached.
      * @return isReached Boolean indicating if consensus was reached.
@@ -239,10 +238,10 @@ contract ConsensusMechanism {
         external
         returns (bool isReached, uint256 target)
     {
-        if (hasElectionEnded() == false) {
+        if (s_startTime + consensusEpochTimeDuration >= block.timestamp) {
             revert Errors.ConsensusMechanism__TIME_IS_NOT_REACHED();
         }
-        if (!isEpochStarted) {
+        if (isEpochNotStarted) {
             revert Errors.ConsensusMechanism__VOTING_IS_INPROGRESS();
         }
         uint256 consensusResult = computeConsensusOutcome();
@@ -254,7 +253,7 @@ contract ConsensusMechanism {
             deleteEpochData(s_epochCounter);
         }
         resetToDefaults();
-        isEpochStarted = false;
+        isEpochNotStarted = true;
         return (isReached, consensusResult);
     }
 
@@ -496,5 +495,9 @@ contract ConsensusMechanism {
         uint256 epoch
     ) public view returns (uint256) {
         return s_resultInEachEpoch[epoch];
+    }
+
+    function fetchStartTime() external view returns (uint256) {
+        return s_startTime;
     }
 }
