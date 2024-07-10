@@ -1,25 +1,43 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.18;
 
-import "forge-std/Test.sol";
-import "../contracts/Protocol/ConsensusMechanism.sol"; // Adjust the path to your ConsensusMechanism contract
-import "../contracts/Protocol/NodeManager.sol"; // Adjust the path to your NodeManager contract
-import "../contracts/Helper/DataTypes.sol"; // Adjust the path to your DataTypes library
-import "../contracts/Helper/Errors.sol"; // Adjust the path to your Errors library
+import {Test, console} from "forge-std/Test.sol";
+import {ConsensusMechanism} from "../contracts/Protocol/ConsensusMechanism.sol"; // Adjust the path to your ConsensusMechanism contract
+import {NodeManager} from "../contracts/Protocol/NodeManager.sol"; // Adjust the path to your NodeManager contract
+import {DataTypes} from "../contracts/Helper/DataTypes.sol"; // Adjust the path to your DataTypes library
+import {Errors} from "../contracts/Helper/Errors.sol"; // Adjust the path to your Errors library
 
 contract ConsensusMechanismTest is Test {
     ConsensusMechanism private consensusMechanism;
     NodeManager private nodeManager;
+
+    // Initialize the Nodes and Admin node.
     address private admin = address(0xABCD);
     address private node1 = address(0x1234);
     address private node2 = address(0x5678);
     address private node3 = address(0x9ABC);
+
+    // Initialize the Node's Regions
     DataTypes.NodeRegion private region1 = DataTypes.NodeRegion.North;
     DataTypes.NodeRegion private region2 = DataTypes.NodeRegion.South;
     DataTypes.NodeRegion private region3 = DataTypes.NodeRegion.West;
+
+    // Initialize the Node's Extra information
     string private ipfs1 = "QmNode1";
     string private ipfs2 = "QmNode2";
     string private ipfs3 = "QmNode3";
+
+    // Initialize the Target's Regions
+    DataTypes.TargetZone private noTarget = DataTypes.TargetZone.None;
+    DataTypes.TargetZone private target1 = DataTypes.TargetZone.EnemyBunkers;
+    DataTypes.TargetZone private target2 =
+        DataTypes.TargetZone.ArtilleryEmplacements;
+    DataTypes.TargetZone private target3 =
+        DataTypes.TargetZone.CommunicationTowers;
+    DataTypes.TargetZone private target4 =
+        DataTypes.TargetZone.ObservationPosts;
+
+    // Minimum vote required to pass consensus
     uint8 private consensusThreshold = 2;
 
     function setUp() public {
@@ -34,6 +52,7 @@ contract ConsensusMechanismTest is Test {
         regions[2] = region3;
 
         string[] memory ipfsData = new string[](3);
+
         ipfsData[0] = ipfs1;
         ipfsData[1] = ipfs2;
         ipfsData[2] = ipfs3;
@@ -48,6 +67,14 @@ contract ConsensusMechanismTest is Test {
         );
     }
 
+    function skipTime() internal {
+        vm.warp(
+            block.timestamp +
+                consensusMechanism.fetchConsensusEpochTimeDuration() +
+                1
+        );
+    }
+
     function testInitialization() public {
         assertEq(
             consensusMechanism.fetchConsensusThreshold(),
@@ -55,15 +82,67 @@ contract ConsensusMechanismTest is Test {
         );
         assertEq(consensusMechanism.fetchPolicyCustodian(), admin);
         assertEq(consensusMechanism.fetchNumberOfEpoch(), 0);
+        assertEq(nodeManager.numberOfPresentNodes(), 3);
     }
 
-    // function testReportTargetLocation() public {
-    //     vm.prank(node1);
-    //     consensusMechanism.reportTargetLocation(
-    //         node1,
-    //         DataTypes.TargetZone.EnemyBunkers
-    //     );
-    // }
+    function testReportTargetLocationAllOnTheSameOpinion() public {
+        vm.prank(node1);
+        consensusMechanism.reportTargetLocation(node1, target1);
+        vm.prank(node1);
+        vm.expectRevert(Errors.ConsensusMechanism__NODE_ALREADY_VOTED.selector);
+        consensusMechanism.reportTargetLocation(node1, target1);
+        vm.expectRevert(
+            Errors.ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER.selector
+        );
+        consensusMechanism.reportTargetLocation(node2, target1);
+        vm.prank(node3);
+        consensusMechanism.reportTargetLocation(node3, target1);
+    }
+
+    function testReportTargetLocationTwoOnTheSameOpinion() public {
+        vm.prank(node1);
+        consensusMechanism.reportTargetLocation(node1, target1);
+        vm.prank(node2);
+        consensusMechanism.reportTargetLocation(node2, target1);
+        vm.prank(node3);
+        consensusMechanism.reportTargetLocation(node3, target2);
+    }
+
+    function testReportTargetLocationAllHaveDiffOpinion() public {
+        vm.prank(node1);
+        consensusMechanism.reportTargetLocation(node1, target1);
+        vm.prank(node2);
+        consensusMechanism.reportTargetLocation(node2, target2);
+        vm.prank(node3);
+        consensusMechanism.reportTargetLocation(node3, target3);
+    }
+
+    function testConsensusAutomationExecutionForAllOnTheSameOpinion() external {
+        testReportTargetLocationAllOnTheSameOpinion();
+        skipTime();
+        (bool isReached, uint256 finalTarget) = consensusMechanism
+            .consensusAutomationExecution();
+        assertEq(isReached, true);
+        assertEq(finalTarget, uint256(target1));
+    }
+
+    function testConsensusAutomationExecutionTwoOnTheSameOpinion() external {
+        testReportTargetLocationTwoOnTheSameOpinion();
+        skipTime();
+        (bool isReached, uint256 finalTarget) = consensusMechanism
+            .consensusAutomationExecution();
+        assertEq(isReached, true);
+        assertEq(finalTarget, uint256(target1));
+    }
+
+    function testConsensusAutomationExecutionAllHaveDiffOpinion() external {
+        testReportTargetLocationAllHaveDiffOpinion();
+        skipTime();
+        (bool isReached, uint256 finalTarget) = consensusMechanism
+            .consensusAutomationExecution();
+        assertEq(isReached, false);
+        assertEq(finalTarget, uint256(noTarget));
+    }
 
     function testReportTargetLocation() public {
         vm.prank(node1);

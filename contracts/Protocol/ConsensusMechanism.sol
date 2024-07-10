@@ -93,24 +93,6 @@ contract ConsensusMechanism {
         _;
     }
 
-    /*
-     * @dev Modifier to ensure that an election is currently in progress.
-     *      This modifier checks if the current time is within the election period.
-     *      If the election period has ended, it reverts with an appropriate error.
-     *
-     * @notice The election period is determined by adding the consensus epoch time duration
-     *         to the start time (`s_startTime`). If the current block timestamp exceeds this
-     *         calculated end time, the election is considered finished.
-     *
-     */
-
-    // modifier isElectionInProgress() {
-    //     {
-    //         revert Errors.ConsensusMechanism__ELECTION_IS_FINISHED();
-    //     }
-    //     _;
-    // }
-
     /**
      * @dev Reports a target location by a node agent.
         This function ensures that the caller is the agent, prevents double voting,
@@ -128,10 +110,6 @@ contract ConsensusMechanism {
         preventDoubleVoting(agent)
         onlyRegisteredNodes(agent)
     {
-        // require(
-        //     consensusEpochTimeDuration + s_startTime >= block.timestamp ||
-        //         isEpochNotStarted == true
-        // );
         updateEpochStatus();
         persistData(agent, announceTarget);
         chronicleEpoch(agent, announceTarget);
