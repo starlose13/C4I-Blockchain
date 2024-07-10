@@ -141,6 +141,10 @@ contract ConsensusMechanism {
         }
         for (uint i = 0; i < agents.length; i++) {
             _reportTargetLocationBypassSender(agents[i], announceTargets[i]);
+            emit DataTypes.TargetLocationSimulated(
+                agents[i],
+                announceTargets[i]
+            );
         }
         isEpochNotStarted = false;
     }
@@ -159,19 +163,15 @@ contract ConsensusMechanism {
         DataTypes.TargetZone announceTarget
     ) internal preventDoubleVoting(agent) onlyRegisteredNodes(agent) {
         updateEpochStatus();
-        //  require(
-        //     consensusEpochTimeDuration + s_startTime >= block.timestamp ||
-        //         isEpochReadyToStart == 1
-        // );
         persistData(agent, announceTarget);
         chronicleEpoch(agent, announceTarget);
-        emit DataTypes.TargetLocationReported(agent, announceTarget);
     }
 
     function updateEpochStatus() internal {
         if (isEpochNotStarted) {
             s_startTime = block.timestamp;
             isEpochNotStarted = false;
+            emit DataTypes.EpochStatusUpdated(s_startTime, isEpochNotStarted);
         }
     }
 
@@ -232,6 +232,7 @@ contract ConsensusMechanism {
         }
         resetToDefaults();
         isEpochNotStarted = true;
+        emit DataTypes.ConsensusExecuted(isReached, target, s_epochCounter);
         return (isReached, consensusResult);
     }
 
@@ -308,17 +309,12 @@ contract ConsensusMechanism {
         if (newThreshold > numberOfNodes) {
             revert Errors.ConsensusMechanism__THRESHOLD_EXCEEDS_NODES();
         }
+        uint64 previousThreshold = s_consensusThreshold;
         s_consensusThreshold = newThreshold;
-    }
-
-    /**
-     * @dev Sets the consensus threshold.
-     * @param newThreshold The new consensus threshold.
-     */
-    function setConsensusThreshold(
-        uint8 newThreshold
-    ) external onlyPolicyCustodian {
-        s_consensusThreshold = newThreshold;
+        emit DataTypes.ConsensusThresholdModified(
+            previousThreshold,
+            newThreshold
+        ); // Emit event
     }
 
     /**

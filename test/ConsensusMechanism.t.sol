@@ -187,6 +187,15 @@ contract ConsensusMechanismTest is Test {
         );
     }
 
+    function testOnlyRegisteredNodes() external {
+        address newNode = address(0x123456);
+        vm.prank(newNode);
+        vm.expectRevert(
+            Errors.ConsensusMechanism__NODE_NOT_REGISTERED.selector
+        );
+        consensusMechanism.reportTargetLocation(newNode, target1);
+    }
+
     function testConsensusAutomationExecution() public {
         vm.prank(node1);
         consensusMechanism.reportTargetLocation(

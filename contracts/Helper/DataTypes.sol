@@ -60,4 +60,18 @@ library DataTypes {
         address indexed node,
         TargetZone announceTarget
     );
+    event TargetLocationSimulated(
+        address indexed agent,
+        DataTypes.TargetZone announceTarget
+    );
+    event EpochStatusUpdated(uint256 startTime, bool epochStatus);
+    event ConsensusExecuted(
+        bool isReached,
+        uint256 target,
+        uint256 epochCounter
+    );
+    event ConsensusThresholdModified(
+        uint64 previousThreshold,
+        uint64 newThreshold
+    );
 }
