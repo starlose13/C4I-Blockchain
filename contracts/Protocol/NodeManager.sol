@@ -11,10 +11,18 @@ import {Errors} from "../Helper/Errors.sol";
  * @dev This contract manages the registration and data of nodes within a decentralized system.
  */
 contract NodeManager is INodeManager {
+    /*//////////////////////////////////////////////////////////////
+                           STATE VARIABLES
+    //////////////////////////////////////////////////////////////*/
     // Contract Admin who can modify the contract and manage the system
     address immutable CONTRACT_ADMIN;
 
-    ////////////////// MAPPINGS  /////////////////////////
+    // Array to store all node addresses
+    address[] private s_nodes;
+
+    /*//////////////////////////////////////////////////////////////
+                               MAPPINGS
+    //////////////////////////////////////////////////////////////*/
 
     // Mapping to store registered nodes and their data
     mapping(address => DataTypes.RegisteredNodes) private s_registeredNodes;
@@ -22,9 +30,9 @@ contract NodeManager is INodeManager {
     // Mapping to check if a node is already registered
     mapping(address => bool) private s_ExistingNodes;
 
-    // Array to store all node addresses
-    address[] private s_nodes;
-
+    /*//////////////////////////////////////////////////////////////
+                             CONSTRUCTOR
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev Constructor to initialize the contract with initial nodes.
      * @param _nodeAddresses Array of node addresses to be registered initially.
@@ -44,6 +52,10 @@ contract NodeManager is INodeManager {
         _initializeNodes(_nodeAddresses, _currentPosition, IPFS);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                              MODIFIERS
+    //////////////////////////////////////////////////////////////*/
+
     /**
      * @dev Modifier to restrict functions to only the contract admin.
      */
@@ -61,11 +73,14 @@ contract NodeManager is INodeManager {
      * @param IPFS Array of IPFS hashes corresponding to the node data.
      */
 
+    /*//////////////////////////////////////////////////////////////
+                          INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     function _initializeNodes(
         address[] memory _nodeAddress,
         DataTypes.NodeRegion[] memory _currentPosition,
         string[] memory IPFS
-    ) private {
+    ) internal {
         for (uint256 i = 0; i < _nodeAddress.length; i++) {
             _registerNode(_nodeAddress[i], _currentPosition[i], IPFS[i]);
         }
@@ -82,7 +97,7 @@ contract NodeManager is INodeManager {
         address _nodeAddress,
         DataTypes.NodeRegion currentPosition,
         string memory IPFS
-    ) private {
+    ) internal {
         s_registeredNodes[_nodeAddress] = DataTypes.RegisteredNodes({
             nodeAddress: _nodeAddress,
             currentPosition: currentPosition,
@@ -93,21 +108,23 @@ contract NodeManager is INodeManager {
         emit NodeRegistered(_nodeAddress, currentPosition);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                     PUBLIC & EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
     /**
-     * @dev Retrieves data of all registered nodes.
-     * @return Array of RegisteredNodes structs.
+     * @dev Updates the IPFS data of a node.
+     * @param _nodeAddress Address of the node to update.
+     * @param newIPFS New IPFS data.
      */
-    function retrieveAllRegisteredNodeData()
-        external
-        view
-        returns (DataTypes.RegisteredNodes[] memory)
-    {
-        DataTypes.RegisteredNodes[]
-            memory result = new DataTypes.RegisteredNodes[](s_nodes.length);
-        for (uint256 i; i < s_nodes.length; i++) {
-            result[i] = s_registeredNodes[s_nodes[i]];
+    function updateNodeIPFSData(
+        address _nodeAddress,
+        string memory newIPFS
+    ) external onlyContractAdmin {
+        if (!isNodeRegistered(_nodeAddress)) {
+            revert Errors.NodeManager__NODE_NOT_FOUND();
         }
-        return result;
+        s_registeredNodes[_nodeAddress].IPFSData = newIPFS;
     }
 
     /**
@@ -130,19 +147,6 @@ contract NodeManager is INodeManager {
     }
 
     /**
-     * @dev Checks if a node is already registered.
-     * @param nodeAddress Address of the node to check.
-     * @return Boolean indicating if the node is registered.
-     */
-
-    function isNodeRegistered(address nodeAddress) public view returns (bool) {
-        if (s_ExistingNodes[nodeAddress] == true) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * @dev Updates the position of a node.
      * @param expeditionaryForces New position of the node.
      * @param _nodeAddress Address of the node to update.
@@ -153,6 +157,22 @@ contract NodeManager is INodeManager {
         address _nodeAddress
     ) external onlyContractAdmin {
         s_registeredNodes[_nodeAddress].currentPosition = expeditionaryForces;
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                               GETTERS
+    //////////////////////////////////////////////////////////////*/
+    /**
+     * @dev Checks if a node is already registered.
+     * @param nodeAddress Address of the node to check.
+     * @return Boolean indicating if the node is registered.
+     */
+
+    function isNodeRegistered(address nodeAddress) public view returns (bool) {
+        if (s_ExistingNodes[nodeAddress] == true) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -191,17 +211,19 @@ contract NodeManager is INodeManager {
     }
 
     /**
-     * @dev Updates the IPFS data of a node.
-     * @param _nodeAddress Address of the node to update.
-     * @param newIPFS New IPFS data.
+     * @dev Retrieves data of all registered nodes.
+     * @return Array of RegisteredNodes structs.
      */
-    function updateNodeIPFSData(
-        address _nodeAddress,
-        string memory newIPFS
-    ) external onlyContractAdmin {
-        if (!isNodeRegistered(_nodeAddress)) {
-            revert Errors.NodeManager__NODE_NOT_FOUND();
+    function retrieveAllRegisteredNodeData()
+        external
+        view
+        returns (DataTypes.RegisteredNodes[] memory)
+    {
+        DataTypes.RegisteredNodes[]
+            memory result = new DataTypes.RegisteredNodes[](s_nodes.length);
+        for (uint256 i; i < s_nodes.length; i++) {
+            result[i] = s_registeredNodes[s_nodes[i]];
         }
-        s_registeredNodes[_nodeAddress].IPFSData = newIPFS;
+        return result;
     }
 }
