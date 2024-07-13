@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
-import {ConsensusMechanism} from "../contracts/Protocol/ConsensusMechanism.sol"; // Adjust the path to your ConsensusMechanism contract
-import {NodeManager} from "../contracts/Protocol/NodeManager.sol"; // Adjust the path to your NodeManager contract
-import {DataTypes} from "../contracts/Helper/DataTypes.sol"; // Adjust the path to your DataTypes library
-import {Errors} from "../contracts/Helper/Errors.sol"; // Adjust the path to your Errors library
+import {ConsensusMechanism} from "../contracts/ethereum/Protocol/ConsensusMechanism.sol"; // Adjust the path to your ConsensusMechanism contract
+import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol"; // Adjust the path to your NodeManager contract
+import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol"; // Adjust the path to your DataTypes library
+import {Errors} from "../contracts/ethereum/Helper/Errors.sol"; // Adjust the path to your Errors library
 
 contract ConsensusMechanismTest is Test {
     ConsensusMechanism private consensusMechanism;

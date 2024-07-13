@@ -2,7 +2,7 @@
 pragma solidity 0.8.24;
 
 import {Script} from "forge-std/Script.sol";
-import {MinimalAccountAbstraction} from "../../contracts/ethereum/MinimalAccountAbstraction.sol";
+import {MinimalAccountAbstraction} from "../../contracts/ethereum/Protocol/MinimalAccountAbstraction.sol";
 import {IEntryPoint} from "lib/account-abstraction/contracts/interfaces/IEntryPoint.sol";
 
 contract SendPackedUserOp is Script {

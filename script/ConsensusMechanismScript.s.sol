@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import {Script} from "forge-std/Script.sol";
-import {NodeManager} from "../contracts/Protocol/NodeManager.sol";
-import {DataTypes} from "../contracts/Helper/DataTypes.sol";
-import {ConsensusMechanism} from "../contracts/Protocol/ConsensusMechanism.sol";
+import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol";
+import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
+import {ConsensusMechanism} from "../contracts/ethereum/Protocol/ConsensusMechanism.sol";
 
 contract ConsensusMechanismScript is Script {
     NodeManager public nodeManager;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
-import {INodeManager} from "../../interfaces/INodeManager.sol";
+import {INodeManager} from "../../../interfaces/INodeManager.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
 import {Errors} from "../Helper/Errors.sol";
 

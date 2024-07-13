@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
-
+pragma solidity 0.8.24;
 import {Test} from "forge-std/Test.sol";
-import {NodeManager} from "../contracts/Protocol/NodeManager.sol";
-import {DataTypes} from "../contracts/Helper/DataTypes.sol";
-import {Errors} from "../contracts/Helper/Errors.sol";
+import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol";
+import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
+import {Errors} from "../contracts/ethereum/Helper/Errors.sol";
 import {NodeManagerScript} from "../script/NodeManagerScript.s.sol";
 
 contract NodeManagerTest is Test {

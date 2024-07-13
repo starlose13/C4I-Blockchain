@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 import {Script, console} from "forge-std/Script.sol";
-import {Errors} from "../../contracts/Helper/Errors.sol";
+import {Errors} from "../../contracts/ethereum/Helper/Errors.sol";
 import {EntryPoint} from "lib/account-abstraction/contracts/core/EntryPoint.sol";
 
 contract HelperConfig is Script {

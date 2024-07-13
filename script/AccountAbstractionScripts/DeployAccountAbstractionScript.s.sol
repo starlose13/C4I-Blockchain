@@ -2,7 +2,7 @@
 pragma solidity 0.8.24;
 
 import {Script} from "forge-std/Script.sol";
-import {MinimalAccountAbstraction} from "../../contracts/ethereum/MinimalAccountAbstraction.sol";
+import {MinimalAccountAbstraction} from "../../contracts/ethereum/Protocol/MinimalAccountAbstraction.sol";
 import {HelperConfig} from "script/AccountAbstractionScripts/HelperConfig.s.sol";
 
 contract AccountAbstractionScript is Script {
