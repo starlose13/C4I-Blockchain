@@ -35,6 +35,11 @@ contract AccountAbstraction is IAccount, Ownable {
     }
 
     /*//////////////////////////////////////////////////////////////
+                              FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    receive() external payable {}
+
+    /*//////////////////////////////////////////////////////////////
                           EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
@@ -45,6 +50,21 @@ contract AccountAbstraction is IAccount, Ownable {
     ) external requireFromEntryPoint returns (uint256 validationData) {
         validationData = _validateSignature(userOp, userOpHash);
         _payPrefund(missingAccountFunds);
+    }
+
+    function execute(
+        address dest,
+        uint256 value,
+        bytes calldata functionData
+    ) external requireFromEntryPoint {
+        (bool success, bytes memory result) = dest.call{
+            value: value,
+            gas: type(uint256).max
+        }(functionData);
+
+        if (!success) {
+            revert Errors.AccountAbstractions__CALL_FAILED(result);
+        }
     }
 
     /*//////////////////////////////////////////////////////////////

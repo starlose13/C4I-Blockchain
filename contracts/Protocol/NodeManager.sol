@@ -66,6 +66,10 @@ contract NodeManager is INodeManager {
         _;
     }
 
+    /*//////////////////////////////////////////////////////////////
+                              FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
     /**
      * @dev Internal function to initialize nodes during contract deployment.
      * @param _nodeAddress Array of node addresses to be registered.
