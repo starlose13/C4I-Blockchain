@@ -13,6 +13,9 @@ import {Utils} from "./../Helper/Utils.sol";
  * @dev Manages the consensus process among nodes for various operations.
  */
 contract ConsensusMechanism {
+    /*//////////////////////////////////////////////////////////////
+                           STATE VARIABLES
+    //////////////////////////////////////////////////////////////*/
     INodeManager private immutable nodeManager; // Address of NodeManager Smart Contract
     address private immutable POLICY_CUSTODIAN;
     uint64 private constant CONSENSUS_NOT_REACHED = 0;
@@ -24,15 +27,23 @@ contract ConsensusMechanism {
     uint256 private s_interval; // Chainlink interval
     bool public isEpochNotStarted = true;
 
+    /*//////////////////////////////////////////////////////////////
+                               MAPPINGS
+    //////////////////////////////////////////////////////////////*/
+
     // Mapping to store target locations reported by nodes
-    mapping(address => DataTypes.TargetLocation) public s_target;
+    mapping(address => DataTypes.TargetLocation) private s_target;
 
     // Mapping to store consensus data for each epoch
     mapping(address => mapping(uint128 => DataTypes.EpochConsensusData))
-        public s_epochResolution;
+        private s_epochResolution;
 
     // Mapping to store consensus result for each epoch
     mapping(uint256 => uint256) private s_resultInEachEpoch;
+
+    /*//////////////////////////////////////////////////////////////
+                             CONSTRUCTOR
+    //////////////////////////////////////////////////////////////*/
 
     /**
      * @dev Initializes the contract with initial consensus threshold and node manager address.
@@ -49,6 +60,9 @@ contract ConsensusMechanism {
         nodeManager = INodeManager(nodeManagerContractAddress);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                              MODIFIERS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev Modifier to restrict function access to the policy custodian.
      */
@@ -93,6 +107,9 @@ contract ConsensusMechanism {
         _;
     }
 
+    /*//////////////////////////////////////////////////////////////
+                           PUBLIC FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev Reports a target location by a node agent.
         This function ensures that the caller is the agent, prevents double voting,
@@ -110,9 +127,9 @@ contract ConsensusMechanism {
         preventDoubleVoting(agent)
         onlyRegisteredNodes(agent)
     {
-        updateEpochStatus();
-        persistData(agent, announceTarget);
-        chronicleEpoch(agent, announceTarget);
+        _updateEpochStatus();
+        _persistData(agent, announceTarget);
+        _chronicleEpoch(agent, announceTarget);
         emit DataTypes.TargetLocationReported(agent, announceTarget);
     }
 
@@ -149,6 +166,15 @@ contract ConsensusMechanism {
         isEpochNotStarted = false;
     }
 
+    /**
+     * @dev Checks if a node has already participated in the current epoch.
+     * @param agent The address of the node.
+     * @return Boolean indicating if the node has participated.
+     */
+    function hasNodeParticipated(address agent) public view returns (bool) {
+        return (s_target[agent].reportedBy != address(0));
+    }
+
     /*
      * @dev Internal function to report target location for a specific agent.
      *      This bypasses the ensureCorrectSender check but retains other checks.
@@ -158,16 +184,20 @@ contract ConsensusMechanism {
      * @param announceTarget The target zone being reported by the agent.
      */
 
+    /*//////////////////////////////////////////////////////////////
+                          INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
     function _reportTargetLocationBypassSender(
         address agent,
         DataTypes.TargetZone announceTarget
     ) internal preventDoubleVoting(agent) onlyRegisteredNodes(agent) {
-        updateEpochStatus();
-        persistData(agent, announceTarget);
-        chronicleEpoch(agent, announceTarget);
+        _updateEpochStatus();
+        _persistData(agent, announceTarget);
+        _chronicleEpoch(agent, announceTarget);
     }
 
-    function updateEpochStatus() internal {
+    function _updateEpochStatus() internal {
         if (isEpochNotStarted) {
             s_startTime = block.timestamp;
             isEpochNotStarted = false;
@@ -180,10 +210,10 @@ contract ConsensusMechanism {
      * @param agent Address of the reporting node.
      * @param announceTarget Target zone being reported.
      */
-    function persistData(
+    function _persistData(
         address agent,
         DataTypes.TargetZone announceTarget
-    ) private {
+    ) internal {
         s_target[agent].zone = DataTypes.TargetZone(announceTarget); // Location of target (lat & long) that reported
         s_target[agent].reportedBy = agent; // Address of the node that reported this location
         s_target[agent].timestamp = block.timestamp; // Time when the location was reported
@@ -196,44 +226,15 @@ contract ConsensusMechanism {
      * @param _reportedZone Target zone being reported.
      */
 
-    function chronicleEpoch(
+    function _chronicleEpoch(
         address agent,
         DataTypes.TargetZone _reportedZone
-    ) private {
+    ) internal {
         s_epochResolution[agent][s_epochCounter] = DataTypes
             .EpochConsensusData({
                 zone: DataTypes.TargetZone(_reportedZone),
                 timestamp: block.timestamp
             });
-    }
-
-    /**
-     * @dev Executes the consensus automation and checks if consensus is reached.
-     * @return isReached Boolean indicating if consensus was reached.
-     * @return target Target zone with the consensus.
-     */
-    function consensusAutomationExecution()
-        external
-        returns (bool isReached, uint256 target)
-    {
-        if (s_startTime + consensusEpochTimeDuration >= block.timestamp) {
-            revert Errors.ConsensusMechanism__TIME_IS_NOT_REACHED();
-        }
-        if (isEpochNotStarted) {
-            revert Errors.ConsensusMechanism__VOTING_IS_INPROGRESS();
-        }
-        uint256 consensusResult = computeConsensusOutcome();
-        if (consensusResult != 0) {
-            isReached = true;
-            s_resultInEachEpoch[s_epochCounter] = consensusResult;
-            s_epochCounter += 1;
-        } else if (consensusResult == 0) {
-            deleteEpochData(s_epochCounter);
-        }
-        resetToDefaults();
-        isEpochNotStarted = true;
-        emit DataTypes.ConsensusExecuted(isReached, target, s_epochCounter);
-        return (isReached, consensusResult);
     }
 
     /*
@@ -246,17 +247,6 @@ contract ConsensusMechanism {
             address key = nodeManager.retrieveAddressByIndex(i);
             delete s_epochResolution[key][epoch];
         }
-    }
-
-    /**
-     * @dev Modifies the duration of each consensus epoch.
-     * @param newEpochTimeDurationInMinute New epoch duration in minutes.
-     */
-
-    function modifyEpochDuration(
-        uint256 newEpochTimeDurationInMinute
-    ) external onlyPolicyCustodian {
-        consensusEpochTimeDuration = (newEpochTimeDurationInMinute * 1 minutes);
     }
 
     /**
@@ -299,34 +289,6 @@ contract ConsensusMechanism {
     }
 
     /**
-     * @dev Modifies the consensus threshold.
-     * @param newThreshold New consensus threshold.
-     */
-    function modifyConsensusThreshold(
-        uint64 newThreshold
-    ) external onlyPolicyCustodian {
-        uint256 numberOfNodes = nodeManager.numberOfPresentNodes();
-        if (newThreshold > numberOfNodes) {
-            revert Errors.ConsensusMechanism__THRESHOLD_EXCEEDS_NODES();
-        }
-        uint64 previousThreshold = s_consensusThreshold;
-        s_consensusThreshold = newThreshold;
-        emit DataTypes.ConsensusThresholdModified(
-            previousThreshold,
-            newThreshold
-        ); // Emit event
-    }
-
-    /**
-     * @dev Checks if a node has already participated in the current epoch.
-     * @param agent The address of the node.
-     * @return Boolean indicating if the node has participated.
-     */
-    function hasNodeParticipated(address agent) public view returns (bool) {
-        return (s_target[agent].reportedBy != address(0));
-    }
-
-    /**
      * @dev Deletes the target location data for a specific node.
      * @param index Index of the node in the node manager.
      */
@@ -354,6 +316,38 @@ contract ConsensusMechanism {
         }
     }
 
+    /*//////////////////////////////////////////////////////////////
+                          EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+    /**
+     * @dev Executes the consensus automation and checks if consensus is reached.
+     * @return isReached Boolean indicating if consensus was reached.
+     * @return target Target zone with the consensus.
+     */
+    function consensusAutomationExecution()
+        external
+        returns (bool isReached, uint256 target)
+    {
+        if (s_startTime + consensusEpochTimeDuration >= block.timestamp) {
+            revert Errors.ConsensusMechanism__TIME_IS_NOT_REACHED();
+        }
+        if (isEpochNotStarted) {
+            revert Errors.ConsensusMechanism__VOTING_IS_INPROGRESS();
+        }
+        uint256 consensusResult = computeConsensusOutcome();
+        if (consensusResult != 0) {
+            isReached = true;
+            s_resultInEachEpoch[s_epochCounter] = consensusResult;
+            s_epochCounter += 1;
+        } else if (consensusResult == 0) {
+            deleteEpochData(s_epochCounter);
+        }
+        resetToDefaults();
+        isEpochNotStarted = true;
+        emit DataTypes.ConsensusExecuted(isReached, target, s_epochCounter);
+        return (isReached, consensusResult);
+    }
+
     /**
      * @dev Checks if upkeep is needed for the automation process.
      * @return upkeepNeeded Boolean indicating if upkeep is needed.
@@ -374,6 +368,36 @@ contract ConsensusMechanism {
     }
 
     /**
+     * @dev Modifies the duration of each consensus epoch.
+     * @param newEpochTimeDurationInMinute New epoch duration in minutes.
+     */
+
+    function modifyEpochDuration(
+        uint256 newEpochTimeDurationInMinute
+    ) external onlyPolicyCustodian {
+        consensusEpochTimeDuration = (newEpochTimeDurationInMinute * 1 minutes);
+    }
+
+    /**
+     * @dev Modifies the consensus threshold.
+     * @param newThreshold New consensus threshold.
+     */
+    function modifyConsensusThreshold(
+        uint64 newThreshold
+    ) external onlyPolicyCustodian {
+        uint256 numberOfNodes = nodeManager.numberOfPresentNodes();
+        if (newThreshold > numberOfNodes) {
+            revert Errors.ConsensusMechanism__THRESHOLD_EXCEEDS_NODES();
+        }
+        uint64 previousThreshold = s_consensusThreshold;
+        s_consensusThreshold = newThreshold;
+        emit DataTypes.ConsensusThresholdModified(
+            previousThreshold,
+            newThreshold
+        ); // Emit event
+    }
+
+    /**
      * @dev Performs upkeep for the automation process.
      * param performData Data for performing upkeep (not used in this example).
      */
@@ -383,6 +407,10 @@ contract ConsensusMechanism {
         }
         // We don't use the performData in this example. The performData is generated by the Automation Node's call to your checkUpkeep function
     }
+
+    /*//////////////////////////////////////////////////////////////
+                               GETTERS
+    //////////////////////////////////////////////////////////////*/
 
     /**
      * @dev Fetches consensus zones for a specific epoch.
