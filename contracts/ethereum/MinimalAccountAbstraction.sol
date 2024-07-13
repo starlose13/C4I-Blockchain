@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
 import {IAccount} from "lib/account-abstraction/contracts/interfaces/IAccount.sol";
@@ -10,7 +10,7 @@ import {SIG_VALIDATION_SUCCESS, SIG_VALIDATION_FAILED} from "lib/account-abstrac
 import {IEntryPoint} from "lib/account-abstraction/contracts/interfaces/IEntryPoint.sol";
 import {Errors} from "../Helper/Errors.sol";
 
-contract AccountAbstraction is IAccount, Ownable {
+contract MinimalAccountAbstraction is IAccount, Ownable {
     /*//////////////////////////////////////////////////////////////
                            STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
