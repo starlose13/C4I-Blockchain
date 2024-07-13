@@ -10,15 +10,15 @@ contract AccountAbstractionScript is Script {
     HelperConfig private helperConfig;
     address userAddress = makeAddr("minimalAccount");
 
-    function run() external returns (MinimalAccountAbstraction) {
-        vm.startBroadcast();
-        vm.prank(userAddress);
+    function run() external returns (HelperConfig, MinimalAccountAbstraction) {
         helperConfig = new HelperConfig();
         HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
+        vm.startBroadcast(config.account);
         minimalAccountAbstraction = new MinimalAccountAbstraction(
             config.entryPoint
         );
+        minimalAccountAbstraction.transferOwnership(config.account);
         vm.stopBroadcast();
-        return minimalAccountAbstraction;
+        return (helperConfig, minimalAccountAbstraction);
     }
 }
