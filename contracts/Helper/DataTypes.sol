@@ -7,6 +7,9 @@ pragma solidity ^0.8.0;
  * @notice Defines the essential structs that worked with the different contracts of the BLOCKCHAINENVIROCOMM protocol
  */
 library DataTypes {
+    /*//////////////////////////////////////////////////////////////
+                                ENUMS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev Enum to represent different node regions.
      */
@@ -28,6 +31,10 @@ library DataTypes {
         CommunicationTowers, // 3
         ObservationPosts // 4
     }
+
+    /*//////////////////////////////////////////////////////////////
+                               STRUCTS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev Struct to store data of a registered node.
      */
@@ -55,6 +62,10 @@ library DataTypes {
         TargetZone zone;
         uint256 timestamp; // Time when the vote was committed
     }
+
+    /*//////////////////////////////////////////////////////////////
+                                EVENTS
+    //////////////////////////////////////////////////////////////*/
 
     event TargetLocationReported(
         address indexed node,
