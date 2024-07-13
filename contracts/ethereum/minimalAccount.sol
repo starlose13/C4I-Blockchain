@@ -7,15 +7,32 @@ import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import {MessageHashUtils} from "lib/openzeppelin-contracts/contracts/utils/cryptography/MessageHashUtils.sol";
 import {ECDSA} from "lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
 import {SIG_VALIDATION_SUCCESS, SIG_VALIDATION_FAILED} from "lib/account-abstraction/contracts/core/Helpers.sol";
+import {IEntryPoint} from "lib/account-abstraction/contracts/interfaces/IEntryPoint.sol";
+import {Errors} from "../Helper/Errors.sol";
 
 contract AccountAbstraction is IAccount, Ownable {
-    constructor() Ownable(msg.sender) {}
+    IEntryPoint private immutable i_entryPoint;
+
+    constructor(address entryPoint) Ownable(msg.sender) {
+        i_entryPoint = IEntryPoint(entryPoint);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                           MODIFIERS
+    //////////////////////////////////////////////////////////////*/
+
+    modifier requireFromEntryPoint() {
+        if (msg.sender != address(i_entryPoint)) {
+            revert Errors.AccountAbstraction__NOT_FROM_ENTRYPOINT();
+        }
+        _;
+    }
 
     function validateUserOp(
         PackedUserOperation calldata userOp,
         bytes32 userOpHash,
         uint256 missingAccountFunds
-    ) external returns (uint256 validationData) {
+    ) external requireFromEntryPoint returns (uint256 validationData) {
         validationData = _validateSignature(userOp, userOpHash);
         _payPrefund(missingAccountFunds);
     }
@@ -42,5 +59,13 @@ contract AccountAbstraction is IAccount, Ownable {
             }("");
             (success);
         }
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                           GETTERS
+    //////////////////////////////////////////////////////////////*/
+
+    function getEntryPoint() external view returns (address) {
+        return address(i_entryPoint);
     }
 }

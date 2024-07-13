@@ -16,6 +16,7 @@ library Errors {
     error ConsensusMechanism__VOTING_IS_INPROGRESS();
     error ConsensusMechanism__TIME_IS_NOT_REACHED();
     error ConsensusMechanism__ELECTION_IS_FINISHED();
+    error AccountAbstraction__NOT_FROM_ENTRYPOINT();
     error NodeManager__NODE_NOT_FOUND();
     error ARRAYS_LENGTH_IS_NOT_EQUAL();
 }
