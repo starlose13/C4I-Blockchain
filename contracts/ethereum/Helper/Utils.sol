@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 /**
  * @title Utils library
@@ -7,6 +7,18 @@ pragma solidity ^0.8.0;
  * @notice math library
  */
 library Utils {
+    /*//////////////////////////////////////////////////////////////
+                              Functions
+    //////////////////////////////////////////////////////////////*/
+
+    /**
+     * @dev Finds the maximum unique value in an array of unsigned integers.
+     *      If the maximum value appears more than once, the function returns (0, 0).
+     * @param numbers The array of unsigned integers (enum target posions) to search through.
+     * @return A tuple where the first element is the index of the maximum unique value,
+     *         and the second element is the maximum unique value itself. If the maximum
+     *         value is not unique, both elements of the tuple will be 0.
+     */
     function findMaxUniqueValueWithCount(
         uint256[] memory numbers
     ) public pure returns (uint256, uint256) {
@@ -25,7 +37,7 @@ library Utils {
                 hasDuplicates = true;
             }
         }
-
+        // If duplicates of the maximum number were found, return (0, 0)
         if (hasDuplicates) {
             return (0, 0);
         } else {

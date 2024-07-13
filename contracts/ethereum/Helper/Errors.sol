@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: BUSL-1.1
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 /**
  * @title Errors
@@ -32,7 +32,7 @@ library Errors {
     error AccountAbstractions__CALL_FAILED(bytes result);
 
     /*//////////////////////////////////////////////////////////////
-                            GLOBAL ERRORS
+                            GLOBAL & OTHER ERRORS
     //////////////////////////////////////////////////////////////*/
     error ARRAYS_LENGTH_IS_NOT_EQUAL();
     error HelperConfig__INVALID_CHAIN_ID();

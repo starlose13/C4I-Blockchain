@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.18;
 
-import {Errors} from "../Helper/Errors.sol";
+import {Errors} from "../../Helper/Errors.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
 import {INodeManager} from "../../interfaces/INodeManager.sol";
 import {IConsensusMechanism} from "../../interfaces/IConsensusMechanism.sol";
