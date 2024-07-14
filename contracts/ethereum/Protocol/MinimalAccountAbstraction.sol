@@ -34,6 +34,13 @@ contract MinimalAccountAbstraction is IAccount, Ownable {
         _;
     }
 
+    modifier requireFromEntryPointOrOwner() {
+        if (msg.sender != address(i_entryPoint) && msg.sender != owner()) {
+            revert Errors.AccountAbstraction__NOT_FROM_ENTRYPOINT_OR_OWNER();
+        }
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                               FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -56,7 +63,7 @@ contract MinimalAccountAbstraction is IAccount, Ownable {
         address dest,
         uint256 value,
         bytes calldata functionData
-    ) external requireFromEntryPoint {
+    ) external requireFromEntryPointOrOwner {
         (bool success, bytes memory result) = dest.call{
             value: value,
             gas: type(uint256).max

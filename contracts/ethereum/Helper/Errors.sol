@@ -29,6 +29,7 @@ library Errors {
                       ACCOUNT ABSTRACTION ERRORS
     //////////////////////////////////////////////////////////////*/
     error AccountAbstraction__NOT_FROM_ENTRYPOINT();
+    error AccountAbstraction__NOT_FROM_ENTRYPOINT_OR_OWNER();
     error AccountAbstractions__CALL_FAILED(bytes result);
 
     /*//////////////////////////////////////////////////////////////
