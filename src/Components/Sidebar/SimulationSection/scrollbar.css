@@ -1,23 +1,31 @@
-.custom-scrollbar::-webkit-scrollbar {
-    width: 10px; /* Adjust width as needed */
-    height: 4px; /* Optional: adjust height for horizontal scrollbars */
+*::-webkit-scrollbar {
+  height: 7px;
+  width: 7px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: #020e1b; /* Track background color */
+*::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: #000000;
+  width: 10px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #09131f; /* Thumb background color */
-    border-radius: 10px; /* Round corners */
-    border: 1px solid #000000; /* Thumb border color */
+*::-webkit-scrollbar-track:hover {
+  background-color: #000000;
 }
 
-.custom-scrollbar::-webkit-scrollbar-button {
-    display: none; /* Remove the up and down arrows */
+*::-webkit-scrollbar-track:active {
+  background-color: #000000;
 }
 
-.custom-scrollbar {
-    scrollbar-width: thin; /* Firefox property for thin scrollbar */
-    scrollbar-color: rgba(41, 139, 254, 0.5) #010310; /* Thumb and track color for Firefox */
+*::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #307db1;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #2b82c9;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #2b68a5;
 }
