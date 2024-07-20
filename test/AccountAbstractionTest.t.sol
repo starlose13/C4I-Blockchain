@@ -31,7 +31,6 @@ contract AccountAbstractionTest is Test {
             address(minimalAccountAbstraction),
             AMOUNT
         );
-        // vm.prank(address(minimalAccountAbstraction));
         vm.prank(minimalAccountAbstraction.owner());
         minimalAccountAbstraction.execute(dest, value, functionData);
         console.log(usdc.balanceOf(address(minimalAccountAbstraction)));
@@ -54,4 +53,5 @@ contract AccountAbstractionTest is Test {
         minimalAccountAbstraction.execute(dest, value, functionData);
         console.log(usdc.balanceOf(address(minimalAccountAbstraction)));
     }
+
 }
