@@ -4,13 +4,14 @@ pragma solidity 0.8.24;
 import {INodeManager} from "../../../interfaces/INodeManager.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
 import {Errors} from "../Helper/Errors.sol";
+import {UUPSUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 /**
  * @title NodeManager
  * @author SunAir institue, University of Ferdowsi
  * @dev This contract manages the registration and data of nodes within a decentralized system.
  */
-contract NodeManager is INodeManager {
+contract NodeManager is INodeManager, UUPSUpgradeable {
     /*//////////////////////////////////////////////////////////////
                            STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
@@ -70,6 +71,16 @@ contract NodeManager is INodeManager {
                               FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
+    /*//////////////////////////////////////////////////////////////
+                          INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    function _authorizeUpgrade(address newImplementation) internal override {
+        if (msg.sender != CONTRACT_ADMIN) {
+            revert Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED();
+        }
+    }
+
     /**
      * @dev Internal function to initialize nodes during contract deployment.
      * @param _nodeAddress Array of node addresses to be registered.
@@ -77,9 +88,6 @@ contract NodeManager is INodeManager {
      * @param IPFS Array of IPFS hashes corresponding to the node data.
      */
 
-    /*//////////////////////////////////////////////////////////////
-                          INTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
     function _initializeNodes(
         address[] memory _nodeAddress,
         DataTypes.NodeRegion[] memory _currentPosition,
@@ -229,5 +237,9 @@ contract NodeManager is INodeManager {
             result[i] = s_registeredNodes[s_nodes[i]];
         }
         return result;
+    }
+
+    function retrieveOwner() external view returns (address contractOwner) {
+        return CONTRACT_ADMIN;
     }
 }

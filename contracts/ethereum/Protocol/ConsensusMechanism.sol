@@ -6,13 +6,14 @@ import {DataTypes} from "../Helper/DataTypes.sol";
 import {INodeManager} from "../../../interfaces/INodeManager.sol";
 import {IConsensusMechanism} from "../../../interfaces/IConsensusMechanism.sol";
 import {Utils} from "./../Helper/Utils.sol";
+import {UUPSUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 /**
  * @title ConsensusMechanism
  * @author SunAir institue, University of Ferdowsi
  * @dev Manages the consensus process among nodes for various operations.
  */
-contract ConsensusMechanism {
+contract ConsensusMechanism is UUPSUpgradeable {
     /*//////////////////////////////////////////////////////////////
                            STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
@@ -179,6 +180,18 @@ contract ConsensusMechanism {
         return (s_target[agent].reportedBy != address(0));
     }
 
+    /*//////////////////////////////////////////////////////////////
+                          INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    function _authorizeUpgrade(
+        address newImplementation
+    ) internal view override {
+        if (msg.sender != nodeManager.retrieveOwner()) {
+            revert Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED();
+        }
+    }
+
     /*
      * @dev Internal function to report target location for a specific agent.
      *      This bypasses the ensureCorrectSender check but retains other checks.
@@ -187,10 +200,6 @@ contract ConsensusMechanism {
      * @param agent The address of the agent reporting the target location.
      * @param announceTarget The target zone being reported by the agent.
      */
-
-    /*//////////////////////////////////////////////////////////////
-                          INTERNAL FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
 
     function _reportTargetLocationBypassSender(
         address agent,

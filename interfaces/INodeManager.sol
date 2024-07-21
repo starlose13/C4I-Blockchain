@@ -3,6 +3,8 @@ pragma solidity 0.8.24;
 import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
 
 interface INodeManager {
+    function retrieveOwner() external view returns (address contractOwner);
+
     function retrieveAllRegisteredNodeData()
         external
         view
