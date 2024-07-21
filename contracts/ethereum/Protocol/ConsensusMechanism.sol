@@ -6,19 +6,29 @@ import {DataTypes} from "../Helper/DataTypes.sol";
 import {INodeManager} from "../../../interfaces/INodeManager.sol";
 import {IConsensusMechanism} from "../../../interfaces/IConsensusMechanism.sol";
 import {Utils} from "./../Helper/Utils.sol";
+import {OwnableUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import {UUPSUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {Initializable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import {AccessControlUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import {AddressUpgradeable} from "lib/chainlink-brownie-contracts/contracts/src/v0.8/vendor/openzeppelin-contracts-upgradeable/v4.8.1/utils/AddressUpgradeable.sol";
 
 /**
  * @title ConsensusMechanism
  * @author SunAir institue, University of Ferdowsi
  * @dev Manages the consensus process among nodes for various operations.
  */
-contract ConsensusMechanism is UUPSUpgradeable {
+contract ConsensusMechanism is
+    Initializable,
+    UUPSUpgradeable,
+    OwnableUpgradeable,
+    AccessControlUpgradeable
+{
     /*//////////////////////////////////////////////////////////////
                            STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
-    INodeManager private immutable nodeManager; // Address of NodeManager Smart Contract
-    address private immutable POLICY_CUSTODIAN;
+    INodeManager private nodeManager; // Address of NodeManager Smart Contract
+    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+    address private POLICY_CUSTODIAN;
     uint64 private constant CONSENSUS_NOT_REACHED = 0;
     uint64 private s_consensusThreshold; // Threshold for reaching consensus
     uint128 private s_epochCounter;
@@ -46,16 +56,25 @@ contract ConsensusMechanism is UUPSUpgradeable {
                              CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
 
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
      * @dev Initializes the contract with initial consensus threshold and node manager address.
      * @param _s_consensusThreshold Initial consensus threshold.
      * @param nodeManagerContractAddress Address of the NodeManager contract.
+     * @param policyCustodian Address of the owner of NodeManager contract.
      */
-    constructor(
+    function initialize(
         uint8 _s_consensusThreshold,
-        address nodeManagerContractAddress
-    ) {
-        POLICY_CUSTODIAN = msg.sender;
+        address nodeManagerContractAddress,
+        address policyCustodian
+    ) public initializer {
+        __Ownable_init(policyCustodian);
+        __UUPSUpgradeable_init();
+        __AccessControl_init();
+        POLICY_CUSTODIAN = policyCustodian;
         s_lastTimeStamp = block.timestamp;
         s_consensusThreshold = _s_consensusThreshold;
         nodeManager = INodeManager(nodeManagerContractAddress);
@@ -186,10 +205,14 @@ contract ConsensusMechanism is UUPSUpgradeable {
 
     function _authorizeUpgrade(
         address newImplementation
-    ) internal view override {
-        if (msg.sender != nodeManager.retrieveOwner()) {
+    ) internal view override onlyRole(UPGRADER_ROLE) {
+        if (msg.sender != POLICY_CUSTODIAN) {
             revert Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED();
         }
+        require(
+            AddressUpgradeable.isContract(newImplementation),
+            "New implementation is not a contract"
+        );
     }
 
     /*

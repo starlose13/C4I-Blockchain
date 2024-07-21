@@ -4,19 +4,31 @@ pragma solidity 0.8.24;
 import {INodeManager} from "../../../interfaces/INodeManager.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
 import {Errors} from "../Helper/Errors.sol";
+import {OwnableUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import {UUPSUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {Initializable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import {AccessControlUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import {AddressUpgradeable} from "lib/chainlink-brownie-contracts/contracts/src/v0.8/vendor/openzeppelin-contracts-upgradeable/v4.8.1/utils/AddressUpgradeable.sol";
 
 /**
  * @title NodeManager
  * @author SunAir institue, University of Ferdowsi
  * @dev This contract manages the registration and data of nodes within a decentralized system.
  */
-contract NodeManager is INodeManager, UUPSUpgradeable {
+contract NodeManager is
+    INodeManager,
+    Initializable,
+    UUPSUpgradeable,
+    OwnableUpgradeable,
+    AccessControlUpgradeable
+{
     /*//////////////////////////////////////////////////////////////
                            STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
+    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+
     // Contract Admin who can modify the contract and manage the system
-    address immutable CONTRACT_ADMIN;
+    address private CONTRACT_ADMIN;
 
     // Array to store all node addresses
     address[] private s_nodes;
@@ -34,6 +46,10 @@ contract NodeManager is INodeManager, UUPSUpgradeable {
     /*//////////////////////////////////////////////////////////////
                              CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
+    constructor() {
+        _disableInitializers();
+    }
+
     /**
      * @dev Constructor to initialize the contract with initial nodes.
      * @param _nodeAddresses Array of node addresses to be registered initially.
@@ -41,16 +57,18 @@ contract NodeManager is INodeManager, UUPSUpgradeable {
      * @param IPFS Array of IPFS hashes corresponding to the node data. this IPFS contains the details of
      * the nodes data consisting of the type of weapons and the name of the weapon
      */
-    constructor(
+    function initialize(
         address[] memory _nodeAddresses,
         DataTypes.NodeRegion[] memory _currentPosition,
         string[] memory IPFS
-    ) {
+    ) public initializer {
         if (_nodeAddresses.length != _currentPosition.length) {
             revert Errors.ARRAYS_LENGTH_IS_NOT_EQUAL();
         }
         CONTRACT_ADMIN = msg.sender;
+        __Ownable_init(CONTRACT_ADMIN);
         _initializeNodes(_nodeAddresses, _currentPosition, IPFS);
+        __UUPSUpgradeable_init();
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -75,8 +93,13 @@ contract NodeManager is INodeManager, UUPSUpgradeable {
                           INTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    function _authorizeUpgrade(address newImplementation) internal override {
+    function _authorizeUpgrade(
+        address newImplementation
+    ) internal view override onlyRole(UPGRADER_ROLE) {
         if (msg.sender != CONTRACT_ADMIN) {
+            revert Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED();
+        }
+        if (!AddressUpgradeable.isContract(newImplementation)) {
             revert Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED();
         }
     }

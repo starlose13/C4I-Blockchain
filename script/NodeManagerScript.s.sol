@@ -20,7 +20,7 @@ contract NodeManagerScript is Script {
         DataTypes.NodeRegion[] memory Type = new DataTypes.NodeRegion[](2);
         Type[0] = DataTypes.NodeRegion.North;
         Type[1] = DataTypes.NodeRegion.North;
-        nodeManager = new NodeManager(initialAddresses, Type, IPFS);
+        nodeManager = new NodeManager();
         vm.stopBroadcast();
         return nodeManager;
     }

@@ -58,13 +58,10 @@ contract ConsensusMechanismTest is Test {
         ipfsData[2] = ipfs3;
 
         vm.prank(admin);
-        nodeManager = new NodeManager(nodes, regions, ipfsData);
+        nodeManager = new NodeManager();
 
         vm.prank(admin);
-        consensusMechanism = new ConsensusMechanism(
-            consensusThreshold,
-            address(nodeManager)
-        );
+        consensusMechanism = new ConsensusMechanism();
     }
 
     function skipTime() internal {

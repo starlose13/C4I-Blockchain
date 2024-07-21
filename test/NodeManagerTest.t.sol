@@ -39,7 +39,7 @@ contract NodeManagerTest is Test {
         ipfsData[1] = ipfs2;
 
         vm.prank(admin);
-        nodeManager = new NodeManager(nodes, regions, ipfsData);
+        nodeManager = new NodeManager();
     }
 
     function testInitialization() public {
@@ -184,7 +184,7 @@ contract NodeManagerTest is Test {
         ipfsData[1] = ipfs2;
 
         vm.expectRevert(Errors.ARRAYS_LENGTH_IS_NOT_EQUAL.selector);
-        new NodeManager(nodes, regions, ipfsData);
+        new NodeManager();
     }
 
     function testOnlyContractAdmin() public {
@@ -214,14 +214,10 @@ contract NodeManagerTest is Test {
 
     function testRetrieveAllRegisteredNodeDataWithZeroNodes() public {
         address[] memory initialAddresses = new address[](0);
-        string[] memory IPFS = new string[](0);
         DataTypes.NodeRegion[] memory Type = new DataTypes.NodeRegion[](0);
-        NodeManager emptyNodeManager = new NodeManager(
-            initialAddresses,
-            Type,
-            IPFS
-        );
-
+        string[] memory IPFS = new string[](0);
+        NodeManager emptyNodeManager = new NodeManager();
+        emptyNodeManager.initialize(initialAddresses, Type, IPFS);
         DataTypes.RegisteredNodes[] memory nodes = emptyNodeManager
             .retrieveAllRegisteredNodeData();
         assertEq(nodes.length, 0, "There should be no nodes registered");
@@ -231,11 +227,8 @@ contract NodeManagerTest is Test {
         address[] memory initialAddresses = new address[](0);
         string[] memory IPFS = new string[](0);
         DataTypes.NodeRegion[] memory Type = new DataTypes.NodeRegion[](0);
-        NodeManager emptyNodeManager = new NodeManager(
-            initialAddresses,
-            Type,
-            IPFS
-        );
+        NodeManager emptyNodeManager = new NodeManager();
+        emptyNodeManager.initialize(initialAddresses, Type, IPFS);
 
         uint256 count = emptyNodeManager.numberOfPresentNodes();
         assertEq(count, 0, "Number of present nodes should be zero");

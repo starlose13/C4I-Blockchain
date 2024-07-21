@@ -27,12 +27,9 @@ contract ConsensusMechanismScript is Script {
         Type[0] = DataTypes.NodeRegion.North;
         Type[1] = DataTypes.NodeRegion.East;
         Type[2] = DataTypes.NodeRegion.West;
-        nodeManager = new NodeManager(initialAddresses, Type, IPFS);
+        nodeManager = new NodeManager();
         THRESHOLD = 2;
-        consensusMechanism = new ConsensusMechanism(
-            THRESHOLD,
-            address(nodeManager)
-        );
+        consensusMechanism = new ConsensusMechanism();
         vm.stopBroadcast();
         return consensusMechanism;
     }
