@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
-import {Test} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol";
 import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
 import {Errors} from "../contracts/ethereum/Helper/Errors.sol";
@@ -17,29 +17,11 @@ contract NodeManagerTest is Test {
     string private ipfs2 = "QmNode2";
     NodeManager private nodeManager;
     NodeManagerScript public nodeManagerScript;
+    address proxy;
 
     function setUp() public {
         nodeManagerScript = new NodeManagerScript();
-        nodeManager = nodeManagerScript.run();
-
-        vm.deal(FIRST_COMMANDER, 100 ether);
-        vm.deal(SECOND_COMMANDER, 100 ether);
-        vm.deal(THIRD_COMMANDER, 100 ether);
-
-        address[] memory nodes = new address[](2);
-        nodes[0] = FIRST_COMMANDER;
-        nodes[1] = SECOND_COMMANDER;
-
-        DataTypes.NodeRegion[] memory regions = new DataTypes.NodeRegion[](2);
-        regions[0] = region1;
-        regions[1] = region2;
-
-        string[] memory ipfsData = new string[](2);
-        ipfsData[0] = ipfs1;
-        ipfsData[1] = ipfs2;
-
-        vm.prank(admin);
-        nodeManager = new NodeManager();
+        proxy = nodeManagerScript.run();
     }
 
     function testInitialization() public {
@@ -283,4 +265,6 @@ contract NodeManagerTest is Test {
             "Second new node IPFS data mismatch"
         );
     }
+
+    function testRetrieveOwner() public {}
 }
