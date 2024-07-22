@@ -37,4 +37,5 @@ library Errors {
     //////////////////////////////////////////////////////////////*/
     error ARRAYS_LENGTH_IS_NOT_EQUAL();
     error HelperConfig__INVALID_CHAIN_ID();
+    error NOT_ZERO_ADDRESS_ALLOWED();
 }

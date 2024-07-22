@@ -85,6 +85,17 @@ contract NodeManager is
         _;
     }
 
+    /**
+     * @dev Modifier to restrict address(0) call functions.
+     */
+
+    modifier notZeroAddress(address sender) {
+        if (sender == address(0)) {
+            revert Errors.NOT_ZERO_ADDRESS_ALLOWED();
+        }
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                               FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -132,7 +143,7 @@ contract NodeManager is
         address _nodeAddress,
         DataTypes.NodeRegion currentPosition,
         string memory IPFS
-    ) internal {
+    ) internal notZeroAddress(_nodeAddress) {
         s_registeredNodes[_nodeAddress] = DataTypes.RegisteredNodes({
             nodeAddress: _nodeAddress,
             currentPosition: currentPosition,
@@ -155,7 +166,7 @@ contract NodeManager is
     function updateNodeIPFSData(
         address _nodeAddress,
         string memory newIPFS
-    ) external onlyContractAdmin {
+    ) external onlyContractAdmin notZeroAddress(_nodeAddress) {
         if (!isNodeRegistered(_nodeAddress)) {
             revert Errors.NodeManager__NODE_NOT_FOUND();
         }
@@ -190,7 +201,7 @@ contract NodeManager is
     function updateExpeditionaryForces(
         DataTypes.NodeRegion expeditionaryForces,
         address _nodeAddress
-    ) external onlyContractAdmin {
+    ) external onlyContractAdmin notZeroAddress(_nodeAddress) {
         s_registeredNodes[_nodeAddress].currentPosition = expeditionaryForces;
     }
 
