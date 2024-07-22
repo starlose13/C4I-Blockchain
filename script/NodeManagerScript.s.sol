@@ -7,12 +7,14 @@ import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
 import {ERC1967Proxy} from "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract NodeManagerScript is Script {
-    function run() external returns (address) {
-        address proxy = deployNodeManager();
+    address public proxy;
+
+    function run() external returns (address nodeProxyContract) {
+        proxy = deployNodeManager();
         return proxy;
     }
 
-    function deployNodeManager() public returns (address) {
+    function deployNodeManager() public returns (address nodeProxyContract) {
         address[] memory initialNodeAddresses = new address[](2);
         initialNodeAddresses[0] = makeAddr("ALICE Commander"); // Replace with actual address 1
         initialNodeAddresses[1] = makeAddr("BOB Commander"); // Replace with actual address 2
@@ -24,15 +26,16 @@ contract NodeManagerScript is Script {
         );
         nodesRegions[0] = DataTypes.NodeRegion.North;
         nodesRegions[1] = DataTypes.NodeRegion.North;
-        vm.startBroadcast();
         NodeManager nodeManager = new NodeManager();
-        ERC1967Proxy proxy = new ERC1967Proxy(address(nodeManager), "");
-        NodeManager(address(proxy)).initialize(
+        ERC1967Proxy nodeManagerProxy = new ERC1967Proxy(
+            address(nodeManager),
+            ""
+        );
+        NodeManager(address(nodeManagerProxy)).initialize(
             initialNodeAddresses,
             nodesRegions,
             nodesIPFSData
         );
-        vm.stopBroadcast();
-        return address(proxy);
+        return address(nodeManagerProxy);
     }
 }

@@ -3,34 +3,56 @@
 pragma solidity 0.8.24;
 
 import {Script} from "forge-std/Script.sol";
-import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol";
+import {NodeManagerScript} from "../script/NodeManagerScript.s.sol";
 import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
 import {ConsensusMechanism} from "../contracts/ethereum/Protocol/ConsensusMechanism.sol";
+import {ERC1967Proxy} from "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol";
 
 contract ConsensusMechanismScript is Script {
-    NodeManager public nodeManager;
-    ConsensusMechanism public consensusMechanism;
-    uint8 private THRESHOLD;
+    uint8 private constant THRESHOLD = 2;
 
-    function run() external returns (ConsensusMechanism) {
+    function run()
+        external
+        returns (
+            address consensusProxyContract,
+            address nodeManagerProxyContract
+        )
+    {
+        (
+            consensusProxyContract,
+            nodeManagerProxyContract
+        ) = deployConsensusMechanism();
+        return (consensusProxyContract, nodeManagerProxyContract);
+    }
+
+    function deployConsensusMechanism()
+        public
+        returns (
+            address consensusProxyContract,
+            address nodeManagerProxyContract
+        )
+    {
+        // Allow cheatcodes for the address of NodeManagerScript
+        address nodeManagerScriptAddress = address(new NodeManagerScript());
+        vm.allowCheatcodes(nodeManagerScriptAddress);
         vm.startBroadcast();
-        // Assuming you have valid addresses
-        address[] memory initialAddresses = new address[](3);
-        initialAddresses[0] = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266; // Replace with actual address 1
-        initialAddresses[1] = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8; // Replace with actual address 2
-        initialAddresses[2] = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC; // Replace with actual address 3
-        string[] memory IPFS = new string[](3);
-        IPFS[0] = "Position 1";
-        IPFS[1] = "Position 2";
-        IPFS[2] = "Position 3";
-        DataTypes.NodeRegion[] memory Type = new DataTypes.NodeRegion[](3);
-        Type[0] = DataTypes.NodeRegion.North;
-        Type[1] = DataTypes.NodeRegion.East;
-        Type[2] = DataTypes.NodeRegion.West;
-        nodeManager = new NodeManager();
-        THRESHOLD = 2;
-        consensusMechanism = new ConsensusMechanism();
+        NodeManagerScript nodeManagerDeployer = NodeManagerScript(
+            nodeManagerScriptAddress
+        );
+        address nodeManagerProxy = nodeManagerDeployer.run();
+        address policyCustodian = NodeManager(nodeManagerProxy).retrieveOwner();
+        ConsensusMechanism consensusMechanism = new ConsensusMechanism();
+        ERC1967Proxy consensusProxy = new ERC1967Proxy(
+            address(consensusMechanism),
+            ""
+        );
+        ConsensusMechanism(address(consensusProxy)).initialize(
+            THRESHOLD,
+            nodeManagerProxy,
+            policyCustodian
+        );
         vm.stopBroadcast();
-        return consensusMechanism;
+        return (address(consensusProxy), address(nodeManagerProxy));
     }
 }

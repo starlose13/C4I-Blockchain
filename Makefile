@@ -26,9 +26,10 @@ $(info NETWORK_ARGS: $(NETWORK_ARGS))
 
 #deploy  the node manager smart contract on the specefic network 
 
-deploy:
+deploy-nm:
 	@forge script ./script/NodeManagerScript.s.sol:NodeManagerScript  $(NETWORK_ARGS)
-
+deploy-cm:
+	@forge script ./script/ConsensusMechanismScript.s.sol:ConsensusMechanismScript $(NETWORK_ARGS)
 git-add:
 	@git add .
 
