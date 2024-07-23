@@ -27,17 +27,16 @@ contract ConsensusMechanism is
                            STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
     INodeManager private nodeManager; // Address of NodeManager Smart Contract
-    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
-    address private POLICY_CUSTODIAN;
-    uint64 private constant CONSENSUS_NOT_REACHED = 0;
+    address public POLICY_CUSTODIAN;
     uint64 private s_consensusThreshold; // Threshold for reaching consensus
     uint128 private s_epochCounter;
-    uint256 private consensusEpochTimeDuration = 1 minutes;
     uint256 private s_startTime; // Start time for each consensus epoch
     uint256 public s_lastTimeStamp; // Timestamp for Chainlink auto-execution
     uint256 private s_interval; // Chainlink interval
-    bool public isEpochNotStarted = true;
-
+    bool public isEpochNotStarted;
+    uint64 private CONSENSUS_NOT_REACHED;
+    bytes32 private UPGRADER_ROLE;
+    uint256 private consensusEpochTimeDuration;
     /*//////////////////////////////////////////////////////////////
                                MAPPINGS
     //////////////////////////////////////////////////////////////*/
@@ -74,6 +73,10 @@ contract ConsensusMechanism is
         __Ownable_init(policyCustodian);
         __UUPSUpgradeable_init();
         __AccessControl_init();
+        UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+        CONSENSUS_NOT_REACHED = 0;
+        isEpochNotStarted = true;
+        consensusEpochTimeDuration = 1 minutes;
         POLICY_CUSTODIAN = policyCustodian;
         s_lastTimeStamp = block.timestamp;
         s_consensusThreshold = _s_consensusThreshold;
@@ -537,5 +540,13 @@ contract ConsensusMechanism is
 
     function fetchStartTime() external view returns (uint256) {
         return s_startTime;
+    }
+
+    function fetchNodeMangerProxyContractAddress()
+        external
+        view
+        returns (address)
+    {
+        return address(nodeManager);
     }
 }

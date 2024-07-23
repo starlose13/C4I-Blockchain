@@ -25,13 +25,14 @@ contract NodeManager is
     /*//////////////////////////////////////////////////////////////
                            STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
-    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+
+    bytes32 private UPGRADER_ROLE;
 
     // Contract Admin who can modify the contract and manage the system
     address private CONTRACT_ADMIN;
 
     // Array to store all node addresses
-    address[] private s_nodes;
+    address[] internal s_nodes;
 
     /*//////////////////////////////////////////////////////////////
                                MAPPINGS
@@ -66,6 +67,7 @@ contract NodeManager is
             revert Errors.ARRAYS_LENGTH_IS_NOT_EQUAL();
         }
         CONTRACT_ADMIN = msg.sender;
+        UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
         __Ownable_init(CONTRACT_ADMIN);
         _initializeNodes(_nodeAddresses, _currentPosition, IPFS);
         __UUPSUpgradeable_init();
@@ -275,5 +277,9 @@ contract NodeManager is
 
     function retrieveOwner() external view returns (address contractOwner) {
         return CONTRACT_ADMIN;
+    }
+
+    function getNodeAddresses() external view returns (address[] memory) {
+        return s_nodes;
     }
 }

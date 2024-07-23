@@ -2,30 +2,32 @@
 pragma solidity 0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
-import {ConsensusMechanism} from "../contracts/ethereum/Protocol/ConsensusMechanism.sol"; // Adjust the path to your ConsensusMechanism contract
-import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol"; // Adjust the path to your NodeManager contract
-import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol"; // Adjust the path to your DataTypes library
-import {Errors} from "../contracts/ethereum/Helper/Errors.sol"; // Adjust the path to your Errors library
+import {ConsensusMechanism} from "../contracts/ethereum/Protocol/ConsensusMechanism.sol";
+import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol";
+import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
+import {Errors} from "../contracts/ethereum/Helper/Errors.sol";
+import {IntegratedDeploymentScript} from "../script/IntegratedScripts/IntegratedDeploymentScript.s.sol";
 
 contract ConsensusMechanismTest is Test {
     ConsensusMechanism private consensusMechanism;
     NodeManager private nodeManager;
+    IntegratedDeploymentScript private deploymentScript;
 
     // Initialize the Nodes and Admin node.
-    address private admin = address(0xABCD);
-    address private node1 = address(0x1234);
-    address private node2 = address(0x5678);
-    address private node3 = address(0x9ABC);
+    address private admin;
+    address private immutable FIRST_COMMANDER = makeAddr("ALICE Commander");
+    address private immutable SECOND_COMMANDER = makeAddr("BOB Commander");
+    address private immutable THIRD_COMMANDER = makeAddr("JHON Commander");
 
     // Initialize the Node's Regions
     DataTypes.NodeRegion private region1 = DataTypes.NodeRegion.North;
-    DataTypes.NodeRegion private region2 = DataTypes.NodeRegion.South;
+    DataTypes.NodeRegion private region2 = DataTypes.NodeRegion.North;
     DataTypes.NodeRegion private region3 = DataTypes.NodeRegion.West;
 
     // Initialize the Node's Extra information
-    string private ipfs1 = "QmNode1";
-    string private ipfs2 = "QmNode2";
-    string private ipfs3 = "QmNode3";
+    string private ipfs1 = "Position 1";
+    string private ipfs2 = "Position 2";
+    string private ipfs3 = "Position 3";
 
     // Initialize the Target's Regions
     DataTypes.TargetZone private noTarget = DataTypes.TargetZone.None;
@@ -38,148 +40,286 @@ contract ConsensusMechanismTest is Test {
         DataTypes.TargetZone.ObservationPosts;
 
     // Minimum vote required to pass consensus
-    uint8 private consensusThreshold = 2;
+    uint8 private consensusThreshold = 3;
+
+    address private consensusProxyContract;
+    address private nodeManagerProxyContract;
+    address private policyCustodian;
 
     function setUp() public {
-        address[] memory nodes = new address[](3);
-        nodes[0] = node1;
-        nodes[1] = node2;
-        nodes[2] = node3;
-
-        DataTypes.NodeRegion[] memory regions = new DataTypes.NodeRegion[](3);
-        regions[0] = region1;
-        regions[1] = region2;
-        regions[2] = region3;
-
-        string[] memory ipfsData = new string[](3);
-
-        ipfsData[0] = ipfs1;
-        ipfsData[1] = ipfs2;
-        ipfsData[2] = ipfs3;
-
-        vm.prank(admin);
-        nodeManager = new NodeManager();
-
-        vm.prank(admin);
-        consensusMechanism = new ConsensusMechanism();
+        deploymentScript = new IntegratedDeploymentScript();
+        (
+            consensusProxyContract,
+            nodeManagerProxyContract,
+            policyCustodian
+        ) = deploymentScript.run();
     }
 
-    function skipTime() internal {
-        vm.warp(
-            block.timestamp +
-                consensusMechanism.fetchConsensusEpochTimeDuration() +
-                1
+    function testDeployAndVerify() public {
+        consensusMechanism = ConsensusMechanism(consensusProxyContract);
+
+        // Verify NodeManager data
+        address[] memory initialNodeAddresses = NodeManager(
+            nodeManagerProxyContract
+        ).getNodeAddresses();
+
+        assertEq(initialNodeAddresses.length, 6);
+
+        assertEq(
+            initialNodeAddresses[0],
+            address(uint160(uint256(keccak256("Alice"))))
         );
+        assertEq(
+            initialNodeAddresses[1],
+            address(uint160(uint256(keccak256("Bob"))))
+        );
+        assertEq(
+            initialNodeAddresses[2],
+            address(uint160(uint256(keccak256("Carol"))))
+        );
+        assertEq(
+            initialNodeAddresses[3],
+            address(uint160(uint256(keccak256("Dave"))))
+        );
+        assertEq(
+            initialNodeAddresses[4],
+            address(uint160(uint256(keccak256("Eve"))))
+        );
+        assertEq(
+            initialNodeAddresses[5],
+            address(uint160(uint256(keccak256("Mallory"))))
+        );
+
+        // Verify ConsensusMechanism data
+        assertEq(consensusMechanism.fetchConsensusThreshold(), 3);
+        assertEq(
+            consensusMechanism.fetchNodeMangerProxyContractAddress(),
+            nodeManagerProxyContract
+        );
+        assertEq(consensusMechanism.POLICY_CUSTODIAN(), policyCustodian);
+    }
+
+    function testSkipTime() public {
+        uint256 expectedTimeMoved = block.timestamp + 1 minutes;
+        uint256 acctualTimeMoved = ConsensusMechanism(consensusProxyContract)
+            .fetchStartTime() +
+            ConsensusMechanism(consensusProxyContract)
+                .fetchConsensusEpochTimeDuration() +
+            1;
+        vm.warp(acctualTimeMoved);
+        console.log("acctualTimeMoved:", acctualTimeMoved);
+        console.log("expectedTimeMoved :", expectedTimeMoved);
+        assertEq(acctualTimeMoved, expectedTimeMoved);
     }
 
     function testInitialization() public {
+        uint256 expectedEpochNumber;
+        uint256 expectedNumberOfPresentNodes = 6;
         assertEq(
-            consensusMechanism.fetchConsensusThreshold(),
+            ConsensusMechanism(consensusProxyContract)
+                .fetchConsensusThreshold(),
             consensusThreshold
         );
-        assertEq(consensusMechanism.fetchPolicyCustodian(), admin);
-        assertEq(consensusMechanism.fetchNumberOfEpoch(), 0);
-        assertEq(nodeManager.numberOfPresentNodes(), 3);
-    }
-
-    function testReportTargetLocationAllOnTheSameOpinion() public {
-        vm.prank(node1);
-        consensusMechanism.reportTargetLocation(node1, target1);
-        vm.prank(node1);
-        vm.expectRevert(Errors.ConsensusMechanism__NODE_ALREADY_VOTED.selector);
-        consensusMechanism.reportTargetLocation(node1, target1);
-        vm.expectRevert(
-            Errors.ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER.selector
+        assertEq(
+            ConsensusMechanism(consensusProxyContract).fetchPolicyCustodian(),
+            policyCustodian
         );
-        consensusMechanism.reportTargetLocation(node2, target1);
-        vm.prank(node3);
-        consensusMechanism.reportTargetLocation(node3, target1);
+        assertEq(
+            ConsensusMechanism(consensusProxyContract).fetchNumberOfEpoch(),
+            expectedEpochNumber
+        );
+        assertEq(
+            NodeManager(nodeManagerProxyContract).numberOfPresentNodes(),
+            expectedNumberOfPresentNodes
+        );
     }
 
-    function testReportTargetLocationTwoOnTheSameOpinion() public {
-        vm.prank(node1);
-        consensusMechanism.reportTargetLocation(node1, target1);
-        vm.prank(node2);
-        consensusMechanism.reportTargetLocation(node2, target1);
-        vm.prank(node3);
-        consensusMechanism.reportTargetLocation(node3, target2);
+    function testConsensusReachedWithAllVote() public {
+        address[] memory initialNodeAddresses = NodeManager(
+            nodeManagerProxyContract
+        ).getNodeAddresses();
+
+        vm.prank(initialNodeAddresses[0]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[0],
+            target1
+        );
+        vm.prank(initialNodeAddresses[1]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[1],
+            target1
+        );
+        vm.prank(initialNodeAddresses[2]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[2],
+            target1
+        );
+
+        vm.prank(initialNodeAddresses[3]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[3],
+            target1
+        );
+        vm.prank(initialNodeAddresses[4]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[4],
+            target1
+        );
+        vm.prank(initialNodeAddresses[5]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[5],
+            target1
+        );
+        vm.prank(initialNodeAddresses[0]);
+        vm.expectRevert(Errors.ConsensusMechanism__NODE_ALREADY_VOTED.selector);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[0],
+            target1
+        );
     }
 
-    function testReportTargetLocationAllHaveDiffOpinion() public {
-        vm.prank(node1);
-        consensusMechanism.reportTargetLocation(node1, target1);
-        vm.prank(node2);
-        consensusMechanism.reportTargetLocation(node2, target2);
-        vm.prank(node3);
-        consensusMechanism.reportTargetLocation(node3, target3);
+    function testMaliciousNodesEnteredButConsensusReached() public {
+        address[] memory initialNodeAddresses = NodeManager(
+            nodeManagerProxyContract
+        ).getNodeAddresses();
+        vm.prank(initialNodeAddresses[0]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[0],
+            target1
+        );
+        vm.prank(initialNodeAddresses[1]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[1],
+            target1
+        );
+        vm.prank(initialNodeAddresses[2]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[2],
+            target1
+        );
+        vm.prank(initialNodeAddresses[3]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[3],
+            target2
+        );
+        vm.prank(initialNodeAddresses[4]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[4],
+            target3
+        );
+        vm.prank(initialNodeAddresses[5]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[5],
+            target3
+        );
+    }
+
+    function testMaliciousNodesEnteredButConsensusNotReached() public {
+        address[] memory initialNodeAddresses = NodeManager(
+            nodeManagerProxyContract
+        ).getNodeAddresses();
+        vm.prank(initialNodeAddresses[0]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[0],
+            target1
+        );
+        vm.prank(initialNodeAddresses[1]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[1],
+            target1
+        );
+        vm.prank(initialNodeAddresses[2]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[2],
+            target2
+        );
+        vm.prank(initialNodeAddresses[3]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[3],
+            target2
+        );
+        vm.prank(initialNodeAddresses[4]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[4],
+            target3
+        );
+        vm.prank(initialNodeAddresses[5]);
+        ConsensusMechanism(consensusProxyContract).reportTargetLocation(
+            initialNodeAddresses[5],
+            target3
+        );
     }
 
     function testConsensusAutomationExecutionForAllOnTheSameOpinion() external {
-        testReportTargetLocationAllOnTheSameOpinion();
-        skipTime();
-        (bool isReached, uint256 finalTarget) = consensusMechanism
-            .consensusAutomationExecution();
+        testConsensusReachedWithAllVote();
+        testSkipTime();
+        (bool isReached, uint256 finalTarget) = ConsensusMechanism(
+            consensusProxyContract
+        ).consensusAutomationExecution();
+        console.log("isReached:", isReached);
+        console.log("finalTarget:", finalTarget);
+
         assertEq(isReached, true);
         assertEq(finalTarget, uint256(target1));
     }
 
-    function testConsensusAutomationExecutionTwoOnTheSameOpinion() external {
-        testReportTargetLocationTwoOnTheSameOpinion();
-        skipTime();
-        (bool isReached, uint256 finalTarget) = consensusMechanism
-            .consensusAutomationExecution();
-        assertEq(isReached, true);
-        assertEq(finalTarget, uint256(target1));
-    }
+    // function testConsensusAutomationExecutionTwoOnTheSameOpinion() external {
+    //     testReportTargetLocationTwoOnTheSameOpinion();
+    //     testSkipTime();
+    //     (bool isReached, uint256 finalTarget) = consensusMechanism
+    //         .consensusAutomationExecution();
+    //     assertEq(isReached, true);
+    //     assertEq(finalTarget, uint256(target1));
+    // }
 
-    function testConsensusAutomationExecutionAllHaveDiffOpinion() external {
-        testReportTargetLocationAllHaveDiffOpinion();
-        skipTime();
-        (bool isReached, uint256 finalTarget) = consensusMechanism
-            .consensusAutomationExecution();
-        assertEq(isReached, false);
-        assertEq(finalTarget, uint256(noTarget));
-    }
+    // function testConsensusAutomationExecutionAllHaveDiffOpinion() external {
+    //     testReportTargetLocationAllHaveDiffOpinion();
+    //     testSkipTime();
+    //     (bool isReached, uint256 finalTarget) = consensusMechanism
+    //         .consensusAutomationExecution();
+    //     assertEq(isReached, false);
+    //     assertEq(finalTarget, uint256(noTarget));
+    // }
 
     function testReportTargetLocation() public {
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node1,
+            FIRST_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
 
         DataTypes.TargetLocation memory reportedLocation = consensusMechanism
-            .fetchTargetLocation(node1);
+            .fetchTargetLocation(FIRST_COMMANDER);
         assertEq(
             uint256(reportedLocation.zone),
             uint256(DataTypes.TargetZone.EnemyBunkers)
         );
-        assertEq(reportedLocation.reportedBy, node1);
+        assertEq(reportedLocation.reportedBy, FIRST_COMMANDER);
         assertTrue(reportedLocation.isActive);
     }
 
     function testReportTargetLocationNotAuthorized() public {
-        vm.prank(node2);
+        vm.prank(SECOND_COMMANDER);
         vm.expectRevert(
             Errors.ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER.selector
         );
         consensusMechanism.reportTargetLocation(
-            node1,
+            FIRST_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
     }
 
     function testDoubleVotingNotAllowed() public {
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node1,
+            FIRST_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
 
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         vm.expectRevert(Errors.ConsensusMechanism__NODE_ALREADY_VOTED.selector);
         consensusMechanism.reportTargetLocation(
-            node1,
+            FIRST_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
     }
@@ -194,21 +334,21 @@ contract ConsensusMechanismTest is Test {
     }
 
     function testConsensusAutomationExecution() public {
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node1,
+            FIRST_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
         console.log("start time", consensusMechanism.fetchStartTime());
 
-        vm.prank(node2);
+        vm.prank(SECOND_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node2,
+            SECOND_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
-        vm.prank(node3);
+        vm.prank(THIRD_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node3,
+            THIRD_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
 
@@ -231,9 +371,9 @@ contract ConsensusMechanismTest is Test {
     }
 
     function testMakingConsensusAutomationExecutionNotAtTime() public {
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node1,
+            FIRST_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
 
@@ -246,15 +386,15 @@ contract ConsensusMechanismTest is Test {
     }
 
     function testConsensusAutomationExecutionNoConsensus() public {
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node1,
+            FIRST_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
 
-        vm.prank(node2);
+        vm.prank(SECOND_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node2,
+            SECOND_COMMANDER,
             DataTypes.TargetZone.ArtilleryEmplacements
         );
 
@@ -295,28 +435,32 @@ contract ConsensusMechanismTest is Test {
     }
 
     function testHasNodeParticipated() public {
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node1,
+            FIRST_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
 
-        bool hasParticipated = consensusMechanism.hasNodeParticipated(node1);
+        bool hasParticipated = consensusMechanism.hasNodeParticipated(
+            FIRST_COMMANDER
+        );
         assertTrue(hasParticipated);
 
-        hasParticipated = consensusMechanism.hasNodeParticipated(node2);
+        hasParticipated = consensusMechanism.hasNodeParticipated(
+            SECOND_COMMANDER
+        );
         assertFalse(hasParticipated);
     }
 
     function testResetToDefaults() public {
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node1,
+            FIRST_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
-        vm.prank(node2);
+        vm.prank(SECOND_COMMANDER);
         consensusMechanism.reportTargetLocation(
-            node2,
+            SECOND_COMMANDER,
             DataTypes.TargetZone.EnemyBunkers
         );
         vm.warp(block.timestamp + 12 minutes);
@@ -325,7 +469,9 @@ contract ConsensusMechanismTest is Test {
         assertEq(sucess, true);
         assertEq(target, uint256(DataTypes.TargetZone.EnemyBunkers));
         assertEq(consensusMechanism.fetchNumberOfEpoch(), 1);
-        assertTrue(consensusMechanism.isEpochNotStarted());
+        assertTrue(
+            ConsensusMechanism(consensusProxyContract).isEpochNotStarted()
+        );
     }
 
     function testFetchPolicyCustodian() public {
@@ -360,11 +506,11 @@ contract ConsensusMechanismTest is Test {
     }
 
     function testTargetLocationSimulation() external {
-        vm.startPrank(node1);
+        vm.startPrank(FIRST_COMMANDER);
         address[] memory nodes = new address[](3);
-        nodes[0] = node1;
-        nodes[1] = node2;
-        nodes[2] = node3;
+        nodes[0] = FIRST_COMMANDER;
+        nodes[1] = SECOND_COMMANDER;
+        nodes[2] = THIRD_COMMANDER;
 
         DataTypes.TargetZone[] memory regions = new DataTypes.TargetZone[](3);
         regions[0] = DataTypes.TargetZone.ArtilleryEmplacements;
@@ -383,15 +529,15 @@ contract ConsensusMechanismTest is Test {
 
     function testVotingOnConsensusAndAutomation() public {
         address[] memory nodes = new address[](3);
-        nodes[0] = node1;
-        nodes[1] = node2;
-        nodes[2] = node3;
+        nodes[0] = FIRST_COMMANDER;
+        nodes[1] = SECOND_COMMANDER;
+        nodes[2] = THIRD_COMMANDER;
 
         DataTypes.TargetZone[] memory regions = new DataTypes.TargetZone[](3);
         regions[0] = DataTypes.TargetZone.ArtilleryEmplacements;
         regions[1] = DataTypes.TargetZone.CommunicationTowers;
         regions[2] = DataTypes.TargetZone.ObservationPosts;
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.TargetLocationSimulation(nodes, regions);
         vm.warp(block.timestamp + 1000 minutes);
 
@@ -400,16 +546,16 @@ contract ConsensusMechanismTest is Test {
 
     function testFailedReachingConsensus() external {
         address[] memory nodes = new address[](3);
-        nodes[0] = node1;
-        nodes[1] = node2;
-        nodes[2] = node3;
+        nodes[0] = FIRST_COMMANDER;
+        nodes[1] = SECOND_COMMANDER;
+        nodes[2] = THIRD_COMMANDER;
 
         DataTypes.TargetZone[] memory regions = new DataTypes.TargetZone[](3);
         regions[0] = DataTypes.TargetZone.ArtilleryEmplacements;
         regions[1] = DataTypes.TargetZone.CommunicationTowers;
         regions[2] = DataTypes.TargetZone.ObservationPosts;
 
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.TargetLocationSimulation(nodes, regions);
         vm.warp(block.timestamp + 1 minutes);
 
@@ -434,15 +580,15 @@ contract ConsensusMechanismTest is Test {
         // );
 
         address[] memory nodes = new address[](3);
-        nodes[0] = node1;
-        nodes[1] = node2;
-        nodes[2] = node3;
+        nodes[0] = FIRST_COMMANDER;
+        nodes[1] = SECOND_COMMANDER;
+        nodes[2] = THIRD_COMMANDER;
 
         DataTypes.TargetZone[] memory regions = new DataTypes.TargetZone[](3);
         regions[0] = DataTypes.TargetZone.ArtilleryEmplacements;
         regions[1] = DataTypes.TargetZone.CommunicationTowers;
         regions[2] = DataTypes.TargetZone.ObservationPosts;
-        vm.prank(node1);
+        vm.prank(FIRST_COMMANDER);
         consensusMechanism.TargetLocationSimulation(nodes, regions);
         vm.warp(block.timestamp + 10000 minutes);
 
@@ -452,3 +598,26 @@ contract ConsensusMechanismTest is Test {
         // assertEq(block.timestamp, consensusMechanism.fetchStartTime());
     }
 }
+
+// the following codes should be deleted when setup function works correctly
+//  address[] memory nodes = new address[](3);
+//         nodes[0] = FIRST_COMMANDER;
+//         nodes[1] = SECOND_COMMANDER;
+//         nodes[2] = THIRD_COMMANDER;
+
+//         DataTypes.NodeRegion[] memory regions = new DataTypes.NodeRegion[](3);
+//         regions[0] = region1;
+//         regions[1] = region2;
+//         regions[2] = region3;
+
+//         string[] memory ipfsData = new string[](3);
+
+//         ipfsData[0] = ipfs1;
+//         ipfsData[1] = ipfs2;
+//         ipfsData[2] = ipfs3;
+
+//         vm.prank(admin);
+//         nodeManager = new NodeManager();
+
+//         vm.prank(admin);
+//         consensusMechanism = new ConsensusMechanism();

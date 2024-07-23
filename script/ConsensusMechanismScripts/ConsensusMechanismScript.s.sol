@@ -10,27 +10,34 @@ import {ERC1967Proxy} from "lib/openzeppelin-contracts/contracts/proxy/ERC1967/E
 import {NodeManager} from "../../contracts/ethereum/Protocol/NodeManager.sol";
 
 contract ConsensusMechanismScript is Script {
-    uint8 private constant THRESHOLD = 2;
+    uint8 private constant THRESHOLD = 3;
 
     function run()
         external
         returns (
             address consensusProxyContract,
-            address nodeManagerProxyContract
+            address nodeManagerProxyContract,
+            address policyCustodian
         )
     {
         (
             consensusProxyContract,
-            nodeManagerProxyContract
+            nodeManagerProxyContract,
+            policyCustodian
         ) = deployConsensusMechanism();
-        return (consensusProxyContract, nodeManagerProxyContract);
+        return (
+            consensusProxyContract,
+            nodeManagerProxyContract,
+            policyCustodian
+        );
     }
 
     function deployConsensusMechanism()
         public
         returns (
             address consensusProxyContract,
-            address nodeManagerProxyContract
+            address nodeManagerProxyContract,
+            address policyCustodian
         )
     {
         // Allow cheatcodes for the address of NodeManagerScript
@@ -41,7 +48,7 @@ contract ConsensusMechanismScript is Script {
             nodeManagerScriptAddress
         );
         address nodeManagerProxy = nodeManagerDeployer.run();
-        address policyCustodian = NodeManager(nodeManagerProxy).retrieveOwner();
+        policyCustodian = NodeManager(nodeManagerProxy).retrieveOwner();
         ConsensusMechanism consensusMechanism = new ConsensusMechanism();
         ERC1967Proxy consensusProxy = new ERC1967Proxy(
             address(consensusMechanism),
@@ -53,6 +60,10 @@ contract ConsensusMechanismScript is Script {
             policyCustodian
         );
         vm.stopBroadcast();
-        return (address(consensusProxy), address(nodeManagerProxy));
+        return (
+            address(consensusProxy),
+            address(nodeManagerProxy),
+            policyCustodian
+        );
     }
 }
