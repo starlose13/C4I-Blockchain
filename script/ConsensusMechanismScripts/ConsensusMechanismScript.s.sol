@@ -3,11 +3,11 @@
 pragma solidity 0.8.24;
 
 import {Script} from "forge-std/Script.sol";
-import {NodeManagerScript} from "../script/NodeManagerScript.s.sol";
-import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
-import {ConsensusMechanism} from "../contracts/ethereum/Protocol/ConsensusMechanism.sol";
+import {NodeManagerScript} from "../../script/NodeManagerScripts/NodeManagerScript.s.sol";
+import {DataTypes} from "../../contracts/ethereum/Helper/DataTypes.sol";
+import {ConsensusMechanism} from "../../contracts/ethereum/Protocol/ConsensusMechanism.sol";
 import {ERC1967Proxy} from "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol";
+import {NodeManager} from "../../contracts/ethereum/Protocol/NodeManager.sol";
 
 contract ConsensusMechanismScript is Script {
     uint8 private constant THRESHOLD = 2;

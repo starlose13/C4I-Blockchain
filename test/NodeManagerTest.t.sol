@@ -4,7 +4,7 @@ import {Test, console} from "forge-std/Test.sol";
 import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol";
 import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
 import {Errors} from "../contracts/ethereum/Helper/Errors.sol";
-import {NodeManagerScript} from "../script/NodeManagerScript.s.sol";
+import {NodeManagerScript} from "../script/NodeManagerScripts/NodeManagerScript.s.sol";
 import {ERC1967Proxy} from "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {StdCheats} from "forge-std/StdCheats.sol";
 import {Initializable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
