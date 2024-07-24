@@ -231,17 +231,17 @@ contract ConsensusMechanism is
         address agent,
         DataTypes.TargetZone announceTarget
     ) internal preventDoubleVoting(agent) onlyRegisteredNodes(agent) {
-        _updateEpochStatus();
+        if (isEpochNotStarted) {
+            _updateEpochStatus();
+        }
         _persistData(agent, announceTarget);
         _chronicleEpoch(agent, announceTarget);
     }
 
     function _updateEpochStatus() internal {
-        if (isEpochNotStarted) {
-            s_startTime = block.timestamp;
-            isEpochNotStarted = false;
-            emit DataTypes.EpochStatusUpdated(s_startTime, isEpochNotStarted);
-        }
+        s_startTime = block.timestamp;
+        isEpochNotStarted = false;
+        emit DataTypes.EpochStatusUpdated(s_startTime, isEpochNotStarted);
     }
 
     /**
