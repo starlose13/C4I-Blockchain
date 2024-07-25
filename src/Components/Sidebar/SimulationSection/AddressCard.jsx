@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 /**
  * AddressCard Component
  * @description Renders individual address data.
- * @param {Object} props - Component properties
- * @param {Object} props.addressData - Data for a single address
- * @param {string} props.addressData.address - The address
- * @param {string} props.addressData.location - The location
- * @param {number} props.addressData.latitude - The latitude
- * @param {number} props.addressData.longitude - The longitude
- * @param {Function} props.onEdit - Function to initiate editing
- * @returns {JSX.Element} The rendered component
+ * @param {Object} props - Component properties.
+ * @param {Object} props.addressData - Data for a single address.
+ * @param {string} props.addressData.address - The address.
+ * @param {string} props.addressData.location - The location.
+ * @param {number} props.addressData.latitude - The latitude.
+ * @param {number} props.addressData.longitude - The longitude.
+ * @param {Function} props.onEdit - Function to initiate editing.
+ * @returns {JSX.Element} The rendered component.
  */
-
 const AddressCard = ({ addressData, onEdit }) => {
     if (!addressData) {
-        return null; // or return a placeholder UI
+        return null; // Return null if no address data is provided
     }
 
     const { address, location, latitude, longitude } = addressData;
@@ -34,7 +33,7 @@ const AddressCard = ({ addressData, onEdit }) => {
     );
 };
 
-
+// Prop types validation for AddressCard
 AddressCard.propTypes = {
     addressData: PropTypes.shape({
         address: PropTypes.string.isRequired,
@@ -46,3 +45,4 @@ AddressCard.propTypes = {
 };
 
 export default AddressCard;
+
