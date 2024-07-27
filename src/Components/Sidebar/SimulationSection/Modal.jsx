@@ -1,5 +1,7 @@
 import SimulationForm from "./SimulationForm";
 
+
+
 /**
  * Modal Component
  * @description Renders a modal with the simulation form.
@@ -10,6 +12,8 @@ import SimulationForm from "./SimulationForm";
  * @param {Object} props.addressData - Initial values for the form fields.
  * @returns {JSX.Element} The rendered component.
  */
+
+
 const Modal = ({ isOpen, onClose, onSubmit, addressData }) => {
     if (!isOpen) return null;
 

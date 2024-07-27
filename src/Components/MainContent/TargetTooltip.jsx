@@ -1,4 +1,5 @@
 import React from 'react';
+import areas from './areas.json';
 
 const TargetTooltip = ({ area, visible, position }) => {
     if (!visible) return null;
@@ -7,10 +8,8 @@ const TargetTooltip = ({ area, visible, position }) => {
     const lineThickness = 6; // Thickness of the lines
     const horizontalLineLength = 70; // Length of the horizontal line
     const verticalLineLength = 50; // Length of the vertical line
-    const tooltipOffsetX = horizontalLineLength + 30; // Horizontal offset of the tooltip from
+    const tooltipOffsetX = horizontalLineLength + 30; // Horizontal offset of the tooltip from the horizontal line
     const tooltipOffsetY = verticalLineLength + 10; // Vertical offset of the tooltip from the horizontal line
-
-
 
     // Style for the indicator circle
     const indicatorStyle = {
@@ -110,13 +109,13 @@ const TargetTooltip = ({ area, visible, position }) => {
                     <div className="text-gray-300">
                         <div className="mb-2">
                             <div className="font-semibold">Address: </div>
-                            <div className="text-[#5a6b6d]">0x13c857...a2297d2256</div>
+                            <div className="text-[#5a6b6d]">{areas.publicAddress}</div>
                         </div>
                         <div>
                             <div className="font-semibold">Position</div>
-                            <div className="text-[#5a6b6d]">Location: Eiffel Tower, Paris, France</div>
-                            <div className="text-[#5a6b6d]">Latitude: 48.8584° N</div>
-                            <div className="text-[#5a6b6d]">Longitude: 2.2945° E</div>
+                            <div className="text-[#5a6b6d]">Location: {areas.positionName}</div>
+                            <div className="text-[#5a6b6d]">Latitude: {areas.position.latitude}</div>
+                            <div className="text-[#5a6b6d]">Longitude: {areas.position.longitude}</div>
                         </div>
                     </div>
                 </div>
