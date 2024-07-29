@@ -1,7 +1,7 @@
 import './App.css';
 import Navbar from "./Components/Navbar.jsx";
 import Sidebar from "./Components/Sidebar.jsx";
-import MapComponent from "./Components/MainContent/MainContent.jsx";
+import MapComponent from "./Components/MapComponent/MapComponents.jsx";
 
 
 

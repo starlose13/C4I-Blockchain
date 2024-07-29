@@ -6,7 +6,7 @@
     "fillColor": "transparent",
     "coords": [
       0.38738738738738737,
-      0.36050156739981191,
+      0.36050156739981193,
       0.4690690690690691,
       0.3605015673981191,
       0.4690690690690691,
@@ -15,11 +15,9 @@
       0.4284221525600836
     ],
     "publicAddress": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-    "position": {
-      "latitude": 0.3932282282282282,
-      "longitude": 0.3446186006191833
-    },
-    "positionName": "Lake view Park"
+    "latitude": 0.42822822822822826,
+    "longitude": 0.39446185997952454,
+    "positionName": "Main Square"
   },
   {
     "name": "02",
@@ -37,11 +35,9 @@
       0.4284221525600836
     ],
     "publicAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-    "position": {
-      "latitude": 0.4759109109109109,
-      "longitude": 0.39446186006191833
-    },
-    "positionName": "Sunset Boulevard"
+    "latitude": 0.5099099099099099,
+    "longitude": 0.3944618599791013,
+    "positionName": "Central Park"
   },
   {
     "name": "03",
@@ -59,11 +55,9 @@
       0.4284221525600836
     ],
     "publicAddress": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-    "position": {
-      "latitude": 0.5586336336336336,
-      "longitude": 0.39446186006191833
-    },
-    "positionName": "Maple Street"
+    "latitude": 0.5915915915915916,
+    "longitude": 0.3944618599791013,
+    "positionName": "City Hall"
   },
   {
     "name": "04",
@@ -81,11 +75,9 @@
       0.49634273772204807
     ],
     "publicAddress": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
-    "position": {
-      "latitude": 0.3932282282282282,
-      "longitude": 0.4623824442238828
-    },
-    "positionName": "Elm Grove"
+    "latitude": 0.42822822822822826,
+    "longitude": 0.46238244514106586,
+    "positionName": "Library"
   },
   {
     "name": "05",
@@ -103,11 +95,9 @@
       0.49634273772204807
     ],
     "publicAddress": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
-    "position": {
-      "latitude": 0.4759109109109109,
-      "longitude": 0.4623824442238828
-    },
-    "positionName": "Pine Hills"
+    "latitude": 0.5099099099099099,
+    "longitude": 0.46238244514106586,
+    "positionName": "Museum"
   },
   {
     "name": "06",
@@ -125,11 +115,9 @@
       0.49634273772204807
     ],
     "publicAddress": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
-    "position": {
-      "latitude": 0.5586336336336336,
-      "longitude": 0.4623824442238828
-    },
-    "positionName": "Cedar Park"
+    "latitude": 0.5915915915915916,
+    "longitude": 0.46238244514106586,
+    "positionName": "University"
   },
   {
     "name": "07",
@@ -147,11 +135,9 @@
       0.5642633228840125
     ],
     "publicAddress": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
-    "position": {
-      "latitude": 0.3932282282282282,
-      "longitude": 0.5303030293858473
-    },
-    "positionName": "Willow Lane"
+    "latitude": 0.42822822822822826,
+    "longitude": 0.5303030303030303,
+    "positionName": "Stadium"
   },
   {
     "name": "08",
@@ -169,11 +155,9 @@
       0.5642633228840125
     ],
     "publicAddress": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
-    "position": {
-      "latitude": 0.4759109109109109,
-      "longitude": 0.5303030293858473
-    },
-    "positionName": "Oak Terrace"
+    "latitude": 0.5099099099099099,
+    "longitude": 0.5303030303030303,
+    "positionName": "Market"
   },
   {
     "name": "09",
@@ -191,10 +175,8 @@
       0.5642633228840125
     ],
     "publicAddress": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
-    "position": {
-      "latitude": 0.5586336336336336,
-      "longitude": 0.5303030293858473
-    },
-    "positionName": "Birchwood"
+    "latitude": 0.5915915915915916,
+    "longitude": 0.5303030303030303,
+    "positionName": "Station"
   }
 ]

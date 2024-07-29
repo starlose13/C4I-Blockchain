@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import ImageMapper from 'react-image-mapper';
 import areas from './areas.json';
 import nodes from './node.json';
@@ -19,7 +19,7 @@ const MapComponent = () => {
     const [tooltipData, setTooltipData] = useState({
         visible: false,
         area: {},
-        position: { x: 0, y: 0 }
+        position: {x: 0, y: 0}
     });
 
     const scaleCoords = (coords, width, height) => {
@@ -45,14 +45,13 @@ const MapComponent = () => {
         const x = event.clientX - 25;
         const y = event.clientY;
         console.log(`clientX: ${x}, clientY: ${y}`);
-        setTooltipData({ visible: true, area: area, position: { x, y } });
+        setTooltipData({visible: true, area: area, position: {x, y}});
     };
 
     const renderNodes = () => {
         return nodes.map((node, index) => {
             const scaledX = node.coords[0] * nodeWidth;
             const scaledY = node.coords[1] * nodeHeight;
-
 
 
             return (
@@ -67,7 +66,7 @@ const MapComponent = () => {
                     <NodeTooltip
                         area={node}
                         visible={true}
-                        position={{ x: scaledX, y: scaledY }}
+                        position={{x: scaledX, y: scaledY}}
                         radius={node.coords[2]} // Assuming NodeTooltip can handle a radius prop if needed
                     />
                 </div>
@@ -85,10 +84,10 @@ const MapComponent = () => {
                     height={height}
                     imgWidth={imgWidth}
                     imgHeight={imgHeight}
-                    strokeColor={"transparent"}
+                    strokeColor={"red"}
                     alt="Map Image"
                 />
-                 {renderNodes()}
+                {renderNodes()}
                 {tooltipData.visible && (
                     <div
                         className='absolute z-50'
@@ -99,13 +98,11 @@ const MapComponent = () => {
                     >
                     </div>
                 )}
-
-
             </div>
-            <TargetTooltip className='z-50' area={tooltipData.area} visible={tooltipData.visible} position={tooltipData.position} />
-        </div>);
-
-
+            <TargetTooltip className='z-50' area={tooltipData.area} visible={tooltipData.visible}
+                           position={tooltipData.position}/>
+        </div>
+    );
 };
 
 export default MapComponent;
