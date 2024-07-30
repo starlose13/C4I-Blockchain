@@ -130,14 +130,16 @@
 //
 // export default TargetTooltip;
 
-
 import React from 'react';
 import dataArea from './areas.json';
 
-
-const TargetTooltip = ({area, visible, position}) => {
+const TargetTooltip = ({areaId, visible, position }) => {
     if (!visible) return null;
 
+
+    // Find the area data based on the areaId
+    const area = dataArea.find(a => a.name === areaId);
+    if (!area) return null;
 
     const circleRadius = 30; // Radius of the indicator circle
     const lineThickness = 6; // Thickness of the lines
@@ -240,20 +242,20 @@ const TargetTooltip = ({area, visible, position}) => {
             {/* Tooltip content */}
             <div style={tooltipStyle}>
                 <div className="flex">
-                    <div
-                        className="flex py-2 m-3 text-red-500 text-4xl items-center font-bold px-4">TARGET
+                    <div className="flex py-2 m-3 text-red-500 text-4xl items-center font-bold px-4">
+                        TARGET
                     </div>
                     <div className="text-gray-300">
                         <div className="mb-2">
                             <div className="font-semibold">Address: </div>
-                            <div className="text-[#5a6b6d]">{dataArea[1].publicAddress}</div>
+                            <div className="text-[#5a6b6d]">{area.publicAddress}</div>
                         </div>
-                            <div>
-                                <div className="font-semibold">Position: </div>
-                                <div className="text-[#5a6b6d]">Location: {dataArea[1].positionName}</div>
-                                <div className="text-[#5a6b6d]">Latitude: {dataArea[1].latitude}</div>
-                                <div className="text-[#5a6b6d]">Longitude: {dataArea[1].longitude}</div>
-                            </div>
+                        <div>
+                            <div className="font-semibold">Position: </div>
+                            <div className="text-[#5a6b6d]">Location: {area.positionName}</div>
+                            <div className="text-[#5a6b6d]">Latitude: {area.latitude}</div>
+                            <div className="text-[#5a6b6d]">Longitude: {area.longitude}</div>
+                        </div>
                     </div>
                 </div>
             </div>

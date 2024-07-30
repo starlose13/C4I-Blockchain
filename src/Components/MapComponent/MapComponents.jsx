@@ -45,7 +45,12 @@ const MapComponent = () => {
         const x = event.clientX - 25;
         const y = event.clientY;
         console.log(`clientX: ${x}, clientY: ${y}`);
-        setTooltipData({visible: true, area: area, position: {x, y}});
+
+        // Ensure tooltip is within viewport
+        const adjustedX = Math.min(x, window.innerWidth - 500);
+        const adjustedY = Math.min(y, window.innerHeight - 300);
+
+        setTooltipData({visible: true, areaId: area.name, position: {x: adjustedX, y: adjustedY}});
     };
 
     const renderNodes = () => {
@@ -84,7 +89,7 @@ const MapComponent = () => {
                     height={height}
                     imgWidth={imgWidth}
                     imgHeight={imgHeight}
-                    strokeColor={"red"}
+                    strokeColor={"transparent"}
                     alt="Map Image"
                 />
                 {renderNodes()}
@@ -99,7 +104,8 @@ const MapComponent = () => {
                     </div>
                 )}
             </div>
-            <TargetTooltip className='z-50' area={tooltipData.area} visible={tooltipData.visible}
+            <TargetTooltip className='z-50' areaId={tooltipData.areaId}
+                           visible={tooltipData.visible}
                            position={tooltipData.position}/>
         </div>
     );
