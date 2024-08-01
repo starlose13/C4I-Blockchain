@@ -1,15 +1,20 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import ImageMapper from 'react-image-mapper';
 import areas from './areas.json';
 import nodes from './node.json';
 import NodeTooltip from "./NodeTooltip.jsx";
 import TargetTooltip from "./TargetTooltip.jsx";
-
+import {MainContext} from "../../hooks/useSimulationContext.jsx"
+import dataArea from "./areas.json";
 
 const MapComponent = () => {
+    let {nodeData, setNodeData, selectedNode, setSelectedNode} = useContext(MainContext)
+
     const URL = "/x.jpg";
+
     const width = 2100;
     const height = 1200;
+
     const imgWidth = 1665;
     const imgHeight = 957;
 
@@ -42,9 +47,21 @@ const MapComponent = () => {
     };
 
     const handleAreaClick = (area, index, event) => {
+
+        const _area = dataArea.find(a => a.name === area.name);
+
         const x = event.clientX - 25;
         const y = event.clientY;
         console.log(`clientX: ${x}, clientY: ${y}`);
+        let temp = nodeData
+        let node = temp.find(node => node.id === selectedNode)
+        console.log("ghablan ",temp)
+
+        temp[node.id -1 ].latitude = _area.latitude
+        temp[node.id -1 ].longitude = _area.longitude
+        temp[node.id -1 ].location = _area.positionName
+        console.log("after ",temp)
+        setNodeData(temp)
 
         // Ensure tooltip is within viewport
         const adjustedX = Math.min(x, window.innerWidth - 500);
@@ -57,8 +74,6 @@ const MapComponent = () => {
         return nodes.map((node, index) => {
             const scaledX = node.coords[0] * nodeWidth;
             const scaledY = node.coords[1] * nodeHeight;
-
-
             return (
                 <div
                     key={index}
@@ -89,7 +104,8 @@ const MapComponent = () => {
                     height={height}
                     imgWidth={imgWidth}
                     imgHeight={imgHeight}
-                    strokeColor={"transparent"}
+                    // strokeColor={"transparent"}
+                    strokeColor={"red"}
                     alt="Map Image"
                 />
                 {renderNodes()}
@@ -104,9 +120,12 @@ const MapComponent = () => {
                     </div>
                 )}
             </div>
-            <TargetTooltip className='z-50' areaId={tooltipData.areaId}
-                           visible={tooltipData.visible}
-                           position={tooltipData.position}/>
+            <TargetTooltip
+                className='z-50'
+                areaId={tooltipData.areaId}
+                visible={tooltipData.visible}
+                position={tooltipData.position}
+            />
         </div>
     );
 };

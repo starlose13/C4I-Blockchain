@@ -2,31 +2,87 @@ import './App.css';
 import Navbar from "./Components/Navbar.jsx";
 import Sidebar from "./Components/Sidebar.jsx";
 import MapComponent from "./Components/MapComponent/MapComponents.jsx";
-
+import {MainContext} from "./hooks/useSimulationContext.jsx";
+import {useState} from "react";
 
 
 function App() {
+    const [selectedNode, setSelectedNode] = useState(0)
+    const [nodeData, setNodeData] = useState([
+        {
+            id:1,
+            address: '0x13c857...a2297d22256',
+            location: 'Eiffel Tower, Paris, France',
+            latitude: '48.8584° N',
+            longitude: '2.2945° E',
+        },
+        {
+            id:2,
+            address: '0x13c857...a2297d22256',
+            location: 'Eiffel Tower, Paris, France',
+            latitude: '48.8584° N',
+            longitude: '2.2945° E',
+        },
+        {
+            id:3,
+            address: '0x13c857...a2297d22256',
+            location: 'Eiffel Tower, Paris, France',
+            latitude: '48.8584° N',
+            longitude: '2.2945° E',
+        },
+        {
+            id:4,
+            address: '0x13c857...a2297d22256',
+            location: 'Eiffel Tower, Paris, France',
+            latitude: '48.8584° N',
+            longitude: '2.2945° E',
+        },
+        {
+            id:5,
+            address: '0x13c857...a2297d22256',
+            location: 'Eiffel Tower, Paris, France',
+            latitude: '48.8584° N',
+            longitude: '2.2945° E',
+        },
+        {
+            id:6,
+            address: '0x13c857...a2297d22256',
+            location: 'Eiffel Tower, Paris, France',
+            latitude: '48.8584° N',
+            longitude: '2.2945° E',
+        },
+        {
+            id:7,
+            address: '0x13c857...a2297d22256',
+            location: 'Eiffel Tower, Paris, France',
+            latitude: '48.8584° N',
+            longitude: '2.2945° E',
+        },
+    ])
 
     return (
-        <div className="w-full h-screen relative bg-[#00030c]">
-            <Navbar/>
-            <div className="flex">
-                <div>
-                    <Sidebar/>
-                </div>
-                <div className="flex-grow mx-2 ">
-                    <MapComponent/>
+        <MainContext.Provider value={{selectedNode, setSelectedNode,nodeData,setNodeData}}>
+            <div className="w-full h-screen relative bg-[#00030c]">
+                <Navbar/>
+                <div className="flex">
+                    <div>
+                        <Sidebar/>
+                    </div>
+                    <div className="flex-grow mx-2 ">
+                        <MapComponent/>
+                    </div>
                 </div>
             </div>
-        </div>
-
+        </MainContext.Provider>
     )
 }
 
 
+export default App;
+
+
 // import { useState, useEffect } from 'react';
 // import { ethers } from 'ethers';
-
 // // Replace with your contract's ABI and address
 // const contractABI =[
 //     {
@@ -47,17 +103,13 @@ function App() {
 //         "name": "setValue"
 //     }
 // ];
-
 // const contractAddress = import.meta.env.VITE_STORAGE_CONTRACT_ADDRESS;
 // const privateKey = import.meta.env.VITE_PRIVATE_KEY;
 // const rpcUrl = import.meta.env.VITE_RPC_URL;
-
-
 // const App = () => {
 //     const [contract, setContract] = useState(null);
 //     const [storedData, setStoredData] = useState(null);
 //     const [transactions, setTransactions] = useState([]);
-
 //     useEffect(() => {
 //         const init = async () => {
 //             try {
@@ -71,8 +123,6 @@ function App() {
 //         };
 //         init();
 //     }, []);
-
-
 //     const fetchStoredData = async () => {
 //         if (contract) {
 //             try {
@@ -83,8 +133,6 @@ function App() {
 //             }
 //         }
 //     };
-
-
 //     const updateStoredData = async (value) => {
 //         if (contract) {
 //             try {
@@ -108,7 +156,6 @@ function App() {
 //             }
 //         }
 //     };
-
 //     return (
 //         <div className="w-full h-full relative bg-[#00030c] text-white">
 //             <div className='ml-4'>
@@ -120,7 +167,6 @@ function App() {
 //                     Get Stored Data
 //                 </button>
 //                 <p className="mb-4">Stored Data: {storedData}</p>
-
 //                 <div className="mb-4">
 //                     <button
 //                         className="bg-gray-800 text-white px-4 py-2 rounded mt-2"
@@ -128,7 +174,6 @@ function App() {
 //                         Set Stored Data to 42
 //                     </button>
 //                 </div>
-
 //                 <h2 className="text-xl mb-2">Transactions</h2>
 //                 <ul className='overflow-y-auto divide-y divide-solid'>
 //                     {transactions.map((tx, index) => (
@@ -151,5 +196,3 @@ function App() {
 //         </div>
 //     );
 // };
-
-export default App;
