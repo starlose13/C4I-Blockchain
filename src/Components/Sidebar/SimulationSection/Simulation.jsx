@@ -1,153 +1,48 @@
-// import { useState, useEffect } from "react";
-// import { Toaster } from "react-hot-toast";
-// import useAddressData from "../../../hooks/useAddressData";
-// import AddressList from "./AddressList";
-// import Modal from "./Modal";
-// import "./scrollbar.css";
-//
-// /**
-//  * Simulation Component
-//  * @description Manages address data and form submission for the simulation.
-//  * @returns {JSX.Element} The rendered Simulation component.
-//  */
-//
-// const Simulation = () => {
-//   const { data: initialData, loading, error } = useAddressData();
-//   const [addressData, setAddressData] = useState(initialData || []);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const [currentAddressIndex, setCurrentAddressIndex] = useState(null);
-//
-//   useEffect(() => {
-//     setAddressData(initialData);
-//   }, [initialData]);
-//
-//   const toggleModal = (index = null) => {
-//     setCurrentAddressIndex(index);
-//     setIsModalOpen(!isModalOpen);
-//   };
-//
-//   const handleFormSubmit = (formData) => {
-//     if (!formData.address || !formData.name || !formData.latitude || !formData.longitude) {
-//       console.error("Invalid form data", formData);
-//       return;
-//     }
-//
-//     const updatedAddress = {
-//       address: formData.address,
-//       location: formData.name,
-//       latitude: parseFloat(formData.latitude),
-//       longitude: parseFloat(formData.longitude),
-//     };
-//
-//     setAddressData((prevData) => {
-//       const newData = [...prevData];
-//       newData[currentAddressIndex] = updatedAddress;
-//       return newData;
-//     });
-//
-//     toggleModal();
-//   };
-//
-//   if (loading) return <div className="text-white">Loading...</div>;
-//   if (error) return <div className="text-red-500">Error: {error.message}</div>;
-//
-//   return (
-//       <div>
-//         <Toaster position="top-left" reverseOrder={true} />
-//         <div className="w-[40rem] p-4 custom-scrollbar">
-//           <h4 className="text-white mb-4 font-bold">Simulation</h4>
-//           <AddressList addressData={addressData} onEdit={toggleModal} />
-//           <button
-//               className="w-full text-sm bg-[#298bfe] text-[#d7e6f7] h-10"
-//               onClick={() => toggleModal(null)}
-//           >
-//             Run Simulation
-//           </button>
-//         </div>
-//         {isModalOpen && (
-//             <Modal
-//                 isOpen={isModalOpen}
-//                 onClose={toggleModal}
-//                 onSubmit={handleFormSubmit}
-//                 addressData={addressData[currentAddressIndex]}
-//             />
-//         )}
-//       </div>
-//   );
-// };
-//
-// export default Simulation;
-
-
-
-import { useState, useEffect } from "react";
-import { Toaster } from "react-hot-toast";
-import useAddressData from "../../../hooks/useAddressData";
-import AddressList from "./AddressList";
-import Modal from "./Modal";
+import AddressCard from './AddressCard';
 import "./scrollbar.css";
+import useAddressData from "../../../hooks/useAddressData.jsx";
+import {MainContext} from "../../../hooks/useSimulationContext.jsx";
+import {useContext, useEffect} from "react";
 
 /**
  * Simulation Component
- * @description Manages address data and form submission for the simulation.
- * @returns {JSX.Element} The rendered Simulation component.
+ * @description This component fetches address data and renders the simulation UI.
+ * @returns {JSX.Element} The rendered component
  */
 
 const Simulation = () => {
-  const { data: initialData, loading, error } = useAddressData();
-  const [addressData, setAddressData] = useState(initialData || []);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentAddressIndex, setCurrentAddressIndex] = useState(null);
 
-  useEffect(() => {
-    setAddressData(initialData);
-  }, [initialData]);
+    let {nodeData, setNodeData, selectedNode, setSelectedNode} = useContext(MainContext)
+    const {data, loading, error} = useAddressData();
 
-  const toggleModal = (index = null) => {
-    setCurrentAddressIndex(index);
-    setIsModalOpen(!isModalOpen);
-  };
+    useEffect(() => {
+        console.log('nodeData changed:', nodeData);
+    }, [nodeData]);
 
-  const handleFormSubmit = (formData) => {
-    if (!formData.address || !formData.name || !formData.latitude || !formData.longitude) {
-      console.error("Invalid form data", formData);
-      return;
-    }
+    if (loading) return <div className="text-white">Loading...</div>;
+    if (error) return <div className="text-red-500">Error: {error.message}</div>;
 
-    const updatedAddress = {
-      address: formData.address,
-      location: formData.name,
-      latitude: parseFloat(formData.latitude),
-      longitude: parseFloat(formData.longitude),
-    };
 
-    setAddressData((prevData) => {
-      const newData = [...prevData];
-      newData[currentAddressIndex] = updatedAddress;
-      return newData;
-    });
+    // Main render
+    return (
+        <div className="w-[40rem] p-4">
+            <h4 className="text-white mb-4 font-bold">Simulation</h4>
+            <div className="grid grid-cols-2 gap-2 mb-2 overflow-y-scroll h-72">
 
-    toggleModal();
-  };
+                {nodeData.map((addressData, index) => (
+                    <AddressCard
+                        key={index}
+                        addressData={addressData}
+                    />
+                ))}
+            </div>
 
-  if (loading) return <div className="text-white">Loading...</div>;
-  if (error) return <div className="text-red-500">Error: {error.message}</div>;
+            <button className="w-full text-sm bg-[#298bfe] text-[#d7e6f7] h-10">
+                Run Simulation
+            </button>
 
-  return (
-      <div>
-        <Toaster position="top-left" reverseOrder={true} />
-        <div className="w-[40rem] p-4 custom-scrollbar">
-          <h4 className="text-white mb-4 font-bold">Simulation</h4>
-          <AddressList addressData={addressData} onEdit={toggleModal} />
-          <button
-              className="w-full text-sm bg-[#298bfe] text-[#d7e6f7] h-10"
-          >
-            Run Simulation
-          </button>
         </div>
-
-      </div>
-  );
+    );
 };
 
 export default Simulation;
