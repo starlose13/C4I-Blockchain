@@ -112,7 +112,7 @@ const MapComponent = () => {
                     height={height}
                     imgWidth={imgWidth}
                     imgHeight={imgHeight}
-                    strokeColor={"red"}
+                    strokeColor={"Transparent"}
                     alt="Map Image"
                 />
                 {renderNodes()}
