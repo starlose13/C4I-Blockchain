@@ -15,9 +15,12 @@
       0.4284221525600836
     ],
     "publicAddress": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-    "latitude": 0.42822822822822826,
-    "longitude": 0.39446185997952454,
-    "positionName": "Main Square"
+    "TargetLatitude": 0.42822822822822826,
+    "TargetLongitude": 0.39446185997952454,
+    "TargetPositionName": "Main Square",
+    "NodeLatitude": "48.8584° N",
+    "NodeLongitude":"3.2945° E",
+    "NodePositionName": "Main Square, Paris, France"
   },
   {
     "name": "02",
@@ -35,9 +38,12 @@
       0.4284221525600836
     ],
     "publicAddress": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-    "latitude": 0.5099099099099099,
-    "longitude": 0.3944618599791013,
-    "positionName": "Central Park"
+    "TargetLatitude": 0.5099099099099099,
+    "TargetLongitude": 0.3944618599791013,
+    "TargetPositionName": "Central Park",
+    "NodeLatitude": "49.8584° N",
+    "NodeLongitude": "4.2945° E",
+    "NodePositionName": "Central Park, Paris, France"
   },
   {
     "name": "03",
@@ -55,9 +61,12 @@
       0.4284221525600836
     ],
     "publicAddress": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-    "latitude": 0.5915915915915916,
-    "longitude": 0.3944618599791013,
-    "positionName": "City Hall"
+    "TargetLatitude": 0.5915915915915916,
+    "TargetLongitude": 0.3944618599791013,
+    "TargetPositionName": "City Hall",
+    "NodeLatitude": "450.8584° N",
+    "NodeLongitude": "5.2945° E",
+    "NodePositionName": "City Hall, Paris, France"
   },
   {
     "name": "04",
@@ -75,9 +84,12 @@
       0.49634273772204807
     ],
     "publicAddress": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
-    "latitude": 0.42822822822822826,
-    "longitude": 0.46238244514106586,
-    "positionName": "Library"
+    "TargetLatitude": 0.42822822822822826,
+    "TargetLongitude": 0.46238244514106586,
+    "TargetPositionName": "Library",
+    "NodeLatitude": "51.8584° N",
+    "NodeLongitude": "6.2945° E",
+    "NodePositionName": "Library, Paris, France"
   },
   {
     "name": "05",
@@ -95,9 +107,12 @@
       0.49634273772204807
     ],
     "publicAddress": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
-    "latitude": 0.5099099099099099,
-    "longitude": 0.46238244514106586,
-    "positionName": "Museum"
+    "TargetLatitude": 0.5099099099099099,
+    "TargetLongitude": 0.46238244514106586,
+    "TargetPositionName": "Museum",
+    "NodeLatitude": "52.8584° N",
+    "NodeLongitude": "7.2945° E",
+    "NodePositionName": "Museum, Paris, France"
   },
   {
     "name": "06",
@@ -115,9 +130,12 @@
       0.49634273772204807
     ],
     "publicAddress": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
-    "latitude": 0.5915915915915916,
-    "longitude": 0.46238244514106586,
-    "positionName": "University"
+    "TargetLatitude": 0.5915915915915916,
+    "TargetLongitude": 0.46238244514106586,
+    "TargetPositionName": "University",
+    "NodeLatitude": "53.8584° N",
+    "NodeLongitude": "7.2945° E",
+    "NodePositionName": "University, Paris, France"
   },
   {
     "name": "07",
@@ -135,9 +153,12 @@
       0.5642633228840125
     ],
     "publicAddress": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
-    "latitude": 0.42822822822822826,
-    "longitude": 0.5303030303030303,
-    "positionName": "Stadium"
+    "TargetLatitude": 0.42822822822822826,
+    "TargetLongitude": 0.5303030303030303,
+    "TargetPositionName": "Stadium",
+    "NodeLatitude": "54.8584° N",
+    "NodeLongitude": "8.2945° E",
+    "NodePositionName": "Stadium, Paris, France"
   },
   {
     "name": "08",
@@ -155,9 +176,12 @@
       0.5642633228840125
     ],
     "publicAddress": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
-    "latitude": 0.5099099099099099,
-    "longitude": 0.5303030303030303,
-    "positionName": "Market"
+    "TargetLatitude": 0.5099099099099099,
+    "TargetLongitude": 0.5303030303030303,
+    "TargetPositionName": "Market",
+    "NodeLatitude": "55.8584° N",
+    "NodeLongitude": "9.2945° E",
+    "NodePositionName": "Market, Paris, France"
   },
   {
     "name": "09",
@@ -175,8 +199,11 @@
       0.5642633228840125
     ],
     "publicAddress": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
-    "latitude": 0.5915915915915916,
-    "longitude": 0.5303030303030303,
-    "positionName": "Station"
+    "TargetLatitude": 0.5915915915915916,
+    "TargetLongitude": 0.5303030303030303,
+    "TargetPositionName": "Station",
+    "NodeLatitude": "56.8584° N",
+    "NodeLongitude": "10.2945° E",
+    "NodePositionName": "Station, Paris, France"
   }
 ]

@@ -55,12 +55,12 @@ const MapComponent = () => {
         console.log(`clientX: ${x}, clientY: ${y}`);
         let temp = nodeData
         let node = temp.find(node => node.id === selectedNode)
-        console.log("ghablan ",temp)
+        console.log("before: ", temp)
 
-        temp[node.id -1 ].latitude = _area.latitude
-        temp[node.id -1 ].longitude = _area.longitude
-        temp[node.id -1 ].location = _area.positionName
-        console.log("after ",temp)
+        temp[node.id - 1].TargetLatitude = _area.TargetLatitude
+        temp[node.id - 1].TargetLongitude = _area.TargetLongitude
+        temp[node.id - 1].location = _area.TargetPositionName
+        console.log("after ", temp)
         setNodeData(temp)
 
         // Ensure tooltip is within viewport
