@@ -8,10 +8,12 @@ export default {
     ],
     theme: {
         extend: {
-            width: {
-                'Box': '50rem',
-            }
-
+            boxShadow: {
+                'custom-raise': '0 0.5em 0.5em -0.4em var(--hover)',
+            },
+            translate: {
+                'custom-raise': '-0.25em',
+            },
         },
         fontFamily: {
             'mono': 'JetBrains Mono'

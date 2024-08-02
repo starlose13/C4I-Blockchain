@@ -1,6 +1,7 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import PropTypes from 'prop-types';
 import {MainContext} from "../../../hooks/useSimulationContext.jsx"
+
 /**
  * AddressCard Component
  * @description Renders individual address data.
@@ -24,12 +25,15 @@ const AddressCard = ({addressData}) => {
         NodeLatitude,
         NodeLongitude
     } = addressData;
-    let {setSelectedNode} = useContext(MainContext)
+
+    const {selectedNode, setSelectedNode} = useContext(MainContext);
+    const isSelected = selectedNode === id;
 
     return (
-        <div className="w-full p-2 bg-[#0d2f5c]" onClick={() => {
-            setSelectedNode(id)
-        }}>
+        <div
+            className={`w-full p-2 ${isSelected ? 'raise border-2 border-blue-500 bg-[#0d2f5c]' : 'bg-[#0d2f5c]'} cursor-pointer`}
+            onClick={() => setSelectedNode(id)}
+        >
             <h3 className="text-sm text-[#dfeeff]">Address</h3>
             <h4 className="text-xs text-[#5178a6]">{address}</h4>
 
