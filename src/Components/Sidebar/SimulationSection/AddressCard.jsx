@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import {MainContext} from "../../../hooks/useSimulationContext.jsx"
+
 /**
  * AddressCard Component
  * @description Renders individual address data.
@@ -13,20 +14,34 @@ import {MainContext} from "../../../hooks/useSimulationContext.jsx"
  * @returns {JSX.Element} The rendered component
  */
 
-const AddressCard = ({ addressData }) => {
-    const { id, address, location, latitude, longitude } = addressData;
+const AddressCard = ({addressData}) => {
+    const {id, address, location, latitude, longitude} = addressData;
     let {setSelectedNode} = useContext(MainContext)
 
     return (
-        <div className="w-full p-2 bg-[#0d2f5c]" onClick={()=>{setSelectedNode(id)}}>
+        <div className="w-full p-2 bg-[#0d2f5c]" onClick={() => {
+            setSelectedNode(id)
+        }}>
             <h3 className="text-sm text-[#dfeeff]">Address</h3>
             <h4 className="text-xs text-[#5178a6]">{address}</h4>
-            <div className="pt-2">
-                <h3 className="text-sm text-[#dfeeff]">Position</h3>
+
+
+            <div className="pt-2 grid grid-rows-3">
+                <h3 className="text-sm text-red-500 font-bold">Target Position </h3>
+                <h2 className="text-xs text-[#5178a6]">Location: {location}</h2>
+                <h2 className="text-xs text-[#5178a6]">Latitude: {latitude}</h2>
+                <h2 className="text-xs text-[#5178a6] ">Longitude: {longitude}</h2>
+            </div>
+
+
+            <div className="pt-2 grid grid-rows-3">
+                <h3 className="text-sm text-[#dfeeff]">Node Position </h3>
                 <h2 className="text-xs text-[#5178a6]">Location: {location}</h2>
                 <h2 className="text-xs text-[#5178a6]">Latitude: {latitude}</h2>
                 <h2 className="text-xs text-[#5178a6]">Longitude: {longitude}</h2>
             </div>
+
+
         </div>
     );
 };
