@@ -8,7 +8,7 @@ import {MainContext} from "../../hooks/useSimulationContext.jsx"
 import dataArea from "./areas.json";
 
 const MapComponent = () => {
-    let {nodeData, setNodeData, selectedNode, setSelectedNode} = useContext(MainContext)
+    let {targetData, setTargetData, selectedNode, setSelectedNode} = useContext(MainContext)
 
     const URL = "/x.jpg";
 
@@ -53,15 +53,20 @@ const MapComponent = () => {
         const x = event.clientX - 25;
         const y = event.clientY;
         console.log(`clientX: ${x}, clientY: ${y}`);
-        let temp = nodeData
+        let temp = targetData
         let node = temp.find(node => node.id === selectedNode)
         console.log("before: ", temp)
-
         temp[node.id - 1].TargetLatitude = _area.TargetLatitude
         temp[node.id - 1].TargetLongitude = _area.TargetLongitude
         temp[node.id - 1].location = _area.TargetPositionName
-        console.log("after ", temp)
-        setNodeData(temp)
+
+        temp[node.id - 1].NodeLatitude = _area.NodeLatitude
+        temp[node.id - 1].NodeLongitude = _area.NodeLongitude
+        temp[node.id - 1].NodePositionName = _area.NodePositionName
+
+        console.log("after target: ", temp)
+        setTargetData(temp)
+
 
         // Ensure tooltip is within viewport
         const adjustedX = Math.min(x, window.innerWidth - 500);
