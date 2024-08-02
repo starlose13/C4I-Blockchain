@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 
 const useAddressData = () => {
     const [data, setData] = useState([]);
@@ -13,53 +13,74 @@ const useAddressData = () => {
                 setTimeout(() => {
                     const fetchedData = [
                         {
-                            id:1,
+                            id: 1,
                             address: '0x13c857...a2297d22256',
                             location: 'Eiffel Tower, Paris, France',
-                            latitude: '48.8584° N',
-                            longitude: '2.2945° E',
+                            TargetLatitude: '48.8584° N',
+                            TargetLongitude: '2.2945° E',
+                            NodePositionName: 'Eiffel Tower, Paris, France',
+                            NodeLatitude: '48.8584° N',
+                            NodeLongitude: '2.2945° E',
                         },
                         {
-                            id:2,
+                            id: 2,
                             address: '0x13c857...a2297d22256',
                             location: 'Eiffel Tower, Paris, France',
-                            latitude: '48.8584° N',
-                            longitude: '2.2945° E',
+                            TargetLatitude: '48.8584° N',
+                            TargetLongitude: '2.2945° E',
+                            NodePositionName: 'Eiffel Tower, Paris, France',
+                            NodeLatitude: '48.8584° N',
+                            NodeLongitude: '2.2945° E',
                         },
                         {
-                            id:3,
+                            id: 3,
                             address: '0x13c857...a2297d22256',
                             location: 'Eiffel Tower, Paris, France',
-                            latitude: '48.8584° N',
-                            longitude: '2.2945° E',
+                            TargetLatitude: '48.8584° N',
+                            TargetLongitude: '2.2945° E',
+                            NodePositionName: 'Eiffel Tower, Paris, France',
+                            NodeLatitude: '48.8584° N',
+                            NodeLongitude: '2.2945° E',
                         },
                         {
-                            id:4,
+                            id: 4,
                             address: '0x13c857...a2297d22256',
                             location: 'Eiffel Tower, Paris, France',
-                            latitude: '48.8584° N',
-                            longitude: '2.2945° E',
+                            TargetLatitude: '48.8584° N',
+                            TargetLongitude: '2.2945° E',
+                            NodePositionName: 'Eiffel Tower, Paris, France',
+                            NodeLatitude: '48.8584° N',
+                            NodeLongitude: '2.2945° E',
                         },
                         {
-                            id:5,
+                            id: 5,
                             address: '0x13c857...a2297d22256',
                             location: 'Eiffel Tower, Paris, France',
-                            latitude: '48.8584° N',
-                            longitude: '2.2945° E',
+                            TargetLatitude: '48.8584° N',
+                            TargetLongitude: '2.2945° E',
+                            NodePositionName: 'Eiffel Tower, Paris, France',
+                            NodeLatitude: '48.8584° N',
+                            NodeLongitude: '2.2945° E',
                         },
                         {
-                            id:6,
+                            id: 6,
                             address: '0x13c857...a2297d22256',
                             location: 'Eiffel Tower, Paris, France',
-                            latitude: '48.8584° N',
-                            longitude: '2.2945° E',
+                            TargetLatitude: '48.8584° N',
+                            TargetLongitude: '2.2945° E',
+                            NodePositionName: 'Eiffel Tower, Paris, France',
+                            NodeLatitude: '48.8584° N',
+                            NodeLongitude: '2.2945° E',
                         },
                         {
-                            id:7,
+                            id: 7,
                             address: '0x13c857...a2297d22256',
                             location: 'Eiffel Tower, Paris, France',
-                            latitude: '48.8584° N',
-                            longitude: '2.2945° E',
+                            TargetLatitude: '48.8584° N',
+                            TargetLongitude: '2.2945° E',
+                            NodePositionName: 'Eiffel Tower, Paris, France',
+                            NodeLatitude: '48.8584° N',
+                            NodeLongitude: '2.2945° E',
                         },
                     ];
                     setData(fetchedData);
@@ -74,7 +95,7 @@ const useAddressData = () => {
         fetchData();
     }, []);
 
-    return { data, loading, error };
+    return {data, loading, error};
 };
 
 export default useAddressData;

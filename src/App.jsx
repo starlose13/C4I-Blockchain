@@ -8,60 +8,79 @@ import {useState} from "react";
 
 function App() {
     const [selectedNode, setSelectedNode] = useState(0)
-    const [nodeData, setNodeData] = useState([
+    const [targetData, setTargetData] = useState([
         {
-            id:1,
+            id: 1,
             address: '0x13c857...a2297d22256',
             location: 'Eiffel Tower, Paris, France',
             latitude: '48.8584° N',
             longitude: '2.2945° E',
         },
         {
-            id:2,
+            id: 2,
             address: '0x13c857...a2297d22256',
             location: 'Eiffel Tower, Paris, France',
-            latitude: '48.8584° N',
-            longitude: '2.2945° E',
+            TargetLatitude: '48.8584° N',
+            TargetLongitude: '2.2945° E',
+            NodePositionName: 'Eiffel Tower, Paris, France',
+            NodeLatitude:'48.8584° N',
+            NodeLongitude:'2.2945° E',
         },
         {
-            id:3,
+            id: 3,
             address: '0x13c857...a2297d22256',
             location: 'Eiffel Tower, Paris, France',
-            latitude: '48.8584° N',
-            longitude: '2.2945° E',
+            TargetLatitude: '48.8584° N',
+            TargetLongitude: '2.2945° E',
+            NodePositionName: 'Eiffel Tower, Paris, France',
+            NodeLatitude:'48.8584° N',
+            NodeLongitude:'2.2945° E',
         },
         {
-            id:4,
+            id: 4,
             address: '0x13c857...a2297d22256',
             location: 'Eiffel Tower, Paris, France',
-            latitude: '48.8584° N',
-            longitude: '2.2945° E',
+            TargetLatitude: '48.8584° N',
+            TargetLongitude: '2.2945° E',
+            NodePositionName: 'Eiffel Tower, Paris, France',
+            NodeLatitude:'48.8584° N',
+            NodeLongitude:'2.2945° E',
         },
         {
-            id:5,
+            id: 5,
             address: '0x13c857...a2297d22256',
             location: 'Eiffel Tower, Paris, France',
-            latitude: '48.8584° N',
-            longitude: '2.2945° E',
+            TargetLatitude: '48.8584° N',
+            TargetLongitude: '2.2945° E',
+            NodePositionName: 'Eiffel Tower, Paris, France',
+            NodeLatitude:'48.8584° N',
+            NodeLongitude:'2.2945° E',
         },
         {
-            id:6,
+            id: 6,
             address: '0x13c857...a2297d22256',
             location: 'Eiffel Tower, Paris, France',
-            latitude: '48.8584° N',
-            longitude: '2.2945° E',
+            TargetLatitude: '48.8584° N',
+            TargetLongitude: '2.2945° E',
+            NodePositionName: 'Eiffel Tower, Paris, France',
+            NodeLatitude:'48.8584° N',
+            NodeLongitude:'2.2945° E',
         },
         {
-            id:7,
+            id: 7,
             address: '0x13c857...a2297d22256',
             location: 'Eiffel Tower, Paris, France',
-            latitude: '48.8584° N',
-            longitude: '2.2945° E',
+            TargetLatitude: '48.8584° N',
+            TargetLongitude: '2.2945° E',
+            NodePositionName: 'Eiffel Tower, Paris, France',
+            NodeLatitude:'48.8584° N',
+            NodeLongitude:'2.2945° E',
         },
     ])
 
     return (
-        <MainContext.Provider value={{selectedNode, setSelectedNode,nodeData,setNodeData}}>
+        <MainContext.Provider
+            value={{selectedNode, setSelectedNode, targetData, setTargetData}}>
             <div className="w-full h-screen relative bg-[#00030c]">
                 <Navbar/>
                 <div className="flex">

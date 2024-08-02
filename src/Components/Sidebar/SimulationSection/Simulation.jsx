@@ -12,12 +12,12 @@ import {useContext, useEffect} from "react";
 
 const Simulation = () => {
 
-    let {nodeData, setNodeData, selectedNode, setSelectedNode} = useContext(MainContext)
-    const {data, loading, error} = useAddressData();
+    let {targetData} = useContext(MainContext)
+    const {loading, error} = useAddressData();
 
     useEffect(() => {
-        console.log('nodeData changed:', nodeData);
-    }, [nodeData]);
+        console.log('targetData changed:', targetData);
+    }, [targetData]);
 
     if (loading) return <div className="text-white">Loading...</div>;
     if (error) return <div className="text-red-500">Error: {error.message}</div>;
@@ -29,7 +29,7 @@ const Simulation = () => {
             <h4 className="text-white mb-4 font-bold">Simulation</h4>
             <div className="grid grid-cols-2 gap-2 mb-2 overflow-y-scroll h-72">
 
-                {nodeData.map((addressData, index) => (
+                {targetData.map((addressData, index) => (
                     <AddressCard
                         key={index}
                         addressData={addressData}
