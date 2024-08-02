@@ -4,11 +4,11 @@ import areas from './areas.json';
 import nodes from './node.json';
 import NodeTooltip from "./NodeTooltip.jsx";
 import TargetTooltip from "./TargetTooltip.jsx";
-import {MainContext} from "../../hooks/useSimulationContext.jsx"
+import {MainContext} from "../../hooks/useSimulationContext.jsx";
 import dataArea from "./areas.json";
 
 const MapComponent = () => {
-    let {targetData, setTargetData, selectedNode, setSelectedNode} = useContext(MainContext)
+    const {targetData, setTargetData, selectedNode} = useContext(MainContext);
 
     const URL = "/x.jpg";
 
@@ -47,26 +47,28 @@ const MapComponent = () => {
     };
 
     const handleAreaClick = (area, index, event) => {
-
         const _area = dataArea.find(a => a.name === area.name);
 
         const x = event.clientX - 25;
         const y = event.clientY;
-        console.log(`clientX: ${x}, clientY: ${y}`);
-        let temp = targetData
-        let node = temp.find(node => node.id === selectedNode)
-        console.log("before: ", temp)
-        temp[node.id - 1].TargetLatitude = _area.TargetLatitude
-        temp[node.id - 1].TargetLongitude = _area.TargetLongitude
-        temp[node.id - 1].location = _area.TargetPositionName
 
-        temp[node.id - 1].NodeLatitude = _area.NodeLatitude
-        temp[node.id - 1].NodeLongitude = _area.NodeLongitude
-        temp[node.id - 1].NodePositionName = _area.NodePositionName
-
-        console.log("after target: ", temp)
-        setTargetData(temp)
-
+        setTargetData(prevData => {
+            const updatedData = prevData.map((node, idx) => {
+                if (idx === selectedNode - 1) {
+                    return {
+                        ...node,
+                        TargetLatitude: _area.TargetLatitude,
+                        TargetLongitude: _area.TargetLongitude,
+                        location: _area.TargetPositionName,
+                        NodeLatitude: _area.NodeLatitude,
+                        NodeLongitude: _area.NodeLongitude,
+                        NodePositionName: _area.NodePositionName
+                    };
+                }
+                return node;
+            });
+            return updatedData;
+        });
 
         // Ensure tooltip is within viewport
         const adjustedX = Math.min(x, window.innerWidth - 500);
@@ -98,6 +100,7 @@ const MapComponent = () => {
             );
         });
     };
+
     return (
         <div className="ml-48 mt-10">
             <div className="drop-shadow relative">
@@ -109,7 +112,6 @@ const MapComponent = () => {
                     height={height}
                     imgWidth={imgWidth}
                     imgHeight={imgHeight}
-                    // strokeColor={"transparent"}
                     strokeColor={"red"}
                     alt="Map Image"
                 />
