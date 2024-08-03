@@ -3,7 +3,7 @@ import Navbar from "./Components/Navbar.jsx";
 import Sidebar from "./Components/Sidebar.jsx";
 import MapComponent from "./Components/MapComponent/MapComponents.jsx";
 import {MainContext} from "./hooks/useSimulationContext.jsx";
-import {useState} from "react";
+import React, {useState} from "react";
 
 
 function App() {
@@ -77,6 +77,7 @@ function App() {
             NodeLongitude:'2.2945° E',
         },
     ])
+
 
     return (
         <MainContext.Provider
