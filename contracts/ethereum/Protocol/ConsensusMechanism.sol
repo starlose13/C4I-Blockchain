@@ -214,7 +214,7 @@ contract ConsensusMechanism is
         }
         require(
             AddressUpgradeable.isContract(newImplementation),
-            "New implementation is not a contract"
+            "implementation is not a contract"
         );
     }
 

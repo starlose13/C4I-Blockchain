@@ -63,12 +63,19 @@ contract IntegratedDeploymentScript is Script {
             6
         );
 
-        initialNodeAddresses[0] = makeAddr("Alice");
-        initialNodeAddresses[1] = makeAddr("Bob");
-        initialNodeAddresses[2] = makeAddr("Carol");
-        initialNodeAddresses[3] = makeAddr("Dave");
-        initialNodeAddresses[4] = makeAddr("Eve");
-        initialNodeAddresses[5] = makeAddr("Mallory");
+        // initialNodeAddresses[0] = makeAddr("Alice");
+        // initialNodeAddresses[1] = makeAddr("Bob");
+        // initialNodeAddresses[2] = makeAddr("Carol");
+        // initialNodeAddresses[3] = makeAddr("Dave");
+        // initialNodeAddresses[4] = makeAddr("Eve");
+        // initialNodeAddresses[5] = makeAddr("Mallory");
+
+        initialNodeAddresses[0] = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
+        initialNodeAddresses[1] = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
+        initialNodeAddresses[2] = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC;
+        initialNodeAddresses[3] = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
+        initialNodeAddresses[4] = 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65;
+        initialNodeAddresses[5] = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
 
         nodesIPFSData[0] = "Position 0";
         nodesIPFSData[1] = "Position 1";
@@ -79,7 +86,7 @@ contract IntegratedDeploymentScript is Script {
 
         nodesRegions[0] = DataTypes.NodeRegion.North;
         nodesRegions[1] = DataTypes.NodeRegion.North;
-        nodesRegions[2] = DataTypes.NodeRegion.North;
+        nodesRegions[2] = DataTypes.NodeRegion.South;
         nodesRegions[3] = DataTypes.NodeRegion.East;
         nodesRegions[4] = DataTypes.NodeRegion.West;
         nodesRegions[5] = DataTypes.NodeRegion.Central;
