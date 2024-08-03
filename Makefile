@@ -4,7 +4,7 @@
 HOLESKY_NETWORK_ARGS := --rpc-url $(HOLESKY_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) 
 FANTOM_NETWORK_ARGS := --rpc-url $(FANTOM_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -vvvv --verify --etherscan-api-key $(FANTOMSCAN_API_KEY) 
 AMOY_NETWORK_ARGS := --rpc-url $(AMOY_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -vvvv --verify --etherscan-api-key $(ETHERSCAN_API_KEY) 
-
+LOCAL_NETWORK_ARGS := --rpc-url $(LOCAL_RPC_URL) --private-key $(LOCAL_PRIVATE_KEY) --broadcast -vvvv
 # Default network
 NETWORK_ARGS := $(HOLESKY_NETWORK_ARGS)
 
@@ -18,6 +18,8 @@ else ifeq ($(ARGS),--network holesky)
     NETWORK_ARGS := $(HOLESKY_NETWORK_ARGS)
 else ifeq ($(ARGS),--network amoy)
     NETWORK_ARGS := $(AMOY_NETWORK_ARGS)
+else ifeq ($(ARGS),--network local)
+	NETWORK_ARGS := $(LOCAL_NETWORK_ARGS)
 endif
 
 # Print the value of NETWORK_ARGS for debugging
@@ -26,9 +28,12 @@ $(info NETWORK_ARGS: $(NETWORK_ARGS))
 
 #deploy  the node manager smart contract on the specefic network 
 
-deploy:
-	@forge script ./script/NodeManagerScript.s.sol:NodeManagerScript  $(NETWORK_ARGS)
-
+deploy-nm:
+	@forge script ./script/NodeManagerScripts/NodeManagerScript.s.sol:NodeManagerScript  $(NETWORK_ARGS)
+deploy-cm:
+	@forge script ./script/ConsensusMechanismScript.s.sol:ConsensusMechanismScript $(NETWORK_ARGS)
+deploy-contract:
+	@forge script ./script/IntegratedScripts/IntegratedDeploymentScript.s.sol:IntegratedDeploymentScript $(NETWORK_ARGS)
 git-add:
 	@git add .
 
@@ -41,4 +46,4 @@ git-push:
 git-add-commit-push: git-add git-commit git-push
 
 # Target to run deployment and then commit changes to git
-deploy-and-commit: deploy git-add-commit-push
+deploy-and-commit-nodeManager: deploy git-add-commit-push

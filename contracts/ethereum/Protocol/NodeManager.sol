@@ -1,20 +1,42 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
-import {INodeManager} from "../../interfaces/INodeManager.sol";
+import {INodeManager} from "../../../interfaces/INodeManager.sol";
 import {DataTypes} from "../Helper/DataTypes.sol";
 import {Errors} from "../Helper/Errors.sol";
+import {OwnableUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
+import {UUPSUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {Initializable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import {AccessControlUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
+import {AddressUpgradeable} from "lib/chainlink-brownie-contracts/contracts/src/v0.8/vendor/openzeppelin-contracts-upgradeable/v4.8.1/utils/AddressUpgradeable.sol";
 
 /**
  * @title NodeManager
  * @author SunAir institue, University of Ferdowsi
  * @dev This contract manages the registration and data of nodes within a decentralized system.
  */
-contract NodeManager is INodeManager {
-    // Contract Admin who can modify the contract and manage the system
-    address immutable CONTRACT_ADMIN;
+contract NodeManager is
+    INodeManager,
+    Initializable,
+    UUPSUpgradeable,
+    OwnableUpgradeable,
+    AccessControlUpgradeable
+{
+    /*//////////////////////////////////////////////////////////////
+                           STATE VARIABLES
+    //////////////////////////////////////////////////////////////*/
 
-    ////////////////// MAPPINGS  /////////////////////////
+    bytes32 private UPGRADER_ROLE;
+
+    // Contract Admin who can modify the contract and manage the system
+    address private CONTRACT_ADMIN;
+
+    // Array to store all node addresses
+    address[] internal s_nodes;
+
+    /*//////////////////////////////////////////////////////////////
+                               MAPPINGS
+    //////////////////////////////////////////////////////////////*/
 
     // Mapping to store registered nodes and their data
     mapping(address => DataTypes.RegisteredNodes) private s_registeredNodes;
@@ -22,8 +44,12 @@ contract NodeManager is INodeManager {
     // Mapping to check if a node is already registered
     mapping(address => bool) private s_ExistingNodes;
 
-    // Array to store all node addresses
-    address[] private s_nodes;
+    /*//////////////////////////////////////////////////////////////
+                             CONSTRUCTOR
+    //////////////////////////////////////////////////////////////*/
+    constructor() {
+        _disableInitializers();
+    }
 
     /**
      * @dev Constructor to initialize the contract with initial nodes.
@@ -32,17 +58,24 @@ contract NodeManager is INodeManager {
      * @param IPFS Array of IPFS hashes corresponding to the node data. this IPFS contains the details of
      * the nodes data consisting of the type of weapons and the name of the weapon
      */
-    constructor(
+    function initialize(
         address[] memory _nodeAddresses,
         DataTypes.NodeRegion[] memory _currentPosition,
         string[] memory IPFS
-    ) {
+    ) public initializer {
         if (_nodeAddresses.length != _currentPosition.length) {
-            revert Errors.NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL();
+            revert Errors.ARRAYS_LENGTH_IS_NOT_EQUAL();
         }
         CONTRACT_ADMIN = msg.sender;
+        UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+        __Ownable_init(CONTRACT_ADMIN);
         _initializeNodes(_nodeAddresses, _currentPosition, IPFS);
+        __UUPSUpgradeable_init();
     }
+
+    /*//////////////////////////////////////////////////////////////
+                              MODIFIERS
+    //////////////////////////////////////////////////////////////*/
 
     /**
      * @dev Modifier to restrict functions to only the contract admin.
@@ -52,6 +85,36 @@ contract NodeManager is INodeManager {
             revert Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED();
         }
         _;
+    }
+
+    /**
+     * @dev Modifier to restrict address(0) call functions.
+     */
+
+    modifier notZeroAddress(address sender) {
+        if (sender == address(0)) {
+            revert Errors.NOT_ZERO_ADDRESS_ALLOWED();
+        }
+        _;
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                              FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /*//////////////////////////////////////////////////////////////
+                          INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    function _authorizeUpgrade(
+        address newImplementation
+    ) internal view override onlyRole(UPGRADER_ROLE) {
+        if (msg.sender != CONTRACT_ADMIN) {
+            revert Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED();
+        }
+        if (!AddressUpgradeable.isContract(newImplementation)) {
+            revert Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED();
+        }
     }
 
     /**
@@ -65,7 +128,7 @@ contract NodeManager is INodeManager {
         address[] memory _nodeAddress,
         DataTypes.NodeRegion[] memory _currentPosition,
         string[] memory IPFS
-    ) private {
+    ) internal {
         for (uint256 i = 0; i < _nodeAddress.length; i++) {
             _registerNode(_nodeAddress[i], _currentPosition[i], IPFS[i]);
         }
@@ -82,7 +145,7 @@ contract NodeManager is INodeManager {
         address _nodeAddress,
         DataTypes.NodeRegion currentPosition,
         string memory IPFS
-    ) private {
+    ) internal notZeroAddress(_nodeAddress) {
         s_registeredNodes[_nodeAddress] = DataTypes.RegisteredNodes({
             nodeAddress: _nodeAddress,
             currentPosition: currentPosition,
@@ -93,21 +156,23 @@ contract NodeManager is INodeManager {
         emit NodeRegistered(_nodeAddress, currentPosition);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                     PUBLIC & EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
     /**
-     * @dev Retrieves data of all registered nodes.
-     * @return Array of RegisteredNodes structs.
+     * @dev Updates the IPFS data of a node.
+     * @param _nodeAddress Address of the node to update.
+     * @param newIPFS New IPFS data.
      */
-    function retrieveAllRegisteredNodeData()
-        external
-        view
-        returns (DataTypes.RegisteredNodes[] memory)
-    {
-        DataTypes.RegisteredNodes[]
-            memory result = new DataTypes.RegisteredNodes[](s_nodes.length);
-        for (uint256 i; i < s_nodes.length; i++) {
-            result[i] = s_registeredNodes[s_nodes[i]];
+    function updateNodeIPFSData(
+        address _nodeAddress,
+        string memory newIPFS
+    ) external onlyContractAdmin notZeroAddress(_nodeAddress) {
+        if (!isNodeRegistered(_nodeAddress)) {
+            revert Errors.NodeManager__NODE_NOT_FOUND();
         }
-        return result;
+        s_registeredNodes[_nodeAddress].IPFSData = newIPFS;
     }
 
     /**
@@ -130,6 +195,22 @@ contract NodeManager is INodeManager {
     }
 
     /**
+     * @dev Updates the position of a node.
+     * @param expeditionaryForces New position of the node.
+     * @param _nodeAddress Address of the node to update.
+     */
+
+    function updateExpeditionaryForces(
+        DataTypes.NodeRegion expeditionaryForces,
+        address _nodeAddress
+    ) external onlyContractAdmin notZeroAddress(_nodeAddress) {
+        s_registeredNodes[_nodeAddress].currentPosition = expeditionaryForces;
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                               GETTERS
+    //////////////////////////////////////////////////////////////*/
+    /**
      * @dev Checks if a node is already registered.
      * @param nodeAddress Address of the node to check.
      * @return Boolean indicating if the node is registered.
@@ -140,19 +221,6 @@ contract NodeManager is INodeManager {
             return true;
         }
         return false;
-    }
-
-    /**
-     * @dev Updates the position of a node.
-     * @param expeditionaryForces New position of the node.
-     * @param _nodeAddress Address of the node to update.
-     */
-
-    function updateExpeditionaryForces(
-        DataTypes.NodeRegion expeditionaryForces,
-        address _nodeAddress
-    ) external onlyContractAdmin {
-        s_registeredNodes[_nodeAddress].currentPosition = expeditionaryForces;
     }
 
     /**
@@ -191,17 +259,27 @@ contract NodeManager is INodeManager {
     }
 
     /**
-     * @dev Updates the IPFS data of a node.
-     * @param _nodeAddress Address of the node to update.
-     * @param newIPFS New IPFS data.
+     * @dev Retrieves data of all registered nodes.
+     * @return Array of RegisteredNodes structs.
      */
-    function updateNodeIPFSData(
-        address _nodeAddress,
-        string memory newIPFS
-    ) external onlyContractAdmin {
-        if (!isNodeRegistered(_nodeAddress)) {
-            revert Errors.NodeManager__NODE_NOT_FOUND();
+    function retrieveAllRegisteredNodeData()
+        external
+        view
+        returns (DataTypes.RegisteredNodes[] memory)
+    {
+        DataTypes.RegisteredNodes[]
+            memory result = new DataTypes.RegisteredNodes[](s_nodes.length);
+        for (uint256 i; i < s_nodes.length; i++) {
+            result[i] = s_registeredNodes[s_nodes[i]];
         }
-        s_registeredNodes[_nodeAddress].IPFSData = newIPFS;
+        return result;
+    }
+
+    function retrieveOwner() external view returns (address contractOwner) {
+        return CONTRACT_ADMIN;
+    }
+
+    function getNodeAddresses() external view returns (address[] memory) {
+        return s_nodes;
     }
 }

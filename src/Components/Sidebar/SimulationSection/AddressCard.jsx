@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
@@ -10,13 +9,19 @@ import PropTypes from 'prop-types';
  * @param {string} props.addressData.location - The location
  * @param {number} props.addressData.latitude - The latitude
  * @param {number} props.addressData.longitude - The longitude
+ * @param {Function} props.onEdit - Function to initiate editing
  * @returns {JSX.Element} The rendered component
  */
-const AddressCard = ({ addressData }) => {
+
+const AddressCard = ({ addressData, onEdit }) => {
+    if (!addressData) {
+        return null; // or return a placeholder UI
+    }
+
     const { address, location, latitude, longitude } = addressData;
 
     return (
-        <div className="w-full p-2 bg-[#0d2f5c]">
+        <div className="w-full p-2 bg-[#0d2f5c]" onClick={onEdit}>
             <h3 className="text-sm text-[#dfeeff]">Address</h3>
             <h4 className="text-xs text-[#5178a6]">{address}</h4>
             <div className="pt-2">
@@ -29,6 +34,7 @@ const AddressCard = ({ addressData }) => {
     );
 };
 
+
 AddressCard.propTypes = {
     addressData: PropTypes.shape({
         address: PropTypes.string.isRequired,
@@ -36,6 +42,7 @@ AddressCard.propTypes = {
         latitude: PropTypes.number.isRequired,
         longitude: PropTypes.number.isRequired,
     }).isRequired,
+    onEdit: PropTypes.func.isRequired,
 };
 
 export default AddressCard;

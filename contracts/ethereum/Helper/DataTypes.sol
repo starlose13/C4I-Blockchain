@@ -7,6 +7,9 @@ pragma solidity ^0.8.0;
  * @notice Defines the essential structs that worked with the different contracts of the BLOCKCHAINENVIROCOMM protocol
  */
 library DataTypes {
+    /*//////////////////////////////////////////////////////////////
+                                ENUMS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev Enum to represent different node regions.
      */
@@ -22,12 +25,16 @@ library DataTypes {
      */
 
     enum TargetZone {
-        None,
-        EnemyBunkers,
-        ArtilleryEmplacements,
-        CommunicationTowers,
-        ObservationPosts
+        None, // 0
+        EnemyBunkers, // 1
+        ArtilleryEmplacements, // 2
+        CommunicationTowers, // 3
+        ObservationPosts // 4
     }
+
+    /*//////////////////////////////////////////////////////////////
+                               STRUCTS
+    //////////////////////////////////////////////////////////////*/
     /**
      * @dev Struct to store data of a registered node.
      */
@@ -56,8 +63,26 @@ library DataTypes {
         uint256 timestamp; // Time when the vote was committed
     }
 
+    /*//////////////////////////////////////////////////////////////
+                                EVENTS
+    //////////////////////////////////////////////////////////////*/
+
     event TargetLocationReported(
         address indexed node,
         TargetZone announceTarget
+    );
+    event TargetLocationSimulated(
+        address indexed agent,
+        DataTypes.TargetZone announceTarget
+    );
+    event EpochStatusUpdated(uint256 startTime, bool epochStatus);
+    event ConsensusExecuted(
+        bool isReached,
+        uint256 target,
+        uint256 epochCounter
+    );
+    event ConsensusThresholdModified(
+        uint64 previousThreshold,
+        uint64 newThreshold
     );
 }

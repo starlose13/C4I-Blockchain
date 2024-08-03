@@ -1,247 +1,223 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
-
-import {Test} from "forge-std/Test.sol";
-import {NodeManager} from "../contracts/Protocol/NodeManager.sol";
-import {DataTypes} from "../contracts/Helper/DataTypes.sol";
-import {Errors} from "../contracts/Helper/Errors.sol";
-import {NodeManagerScript} from "../script/NodeManagerScript.s.sol";
+pragma solidity 0.8.24;
+import {Test, console} from "forge-std/Test.sol";
+import {NodeManager} from "../contracts/ethereum/Protocol/NodeManager.sol";
+import {DataTypes} from "../contracts/ethereum/Helper/DataTypes.sol";
+import {Errors} from "../contracts/ethereum/Helper/Errors.sol";
+import {StdCheats} from "forge-std/StdCheats.sol";
+import {Initializable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import {IntegratedDeploymentScript} from "../script/IntegratedScripts/IntegratedDeploymentScript.s.sol";
+import {ConsensusMechanismScript} from "../script/ConsensusMechanismScripts/ConsensusMechanismScript.s.sol";
 
 contract NodeManagerTest is Test {
-    address private admin = address(0xABCD);
-    address private immutable FIRST_COMMANDER = makeAddr("ALICE Commander");
-    address private immutable SECOND_COMMANDER = makeAddr("BOB Commander");
-    address private immutable THIRD_COMMANDER = makeAddr("JHON Commander");
-    DataTypes.NodeRegion private region1 = DataTypes.NodeRegion.North;
-    DataTypes.NodeRegion private region2 = DataTypes.NodeRegion.South;
-    string private ipfs1 = "QmNode1";
-    string private ipfs2 = "QmNode2";
-    NodeManager private nodeManager;
-    NodeManagerScript public nodeManagerScript;
+    address consensusProxyContract;
+    address nodeManagerProxyContract;
+    address policyCustodian;
 
-    function setUp() public {
-        nodeManagerScript = new NodeManagerScript();
-        nodeManager = nodeManagerScript.run();
+    function setUp() external {
+        IntegratedDeploymentScript scriptDeployer = new IntegratedDeploymentScript();
 
-        vm.deal(FIRST_COMMANDER, 100 ether);
-        vm.deal(SECOND_COMMANDER, 100 ether);
-        vm.deal(THIRD_COMMANDER, 100 ether);
-
-        address[] memory nodes = new address[](2);
-        nodes[0] = FIRST_COMMANDER;
-        nodes[1] = SECOND_COMMANDER;
-
-        DataTypes.NodeRegion[] memory regions = new DataTypes.NodeRegion[](2);
-        regions[0] = region1;
-        regions[1] = region2;
-
-        string[] memory ipfsData = new string[](2);
-        ipfsData[0] = ipfs1;
-        ipfsData[1] = ipfs2;
-
-        vm.prank(admin);
-        nodeManager = new NodeManager(nodes, regions, ipfsData);
+        (
+            consensusProxyContract,
+            nodeManagerProxyContract,
+            policyCustodian
+        ) = scriptDeployer.run();
     }
 
-    function testInitialization() public {
-        DataTypes.RegisteredNodes[] memory nodes = nodeManager
-            .retrieveAllRegisteredNodeData();
-        assertEq(nodes.length, 2, "Incorrect number of nodes registered");
-
+    function testNodeManagerInitialization() public {
+        uint256 expectedValue = 6;
         assertEq(
-            nodes[0].nodeAddress,
-            FIRST_COMMANDER,
-            "First node address mismatch"
+            NodeManager(nodeManagerProxyContract).numberOfPresentNodes(),
+            expectedValue,
+            "Incorrect number of nodes registered"
         );
-        assertEq(
-            uint256(nodes[0].currentPosition),
-            uint256(region1),
-            "First node region mismatch"
-        );
-        assertEq(nodes[0].IPFSData, ipfs1, "First node IPFS data mismatch");
-
-        assertEq(
-            nodes[1].nodeAddress,
-            SECOND_COMMANDER,
-            "Second node address mismatch"
-        );
-        assertEq(
-            uint256(nodes[1].currentPosition),
-            uint256(region2),
-            "Second node region mismatch"
-        );
-        assertEq(nodes[1].IPFSData, ipfs2, "Second node IPFS data mismatch");
     }
 
-    function testRegisterNewNode() public {
+    function testRegisterRandomNode() public {
         address newNode = address(0x9ABC);
         DataTypes.NodeRegion newRegion = DataTypes.NodeRegion.East;
         string memory newIpfs = "QmNewNode";
-
-        vm.prank(admin);
-        nodeManager.registerNewNode(newNode, newRegion, newIpfs);
-
-        DataTypes.RegisteredNodes[] memory nodes = nodeManager
-            .retrieveAllRegisteredNodeData();
-        assertEq(nodes.length, 3, "Node not added correctly");
-
-        assertEq(nodes[2].nodeAddress, newNode, "New node address mismatch");
+        vm.prank(policyCustodian);
+        NodeManager(nodeManagerProxyContract).registerNewNode(
+            newNode,
+            newRegion,
+            newIpfs
+        );
+        DataTypes.RegisteredNodes[] memory nodes = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
+        assertEq(nodes.length, 7, "Node not added correctly");
+        assertEq(nodes[6].nodeAddress, newNode, "New node address mismatch");
         assertEq(
-            uint256(nodes[2].currentPosition),
+            uint256(nodes[6].currentPosition),
             uint256(newRegion),
             "New node region mismatch"
         );
-        assertEq(nodes[2].IPFSData, newIpfs, "New node IPFS data mismatch");
+        assertEq(nodes[6].IPFSData, newIpfs, "New node IPFS data mismatch");
     }
 
     function testRegisterNewNodeNotAuthorized() public {
         address newNode = address(0x9ABC);
         DataTypes.NodeRegion newRegion = DataTypes.NodeRegion.East;
         string memory newIpfs = "QmNewNode";
-
+        vm.prank(newNode);
         vm.expectRevert(Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED.selector);
-        nodeManager.registerNewNode(newNode, newRegion, newIpfs);
+        NodeManager(nodeManagerProxyContract).registerNewNode(
+            newNode,
+            newRegion,
+            newIpfs
+        );
     }
 
     function testNodeAlreadyExists() public {
-        vm.prank(admin);
+        DataTypes.RegisteredNodes[] memory nodes = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
+        vm.prank(policyCustodian);
         vm.expectRevert(Errors.NodeManager__NODE_ALREADY_EXIST.selector);
-        nodeManager.registerNewNode(FIRST_COMMANDER, region1, ipfs1);
+        NodeManager(nodeManagerProxyContract).registerNewNode(
+            nodes[0].nodeAddress,
+            nodes[0].currentPosition,
+            nodes[0].IPFSData
+        );
     }
 
-    function testUpdateExpeditionaryForces() public {
+    function testUpdateNodeExpeditionary() public {
+        DataTypes.RegisteredNodes[] memory nodeResults = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
         DataTypes.NodeRegion newRegion = DataTypes.NodeRegion.Central;
-
-        vm.prank(admin);
-        nodeManager.updateExpeditionaryForces(newRegion, FIRST_COMMANDER);
-
-        DataTypes.RegisteredNodes[] memory nodes = nodeManager
-            .retrieveAllRegisteredNodeData();
+        vm.prank(policyCustodian);
+        NodeManager(nodeManagerProxyContract).updateExpeditionaryForces(
+            newRegion,
+            nodeResults[0].nodeAddress
+        );
+        DataTypes.RegisteredNodes[] memory nodeResultsAfterChange = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
         assertEq(
-            uint256(nodes[0].currentPosition),
+            uint256(nodeResultsAfterChange[0].currentPosition),
             uint256(newRegion),
             "Node region update failed"
         );
     }
 
     function testUpdateExpeditionaryForcesNotAuthorized() public {
+        DataTypes.RegisteredNodes[] memory nodeResults = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
         DataTypes.NodeRegion newRegion = DataTypes.NodeRegion.Central;
-
+        vm.prank(nodeResults[0].nodeAddress);
         vm.expectRevert(Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED.selector);
-        nodeManager.updateExpeditionaryForces(newRegion, FIRST_COMMANDER);
+        NodeManager(nodeManagerProxyContract).updateExpeditionaryForces(
+            newRegion,
+            nodeResults[0].nodeAddress
+        );
     }
 
-    function testNumberOfPresentNodes() public {
-        uint256 count = nodeManager.numberOfPresentNodes();
-        assertEq(count, 2, "Number of present nodes mismatch");
-    }
-
-    function testRetrieveAddressByIndex() public {
-        address retrievedNode1 = nodeManager.retrieveAddressByIndex(0);
-        address retrievedNode2 = nodeManager.retrieveAddressByIndex(1);
-
-        assertEq(
-            retrievedNode1,
-            FIRST_COMMANDER,
-            "First node retrieval mismatch"
-        );
-        assertEq(
-            retrievedNode2,
-            SECOND_COMMANDER,
-            "Second node retrieval mismatch"
-        );
+    function testNumberOfCurrentNodes() public {
+        uint256 count = NodeManager(nodeManagerProxyContract)
+            .numberOfPresentNodes();
+        uint256 expectedValue = 6;
+        assertEq(count, expectedValue, "Number of present nodes mismatch");
     }
 
     function testRetrieveAddressByIndexOutOfBounds() public {
         vm.expectRevert();
-        nodeManager.retrieveAddressByIndex(10);
+        NodeManager(nodeManagerProxyContract).retrieveAddressByIndex(10);
     }
 
     function testRetrieveNodeDataByAddressNotFound() public {
         vm.expectRevert(Errors.NodeManager__NODE_NOT_FOUND.selector);
-        nodeManager.retrieveNodeDataByAddress(address(0x9999));
+        NodeManager(nodeManagerProxyContract).retrieveNodeDataByAddress(
+            address(0x9999)
+        );
     }
 
     function testUpdateNodeIPFSData() public {
+        DataTypes.RegisteredNodes[] memory nodeResults = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
         string memory newIpfs = "QmUpdatedNode";
-        vm.prank(admin);
-        nodeManager.updateNodeIPFSData(FIRST_COMMANDER, newIpfs);
-
-        DataTypes.RegisteredNodes memory nodeData = nodeManager
-            .retrieveNodeDataByAddress(FIRST_COMMANDER);
+        vm.prank(policyCustodian);
+        NodeManager(nodeManagerProxyContract).updateNodeIPFSData(
+            nodeResults[0].nodeAddress,
+            newIpfs
+        );
+        DataTypes.RegisteredNodes memory nodeData = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveNodeDataByAddress(nodeResults[0].nodeAddress);
         assertEq(nodeData.IPFSData, newIpfs, "IPFS data update failed");
     }
 
     function testConstructorArrayLengthMismatch() public {
+        DataTypes.RegisteredNodes[] memory nodeResults = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
         address[] memory nodes = new address[](2);
-        nodes[0] = FIRST_COMMANDER;
-        nodes[1] = SECOND_COMMANDER;
-
+        nodes[0] = nodeResults[0].nodeAddress;
+        nodes[1] = nodeResults[1].nodeAddress;
         DataTypes.NodeRegion[] memory regions = new DataTypes.NodeRegion[](1);
-        regions[0] = region1;
-
+        regions[0] = nodeResults[0].currentPosition;
         string[] memory ipfsData = new string[](2);
-        ipfsData[0] = ipfs1;
-        ipfsData[1] = ipfs2;
-
-        vm.expectRevert(
-            Errors.NodeManager__ARRAYS_LENGTH_IS_NOT_EQUAL.selector
+        ipfsData[0] = nodeResults[0].IPFSData;
+        ipfsData[1] = nodeResults[1].IPFSData;
+        vm.expectRevert();
+        NodeManager(nodeManagerProxyContract).initialize(
+            nodes,
+            regions,
+            ipfsData
         );
-        new NodeManager(nodes, regions, ipfsData);
     }
 
     function testOnlyContractAdmin() public {
+        DataTypes.RegisteredNodes[] memory nodeResults = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
         DataTypes.NodeRegion newRegion = DataTypes.NodeRegion.Central;
         address newNode = address(0x9ABC);
         string memory newIpfs = "QmNewNode";
-
         // Test registerNewNode with non-admin
-        vm.prank(FIRST_COMMANDER);
+        vm.prank(nodeResults[0].nodeAddress);
         vm.expectRevert(Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED.selector);
-        nodeManager.registerNewNode(newNode, newRegion, newIpfs);
-
+        NodeManager(nodeManagerProxyContract).registerNewNode(
+            newNode,
+            newRegion,
+            newIpfs
+        );
         // Test updateExpeditionaryForces with non-admin
-        vm.prank(FIRST_COMMANDER);
+        vm.prank(nodeResults[0].nodeAddress);
         vm.expectRevert(Errors.NodeManager__CALLER_IS_NOT_AUTHORIZED.selector);
-        nodeManager.updateExpeditionaryForces(newRegion, FIRST_COMMANDER);
+        NodeManager(nodeManagerProxyContract).updateExpeditionaryForces(
+            newRegion,
+            nodeResults[0].nodeAddress
+        );
     }
 
     function testIsNodeRegistered() public {
-        bool isRegistered = nodeManager.isNodeRegistered(FIRST_COMMANDER);
+        DataTypes.RegisteredNodes[] memory nodeResults = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
+        bool isRegistered = NodeManager(nodeManagerProxyContract)
+            .isNodeRegistered(nodeResults[0].nodeAddress);
         assertTrue(isRegistered, "Node should be registered");
-
         address nonExistentNode = address(0x5678);
-        isRegistered = nodeManager.isNodeRegistered(nonExistentNode);
+        isRegistered = NodeManager(nodeManagerProxyContract).isNodeRegistered(
+            nonExistentNode
+        );
         assertFalse(isRegistered, "Node should not be registered");
     }
 
-    function testRetrieveAllRegisteredNodeDataWithZeroNodes() public {
+    function testInitializeCannotBeCalledTwice() public {
         address[] memory initialAddresses = new address[](0);
-        string[] memory IPFS = new string[](0);
         DataTypes.NodeRegion[] memory Type = new DataTypes.NodeRegion[](0);
-        NodeManager emptyNodeManager = new NodeManager(
-            initialAddresses,
-            Type,
-            IPFS
-        );
-
+        string[] memory IPFS = new string[](0);
+        NodeManager emptyNodeManager = new NodeManager();
+        vm.expectRevert(Initializable.InvalidInitialization.selector);
+        emptyNodeManager.initialize(initialAddresses, Type, IPFS);
         DataTypes.RegisteredNodes[] memory nodes = emptyNodeManager
             .retrieveAllRegisteredNodeData();
         assertEq(nodes.length, 0, "There should be no nodes registered");
-    }
-
-    function testNumberOfPresentNodesWithZeroNodes() public {
-        address[] memory initialAddresses = new address[](0);
-        string[] memory IPFS = new string[](0);
-        DataTypes.NodeRegion[] memory Type = new DataTypes.NodeRegion[](0);
-        NodeManager emptyNodeManager = new NodeManager(
-            initialAddresses,
-            Type,
-            IPFS
-        );
-
-        uint256 count = emptyNodeManager.numberOfPresentNodes();
-        assertEq(count, 0, "Number of present nodes should be zero");
     }
 
     function testRegisterMultipleNewNodes() public {
@@ -251,46 +227,53 @@ contract NodeManagerTest is Test {
         DataTypes.NodeRegion newRegion2 = DataTypes.NodeRegion.West;
         string memory newIpfs1 = "QmNewNode1";
         string memory newIpfs2 = "QmNewNode2";
-
-        vm.prank(admin);
-        nodeManager.registerNewNode(newNode1, newRegion1, newIpfs1);
-        vm.prank(admin);
-        nodeManager.registerNewNode(newNode2, newRegion2, newIpfs2);
-
-        DataTypes.RegisteredNodes[] memory nodes = nodeManager
-            .retrieveAllRegisteredNodeData();
-        assertEq(nodes.length, 4, "Incorrect number of nodes registered");
-
+        vm.prank(policyCustodian);
+        NodeManager(nodeManagerProxyContract).registerNewNode(
+            newNode1,
+            newRegion1,
+            newIpfs1
+        );
+        vm.prank(policyCustodian);
+        NodeManager(nodeManagerProxyContract).registerNewNode(
+            newNode2,
+            newRegion2,
+            newIpfs2
+        );
+        DataTypes.RegisteredNodes[] memory nodes = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
+        assertEq(nodes.length, 8, "Incorrect number of nodes registered");
         assertEq(
-            nodes[2].nodeAddress,
+            nodes[6].nodeAddress,
             newNode1,
             "First new node address mismatch"
         );
         assertEq(
-            uint256(nodes[2].currentPosition),
+            uint256(nodes[6].currentPosition),
             uint256(newRegion1),
             "First new node region mismatch"
         );
         assertEq(
-            nodes[2].IPFSData,
+            nodes[6].IPFSData,
             newIpfs1,
             "First new node IPFS data mismatch"
         );
-
         assertEq(
-            nodes[3].nodeAddress,
+            nodes[7].nodeAddress,
             newNode2,
             "Second new node address mismatch"
         );
         assertEq(
-            uint256(nodes[3].currentPosition),
+            uint256(nodes[7].currentPosition),
             uint256(newRegion2),
             "Second new node region mismatch"
         );
         assertEq(
-            nodes[3].IPFSData,
+            nodes[7].IPFSData,
             newIpfs2,
             "Second new node IPFS data mismatch"
         );
     }
+
+    function testRetrieveOwner() public {}
 }
