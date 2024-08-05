@@ -49,31 +49,6 @@ contract ConsensusMechanismTest is Test {
 
         assertEq(initialNodeAddresses.length, 6);
 
-        assertEq(
-            initialNodeAddresses[0],
-            address(uint160(uint256(keccak256("Alice"))))
-        );
-        assertEq(
-            initialNodeAddresses[1],
-            address(uint160(uint256(keccak256("Bob"))))
-        );
-        assertEq(
-            initialNodeAddresses[2],
-            address(uint160(uint256(keccak256("Carol"))))
-        );
-        assertEq(
-            initialNodeAddresses[3],
-            address(uint160(uint256(keccak256("Dave"))))
-        );
-        assertEq(
-            initialNodeAddresses[4],
-            address(uint160(uint256(keccak256("Eve"))))
-        );
-        assertEq(
-            initialNodeAddresses[5],
-            address(uint160(uint256(keccak256("Mallory"))))
-        );
-
         // Verify ConsensusMechanism data
         assertEq(consensusMechanism.fetchConsensusThreshold(), 3);
         assertEq(

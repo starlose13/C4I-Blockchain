@@ -58,7 +58,9 @@ contract IntegratedDeploymentScript is Script {
     {
         // Deploy NodeManager and set initial values
         address[] memory initialNodeAddresses = new address[](6);
-        string[] memory nodesIPFSData = new string[](6);
+        string[] memory nodePosition = new string[](6);
+        string[] memory latitude = new string[](6);
+        string[] memory longitude = new string[](6);
         DataTypes.NodeRegion[] memory nodesRegions = new DataTypes.NodeRegion[](
             6
         );
@@ -77,12 +79,26 @@ contract IntegratedDeploymentScript is Script {
         initialNodeAddresses[4] = 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65;
         initialNodeAddresses[5] = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
 
-        nodesIPFSData[0] = "Position 0";
-        nodesIPFSData[1] = "Position 1";
-        nodesIPFSData[2] = "Position 2";
-        nodesIPFSData[3] = "Position 3";
-        nodesIPFSData[4] = "Position 4";
-        nodesIPFSData[5] = "Position 5";
+        nodePosition[0] = "Position 0";
+        nodePosition[1] = "Position 1";
+        nodePosition[2] = "Position 2";
+        nodePosition[3] = "Position 3";
+        nodePosition[4] = "Position 4";
+        nodePosition[5] = "Position 5";
+
+        longitude[0] = "86.12 W";
+        longitude[1] = "31.07 W";
+        longitude[2] = "27.22 W";
+        longitude[3] = "96.96 W";
+        longitude[4] = "240.73 W";
+        longitude[5] = "180.52 W";
+
+        latitude[0] = "44.22 N";
+        latitude[1] = "102.03 N";
+        latitude[2] = "21.22 N";
+        latitude[3] = "80.69 N";
+        latitude[4] = "54.26 N";
+        latitude[5] = "65.94 N";
 
         nodesRegions[0] = DataTypes.NodeRegion.North;
         nodesRegions[1] = DataTypes.NodeRegion.North;
@@ -99,7 +115,9 @@ contract IntegratedDeploymentScript is Script {
         NodeManager(address(nodeManagerProxy)).initialize(
             initialNodeAddresses,
             nodesRegions,
-            nodesIPFSData
+            nodePosition,
+            latitude,
+            longitude
         );
 
         return address(nodeManagerProxy);

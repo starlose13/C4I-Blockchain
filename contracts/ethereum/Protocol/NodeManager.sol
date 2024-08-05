@@ -9,6 +9,8 @@ import {UUPSUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/
 import {Initializable} from "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import {AccessControlUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
 import {AddressUpgradeable} from "lib/chainlink-brownie-contracts/contracts/src/v0.8/vendor/openzeppelin-contracts-upgradeable/v4.8.1/utils/AddressUpgradeable.sol";
+import {Base64} from "lib/openzeppelin-contracts/contracts/utils/Base64.sol";
+import {Strings} from "lib/openzeppelin-contracts/contracts/utils/Strings.sol";
 
 /**
  * @title NodeManager
@@ -55,13 +57,14 @@ contract NodeManager is
      * @dev Constructor to initialize the contract with initial nodes.
      * @param _nodeAddresses Array of node addresses to be registered initially.
      * @param _currentPosition Array of node regions corresponding to the addresses.
-     * @param IPFS Array of IPFS hashes corresponding to the node data. this IPFS contains the details of
-     * the nodes data consisting of the type of weapons and the name of the weapon
+     * @param nodePosition Array of locations corresponding to the node data.
      */
     function initialize(
         address[] memory _nodeAddresses,
         DataTypes.NodeRegion[] memory _currentPosition,
-        string[] memory IPFS
+        string[] memory nodePosition,
+        string[] memory latitude,
+        string[] memory longitude
     ) public initializer {
         if (_nodeAddresses.length != _currentPosition.length) {
             revert Errors.ARRAYS_LENGTH_IS_NOT_EQUAL();
@@ -69,7 +72,13 @@ contract NodeManager is
         CONTRACT_ADMIN = msg.sender;
         UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
         __Ownable_init(CONTRACT_ADMIN);
-        _initializeNodes(_nodeAddresses, _currentPosition, IPFS);
+        _initializeNodes(
+            _nodeAddresses,
+            _currentPosition,
+            nodePosition,
+            latitude,
+            longitude
+        );
         __UUPSUpgradeable_init();
     }
 
@@ -121,16 +130,24 @@ contract NodeManager is
      * @dev Internal function to initialize nodes during contract deployment.
      * @param _nodeAddress Array of node addresses to be registered.
      * @param _currentPosition Array of node regions corresponding to the addresses.
-     * @param IPFS Array of IPFS hashes corresponding to the node data.
+     * @param nodePosition Array of nodePosition  corresponding to the node data.
      */
 
     function _initializeNodes(
         address[] memory _nodeAddress,
         DataTypes.NodeRegion[] memory _currentPosition,
-        string[] memory IPFS
+        string[] memory nodePosition,
+        string[] memory latitude,
+        string[] memory longitude
     ) internal {
         for (uint256 i = 0; i < _nodeAddress.length; i++) {
-            _registerNode(_nodeAddress[i], _currentPosition[i], IPFS[i]);
+            _registerNode(
+                _nodeAddress[i],
+                _currentPosition[i],
+                nodePosition[i],
+                latitude[i],
+                longitude[i]
+            );
         }
     }
 
@@ -138,18 +155,21 @@ contract NodeManager is
      * @dev Internal function to register a node.
      * @param _nodeAddress Address of the node to be registered.
      * @param currentPosition Region of the node.
-     * @param IPFS IPFS hash of the node data.
      */
 
     function _registerNode(
         address _nodeAddress,
         DataTypes.NodeRegion currentPosition,
-        string memory IPFS
+        string memory nodePosition,
+        string memory latitude,
+        string memory longitude
     ) internal notZeroAddress(_nodeAddress) {
         s_registeredNodes[_nodeAddress] = DataTypes.RegisteredNodes({
             nodeAddress: _nodeAddress,
             currentPosition: currentPosition,
-            IPFSData: IPFS
+            nodePosition: nodePosition,
+            latitude: latitude,
+            longitude: longitude
         });
         s_nodes.push(_nodeAddress);
         s_ExistingNodes[_nodeAddress] = true;
@@ -163,34 +183,47 @@ contract NodeManager is
     /**
      * @dev Updates the IPFS data of a node.
      * @param _nodeAddress Address of the node to update.
-     * @param newIPFS New IPFS data.
+     * @param newNodePosition New position of node location.
+     * @param newLatitude change the latitude of the node location. In geography, latitude is a coordinate that specifies the north–south position of a point on the surface of the Earth or another celestial body.
+     * @param newLongitude change the longitude of the node location. Longitude is a geographic coordinate that specifies the east–west position of a point on the surface of the Earth, or another celestial body
      */
-    function updateNodeIPFSData(
+    function updateNodeData(
         address _nodeAddress,
-        string memory newIPFS
+        string memory newNodePosition,
+        string memory newLatitude,
+        string memory newLongitude
     ) external onlyContractAdmin notZeroAddress(_nodeAddress) {
         if (!isNodeRegistered(_nodeAddress)) {
             revert Errors.NodeManager__NODE_NOT_FOUND();
         }
-        s_registeredNodes[_nodeAddress].IPFSData = newIPFS;
+        s_registeredNodes[_nodeAddress].nodePosition = newNodePosition;
+        s_registeredNodes[_nodeAddress].latitude = newLatitude;
+        s_registeredNodes[_nodeAddress].longitude = newLongitude;
     }
 
     /**
      * @dev Registers a new node if it's not already registered.
      * @param _nodeAddress Address of the new node.
      * @param _currentPosition Position of the new node.
-     * @param IPFS IPFS data of the new node.
      */
 
     function registerNewNode(
         address _nodeAddress,
         DataTypes.NodeRegion _currentPosition,
-        string memory IPFS
+        string memory nodePosition,
+        string memory latitude,
+        string memory longitude
     ) external onlyContractAdmin {
         if (isNodeRegistered(_nodeAddress)) {
             revert Errors.NodeManager__NODE_ALREADY_EXIST();
         }
-        _registerNode(_nodeAddress, _currentPosition, IPFS);
+        _registerNode(
+            _nodeAddress,
+            _currentPosition,
+            nodePosition,
+            latitude,
+            longitude
+        );
         emit NodeRegistered(_nodeAddress, _currentPosition);
     }
 
@@ -282,4 +315,51 @@ contract NodeManager is
     function getNodeAddresses() external view returns (address[] memory) {
         return s_nodes;
     }
+
+    function _baseURI() internal pure returns (string memory) {
+        return "data:application/json;base64,";
+    }
+
+    // function nodeDataURI() public pure returns (string memory) {
+    //     return
+    //         string(
+    //             abi.encodePacked(
+    //                 _baseURI(),
+    //                 Base64.encode(
+    //                     bytes( // bytes casting actually unnecessary as 'abi.encodePacked()' returns a bytes
+    //                         abi.encodePacked(
+    //                             "{",
+    //                             '"timestamp":uint2str(block.timestamp)',
+    //                             '"unit":{',
+    //                             '"name":"Bravo Company",',
+    //                             '"commander":"Captain John Doe",',
+    //                             '"equipment":[{',
+    //                             '"type":"Main Battle Tank",',
+    //                             '"model":"M1 Abrams",',
+    //                             '"identifier":"Alpha-01",',
+    //                             '"status":"Operational"',
+    //                             "}]",
+    //                             "},",
+    //                             '"location":{',
+    //                             '"latitude":34.052235,',
+    //                             '"longitude":-118.243683,',
+    //                             '"altitude":250,',
+    //                             '"grid_reference":"11S KU 1234 5678"',
+    //                             "},",
+    //                             '"situation":{',
+    //                             '"description":"Holding position at checkpoint Alpha.",',
+    //                             '"threat_level":"Medium",',
+    //                             '"orders":"Maintain position and await further instructions."',
+    //                             "},",
+    //                             '"communications":{',
+    //                             '"frequency":"30.000 MHz",',
+    //                             '"encryption":"AES-256"',
+    //                             "}",
+    //                             "}"
+    //                         )
+    //                     )
+    //                 )
+    //             )
+    //         );
+    // }
 }
