@@ -277,21 +277,6 @@ contract NodeManager is
     }
 
     /**
-     * @dev Retrieves node data by its address.
-     * @param _nodeAddress Address of the node to retrieve data for.
-     * @return RegisteredNodes struct containing node data.
-     */
-
-    function retrieveNodeDataByAddress(
-        address _nodeAddress
-    ) external view returns (DataTypes.RegisteredNodes memory) {
-        if (!isNodeRegistered(_nodeAddress)) {
-            revert Errors.NodeManager__NODE_NOT_FOUND();
-        }
-        return s_registeredNodes[_nodeAddress];
-    }
-
-    /**
      * @dev Retrieves data of all registered nodes.
      * @return Array of RegisteredNodes structs.
      */
@@ -316,22 +301,6 @@ contract NodeManager is
         return s_nodes;
     }
 
-    // function fetchLatitude(address user) external view returns (string memory) {
-    //     return s_registeredNodes[user].latitude;
-    // }
-
-    // function fetchLongitude(
-    //     address user
-    // ) external view returns (string memory) {
-    //     return s_registeredNodes[user].longitude;
-    // }
-
-    // function fetchNodePosition(
-    //     address user
-    // ) external view returns (string memory) {
-    //     return s_registeredNodes[user].nodePosition;
-    // }
-
     function _baseURI() internal pure returns (string memory) {
         return "data:application/json;base64,";
     }
@@ -341,48 +310,14 @@ contract NodeManager is
      * @param user The address of the user for whom the data URI is generated
      * @return The Data URI string containing JSON-encoded dat
      */
-    // function URIDataFormatter(
-    //     address user
-    // ) public view returns (string memory) {
-    //     DataTypes.RegisteredNodes storage node = s_registeredNodes[user];
-    //     require(node.nodeAddress != address(0), "Node not found");
-    //     return
-    //         string(
-    //             abi.encodePacked(
-    //                 _baseURI(),
-    //                 Base64.encode(
-    //                     abi.encodePacked(
-    //                         "{",
-    //                         '"wallet_address":"',
-    //                         Utils.addressToString(user),
-    //                         '",',
-    //                         '"register_time":"',
-    //                         Utils.uint256ToString(block.timestamp), // Assuming you want the current timestamp
-    //                         '",',
-    //                         '"unit":{',
-    //                         '"name":"Bravo Commander"',
-    //                         "},",
-    //                         '"location":{',
-    //                         '"latitude":"',
-    //                         node.latitude,
-    //                         '",',
-    //                         '"longitude":"',
-    //                         node.longitude,
-    //                         "},",
-    //                         '"communications":{',
-    //                         '"encryption":"AES-256"',
-    //                         "}",
-    //                         "}"
-    //                     )
-    //                 )
-    //             )
-    //         );
-    // }
 
     function URIDataFormatter(
         address user
     ) public view returns (string memory) {
         DataTypes.RegisteredNodes storage node = s_registeredNodes[user];
+        if (!isNodeRegistered(user)) {
+            revert Errors.NodeManager__NODE_NOT_FOUND();
+        }
         require(node.nodeAddress != address(0), "Node not found");
 
         string memory userEOA = Utils.addressToString(node.nodeAddress);
