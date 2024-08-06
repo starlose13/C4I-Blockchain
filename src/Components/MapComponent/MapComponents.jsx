@@ -1,14 +1,16 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import ImageMapper from 'react-image-mapper';
 import areas from './areas.json';
 import nodes from './node.json';
 import NodeTooltip from "./NodeTooltip.jsx";
 import TargetTooltip from "./TargetTooltip.jsx";
-import {MainContext} from "../../hooks/useSimulationContext.jsx";
+import { MainContext } from "../../hooks/useSimulationContext.jsx";
 import dataArea from "./areas.json";
+import { useInteractWithNodeManagerContract } from "../../hooks/useGetContract.jsx";
+
 
 const MapComponent = () => {
-    const {targetData, setTargetData, selectedNode} = useContext(MainContext);
+    const { targetData, setTargetData, selectedNode } = useContext(MainContext);
 
     const URL = "/x.jpg";
 
@@ -24,7 +26,7 @@ const MapComponent = () => {
     const [tooltipData, setTooltipData] = useState({
         visible: false,
         area: {},
-        position: {x: 0, y: 0}
+        position: { x: 0, y: 0 }
     });
 
     const scaleCoords = (coords, width, height) => {
@@ -46,23 +48,33 @@ const MapComponent = () => {
         })
     };
 
-    const handleAreaClick = (area, index, event) => {
-        const _area = dataArea.find(a => a.name === area.name);
+    const getdata = useInteractWithNodeManagerContract();
 
+
+    const handleAreaClick = (area, index, event) => {
+        console.log("data Area is :", dataArea);
+        
+        let { result } = getdata;
+
+        console.log("result is: ",result );
+        console.log("area is: ",area );
+        
+        const _area_ = result.find(a => result.name === area.id)
+        console.log("_area_ :", _area_);
         const x = event.clientX - 25;
         const y = event.clientY;
-
         setTargetData(prevData => {
             const updatedData = prevData.map((node, idx) => {
                 if (idx === selectedNode - 1) {
                     return {
                         ...node,
-                        TargetLatitude: _area.TargetLatitude,
-                        TargetLongitude: _area.TargetLongitude,
-                        location: _area.TargetPositionName,
-                        NodeLatitude: _area.NodeLatitude,
-                        NodeLongitude: _area.NodeLongitude,
-                        NodePositionName: _area.NodePositionName
+                        address: _area_.address,
+                        TargetLatitude: _area_.ipfsData,
+                        TargetLongitude: _area_.ipfsData,
+                        location: _area_.position,
+                        NodeLatitude: _area_.ipfsData,
+                        NodeLongitude: _area_.ipfsData,
+                        NodePositionName: _area_.ipfsData
                     };
                 }
                 return node;
@@ -70,12 +82,38 @@ const MapComponent = () => {
             return updatedData;
         });
 
-        // Ensure tooltip is within viewport
         const adjustedX = Math.min(x, window.innerWidth - 500);
         const adjustedY = Math.min(y, window.innerHeight - 300);
-
-        setTooltipData({visible: true, areaId: area.name, position: {x: adjustedX, y: adjustedY}});
+        setTooltipData({ visible: true, areaId: area.name, position: { x: adjustedX, y: adjustedY } });
     };
+
+
+ 
+    
+
+     // console.log("targetData: ", targetData);
+        // setTargetData(prevData => {
+        //     const updatedData = prevData.map((node, idx) => {
+        //         if (idx === selectedNode - 1) {
+        //             return {
+        //                 ...node,
+        //                 TargetLatitude: _area.TargetLatitude,
+        //                 TargetLongitude: _area.TargetLongitude,
+        //                 location: _area.TargetPositionName,
+        //                 NodeLatitude: _area.NodeLatitude,
+        //                 NodeLongitude: _area.NodeLongitude,
+        //                 NodePositionName: _area.NodePositionName
+        //             };
+        //         }
+        //         return node;
+        //     });
+        //     return updatedData;
+        // });
+
+        // Ensure tooltip is within viewport
+
+
+
 
     const renderNodes = () => {
         return nodes.map((node, index) => {
@@ -93,7 +131,7 @@ const MapComponent = () => {
                     <NodeTooltip
                         area={node}
                         visible={true}
-                        position={{x: scaledX, y: scaledY}}
+                        position={{ x: scaledX, y: scaledY }}
                         radius={node.coords[2]} // Assuming NodeTooltip can handle a radius prop if needed
                     />
                 </div>
@@ -112,7 +150,7 @@ const MapComponent = () => {
                     height={height}
                     imgWidth={imgWidth}
                     imgHeight={imgHeight}
-                    strokeColor={"Transparent"}
+                    strokeColor={"transparent"}
                     alt="Map Image"
                 />
                 {renderNodes()}
@@ -127,14 +165,16 @@ const MapComponent = () => {
                     </div>
                 )}
             </div>
-            <TargetTooltip
-                className='z-50'
-                areaId={tooltipData.areaId}
-                visible={tooltipData.visible}
-                position={tooltipData.position}
-            />
+            
+<TargetTooltip
+    className='z-50'
+    areaId={tooltipData.areaId}
+    visible={tooltipData.visible}
+    position={tooltipData.position}
+/>
         </div>
     );
 };
 
 export default MapComponent;
+

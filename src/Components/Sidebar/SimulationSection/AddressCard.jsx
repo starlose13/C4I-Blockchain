@@ -35,7 +35,7 @@ const AddressCard = ({addressData}) => {
             onClick={() => setSelectedNode(id)}
         >
             <h3 className="text-sm text-[#dfeeff]">Address</h3>
-            <h4 className="text-xs text-[#5178a6]">{address}</h4>
+            <h4 className="text-[11px] text-[#5178a6] ">{address}</h4>
 
 
             <div className="pt-2 grid grid-rows-3">
@@ -60,7 +60,7 @@ const AddressCard = ({addressData}) => {
 
 AddressCard.propTypes = {
     addressData: PropTypes.shape({
-        address: PropTypes.string.isRequired,
+        address: PropTypes.bigint.isRequired,
         location: PropTypes.string.isRequired,
         latitude: PropTypes.number.isRequired,
         longitude: PropTypes.number.isRequired,
