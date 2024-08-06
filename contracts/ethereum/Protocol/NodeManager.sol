@@ -10,7 +10,7 @@ import {Initializable} from "lib/openzeppelin-contracts-upgradeable/contracts/pr
 import {AccessControlUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/AccessControlUpgradeable.sol";
 import {AddressUpgradeable} from "lib/chainlink-brownie-contracts/contracts/src/v0.8/vendor/openzeppelin-contracts-upgradeable/v4.8.1/utils/AddressUpgradeable.sol";
 import {Base64} from "lib/openzeppelin-contracts/contracts/utils/Base64.sol";
-import {Strings} from "lib/openzeppelin-contracts/contracts/utils/Strings.sol";
+import {Utils} from "../Helper/Utils.sol";
 
 /**
  * @title NodeManager
@@ -181,7 +181,7 @@ contract NodeManager is
     //////////////////////////////////////////////////////////////*/
 
     /**
-     * @dev Updates the IPFS data of a node.
+     * @dev Updates the logistic information  of a node.
      * @param _nodeAddress Address of the node to update.
      * @param newNodePosition New position of node location.
      * @param newLatitude change the latitude of the node location. In geography, latitude is a coordinate that specifies the north–south position of a point on the surface of the Earth or another celestial body.
@@ -316,50 +316,113 @@ contract NodeManager is
         return s_nodes;
     }
 
+    // function fetchLatitude(address user) external view returns (string memory) {
+    //     return s_registeredNodes[user].latitude;
+    // }
+
+    // function fetchLongitude(
+    //     address user
+    // ) external view returns (string memory) {
+    //     return s_registeredNodes[user].longitude;
+    // }
+
+    // function fetchNodePosition(
+    //     address user
+    // ) external view returns (string memory) {
+    //     return s_registeredNodes[user].nodePosition;
+    // }
+
     function _baseURI() internal pure returns (string memory) {
         return "data:application/json;base64,";
     }
 
-    // function nodeDataURI() public pure returns (string memory) {
+    /**
+     * @notice Returns a Data URI containing encoded JSON data with user and unit information
+     * @param user The address of the user for whom the data URI is generated
+     * @return The Data URI string containing JSON-encoded dat
+     */
+    // function URIDataFormatter(
+    //     address user
+    // ) public view returns (string memory) {
+    //     DataTypes.RegisteredNodes storage node = s_registeredNodes[user];
+    //     require(node.nodeAddress != address(0), "Node not found");
     //     return
     //         string(
     //             abi.encodePacked(
     //                 _baseURI(),
     //                 Base64.encode(
-    //                     bytes( // bytes casting actually unnecessary as 'abi.encodePacked()' returns a bytes
-    //                         abi.encodePacked(
-    //                             "{",
-    //                             '"timestamp":uint2str(block.timestamp)',
-    //                             '"unit":{',
-    //                             '"name":"Bravo Company",',
-    //                             '"commander":"Captain John Doe",',
-    //                             '"equipment":[{',
-    //                             '"type":"Main Battle Tank",',
-    //                             '"model":"M1 Abrams",',
-    //                             '"identifier":"Alpha-01",',
-    //                             '"status":"Operational"',
-    //                             "}]",
-    //                             "},",
-    //                             '"location":{',
-    //                             '"latitude":34.052235,',
-    //                             '"longitude":-118.243683,',
-    //                             '"altitude":250,',
-    //                             '"grid_reference":"11S KU 1234 5678"',
-    //                             "},",
-    //                             '"situation":{',
-    //                             '"description":"Holding position at checkpoint Alpha.",',
-    //                             '"threat_level":"Medium",',
-    //                             '"orders":"Maintain position and await further instructions."',
-    //                             "},",
-    //                             '"communications":{',
-    //                             '"frequency":"30.000 MHz",',
-    //                             '"encryption":"AES-256"',
-    //                             "}",
-    //                             "}"
-    //                         )
+    //                     abi.encodePacked(
+    //                         "{",
+    //                         '"wallet_address":"',
+    //                         Utils.addressToString(user),
+    //                         '",',
+    //                         '"register_time":"',
+    //                         Utils.uint256ToString(block.timestamp), // Assuming you want the current timestamp
+    //                         '",',
+    //                         '"unit":{',
+    //                         '"name":"Bravo Commander"',
+    //                         "},",
+    //                         '"location":{',
+    //                         '"latitude":"',
+    //                         node.latitude,
+    //                         '",',
+    //                         '"longitude":"',
+    //                         node.longitude,
+    //                         "},",
+    //                         '"communications":{',
+    //                         '"encryption":"AES-256"',
+    //                         "}",
+    //                         "}"
     //                     )
     //                 )
     //             )
     //         );
     // }
+
+    function URIDataFormatter(
+        address user
+    ) public view returns (string memory) {
+        DataTypes.RegisteredNodes storage node = s_registeredNodes[user];
+        require(node.nodeAddress != address(0), "Node not found");
+
+        string memory userEOA = Utils.addressToString(node.nodeAddress);
+        string memory latitude = node.latitude;
+        string memory longitude = node.longitude;
+        string memory nodePosition = node.nodePosition;
+
+        // Construct JSON string
+        string memory json = string(
+            abi.encodePacked(
+                "{",
+                '"wallet_address":"',
+                userEOA,
+                '",',
+                '"position":"',
+                nodePosition,
+                '",',
+                '"unit":{',
+                '"name":"Bravo Commander"',
+                "},",
+                '"location":{',
+                '"latitude":"',
+                latitude,
+                '",',
+                '"longitude":"',
+                longitude,
+                '"',
+                "},",
+                '"communications":{',
+                '"encryption":"AES-256"',
+                "}",
+                "}"
+            )
+        );
+
+        // Encode JSON to Base64
+        bytes memory jsonBytes = bytes(json);
+        string memory base64Encoded = Base64.encode(jsonBytes);
+
+        // Return Data URI
+        return string(abi.encodePacked(_baseURI(), base64Encoded));
+    }
 }
