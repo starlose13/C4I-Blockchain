@@ -191,10 +191,10 @@ const MapComponent = () => {
                         address: _area_.address,//URIDATAFORMAT /// nodeData (pref)
                         TargetLatitude: _area_.ipfsData,//send by front-ned
                         TargetLongitude: _area_.ipfsData, //send by front-ned
-                        location: _area_.position, //send by front-ned
+                        location: _area_.position, 
                         NodeLatitude: _area_.ipfsData, //URIDATAFORMAT
                         NodeLongitude: _area_.ipfsData, //URIDATAFORMAT
-                        NodePositionName: _area_.ipfsData,// nodeData //ignore
+                        NodePositionName: _area_.ipfsData,// URIDATAFORMAT
                     };
                 }
                 return node;
