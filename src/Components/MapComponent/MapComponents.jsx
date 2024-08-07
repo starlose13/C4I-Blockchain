@@ -185,15 +185,16 @@ const MapComponent = () => {
         setTargetData(prevData => {
             const updatedData = prevData.map((node, idx) => {
                 if (idx === selectedNode - 1 ) {
+
                     return {
                         ...node,
-                        address: _area_.address,
-                        TargetLatitude: _area_.ipfsData,
-                        TargetLongitude: _area_.ipfsData,
-                        location: _area_.position,
-                        NodeLatitude: _area_.ipfsData,
-                        NodeLongitude: _area_.ipfsData,
-                        NodePositionName: _area_.ipfsData,
+                        address: _area_.address,//URIDATAFORMAT /// nodeData (pref)
+                        TargetLatitude: _area_.ipfsData,//send by front-ned
+                        TargetLongitude: _area_.ipfsData, //send by front-ned
+                        location: _area_.position, //send by front-ned
+                        NodeLatitude: _area_.ipfsData, //URIDATAFORMAT
+                        NodeLongitude: _area_.ipfsData, //URIDATAFORMAT
+                        NodePositionName: _area_.ipfsData,// nodeData //ignore
                     };
                 }
                 return node;
