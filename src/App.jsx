@@ -84,7 +84,6 @@ function App() {
 
     const  result  = useInteractWithNodeManagerContract();
     const {res,err} = result
-    console.log(res)
 
    
 

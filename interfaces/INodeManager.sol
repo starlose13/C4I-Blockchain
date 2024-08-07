@@ -13,7 +13,9 @@ interface INodeManager {
     function registerNewNode(
         address _nodeAddress,
         DataTypes.NodeRegion _currentPosition,
-        string memory IPFS
+        string memory nodePosition,
+        string memory latitude,
+        string memory longitude
     ) external;
 
     function updateExpeditionaryForces(

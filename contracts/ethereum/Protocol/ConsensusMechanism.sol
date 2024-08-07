@@ -433,7 +433,7 @@ contract ConsensusMechanism is
         emit DataTypes.ConsensusThresholdModified(
             previousThreshold,
             newThreshold
-        ); // Emit event
+        ); // Emit events
     }
 
     /**

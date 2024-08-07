@@ -136,5 +136,28 @@
     "NodeLatitude": "53.8584° N",
     "NodeLongitude": "7.2945° E",
     "NodePositionName": "University, Paris, France"
+  },
+  {
+    "name": 7,
+    "shape": "poly",
+    "preFillColor": "transparent",
+    "fillColor": "transparent",
+    "coords": [
+      0.5507507507507508,
+      0.4284221525600836,
+      0.6324324324324324,
+      0.4284221525600836,
+      0.6324324324324324,
+      0.49634273772204807,
+      0.5507507507507508,
+      0.49634273772204807
+    ],
+    "publicAddress": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+    "TargetLatitude": 0.5915915915915916,
+    "TargetLongitude": 0.46238244514106586,
+    "TargetPositionName": "University",
+    "NodeLatitude": "53.8584° N",
+    "NodeLongitude": "7.2945° E",
+    "NodePositionName": "University, Paris, France"
   }
 ]
