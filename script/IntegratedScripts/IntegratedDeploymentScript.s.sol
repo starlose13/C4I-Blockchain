@@ -57,12 +57,12 @@ contract IntegratedDeploymentScript is Script {
         returns (address nodeManagerProxyContract)
     {
         // Deploy NodeManager and set initial values
-        address[] memory initialNodeAddresses = new address[](6);
-        string[] memory nodePosition = new string[](6);
-        string[] memory latitude = new string[](6);
-        string[] memory longitude = new string[](6);
+        address[] memory initialNodeAddresses = new address[](7);
+        string[] memory nodePosition = new string[](7);
+        string[] memory latitude = new string[](7);
+        string[] memory longitude = new string[](7);
         DataTypes.NodeRegion[] memory nodesRegions = new DataTypes.NodeRegion[](
-            6
+            7
         );
 
         // initialNodeAddresses[0] = makeAddr("Alice");
@@ -78,27 +78,31 @@ contract IntegratedDeploymentScript is Script {
         initialNodeAddresses[3] = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
         initialNodeAddresses[4] = 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65;
         initialNodeAddresses[5] = 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc;
+        initialNodeAddresses[6] = 0x976EA74026E726554dB657fA54763abd0C3a0aa9;
 
-        nodePosition[0] = "Position 0";
-        nodePosition[1] = "Position 1";
-        nodePosition[2] = "Position 2";
-        nodePosition[3] = "Position 3";
-        nodePosition[4] = "Position 4";
-        nodePosition[5] = "Position 5";
+        nodePosition[0] = "sensor";
+        nodePosition[1] = "gateway";
+        nodePosition[2] = "sensor";
+        nodePosition[3] = "transmitter";
+        nodePosition[4] = "baseStation";
+        nodePosition[5] = "sensor";
+        nodePosition[6] = "baseStation";
 
-        longitude[0] = "86.12 W";
-        longitude[1] = "31.07 W";
-        longitude[2] = "27.22 W";
-        longitude[3] = "96.96 W";
-        longitude[4] = "240.73 W";
-        longitude[5] = "180.52 W";
+        longitude[0] = "-77.036873";
+        longitude[1] = "-122.419418";
+        longitude[2] = "-0.127758";
+        longitude[3] = "139.691711";
+        longitude[4] = "-3.703790";
+        longitude[5] = "151.209295";
+        longitude[6] = "-47.929215";
 
-        latitude[0] = "44.22 N";
-        latitude[1] = "102.03 N";
-        latitude[2] = "21.22 N";
-        latitude[3] = "80.69 N";
-        latitude[4] = "54.26 N";
-        latitude[5] = "65.94 N";
+        latitude[0] = "38.907299";
+        latitude[1] = "37.774929";
+        latitude[2] = "51.507351";
+        latitude[3] = "35.689487";
+        latitude[4] = "40.416775";
+        latitude[5] = "-33.868820";
+        latitude[6] = "-15.779072";
 
         nodesRegions[0] = DataTypes.NodeRegion.North;
         nodesRegions[1] = DataTypes.NodeRegion.North;
