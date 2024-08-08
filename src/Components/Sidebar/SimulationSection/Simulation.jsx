@@ -13,7 +13,6 @@ import { useInteractWithConsensusContract } from "../../../hooks/useGetContract.
 
 const Simulation = () => {
 
-    const [transaction, setTransaction] = useState(null);
     const [addresses, setAddresses] = useState([]);
     const [positions, setPositions] = useState([]);
     let { targetData } = useContext(MainContext)
@@ -28,6 +27,8 @@ const Simulation = () => {
             setPositions(positions);
         }
     };
+
+ 
 
     const { error: consensusError } = useInteractWithConsensusContract(addresses, positions);
 
@@ -45,6 +46,7 @@ const Simulation = () => {
                         addressData={addressData}
                     />
                 ))}
+                
             </div>
 
             <button className="w-full text-sm bg-[#298bfe] text-[#d7e6f7] h-10" onClick={handleRunSimulationClick}>

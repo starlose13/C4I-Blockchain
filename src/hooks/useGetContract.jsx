@@ -4,7 +4,7 @@
 import { ethers } from 'ethers';
 import { useEffect, useState } from "react";
 import NodeManagerABI from "../utils/NodeManagerABI/NodeManager.json"
-import ConsensusMechanismABI from "../../public/ConsensusMechanismABI/ConsensusMechanism.json"
+import ConsensusMechanismABI from "../utils/ConsensusMechanismABI/ConsensusMechanism.json"
 
 /*//////////////////////////////////////////////////////////////
                       LOAD ENVIROMENT VARIABLES
@@ -51,7 +51,7 @@ export const useInteractWithNodeManagerContract = () => {
 
                 // }));
 
-                setResult(structuredData);
+                setResult(data);
             } catch (err) {
                 setError(err);
                 console.error('Error interacting with the contract:', err);
@@ -64,27 +64,19 @@ export const useInteractWithNodeManagerContract = () => {
 }
 
 
-
-/*//////////////////////////////////////////////////////////////
-                          CONSENSUS FUNCTION
-    //////////////////////////////////////////////////////////////*/
-export const useInteractWithConsensusContractOnChainData = () => {
-
+export const useInteractWithConsensusContractOnChainData = (newUriAddresses) => {
     const [error, setError] = useState(null);
-
     useEffect(() => {
-
         const fetchData = async () => {
-
+            if (!newUriAddresses) return; // Wait until newUriAddresses is available
             try {
-
-                const data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
-                const _data = await ConsensusMechanismContract.TargetLocationSimulation(s_agents, s_announceTargets);
-
-                // console.log(data);
+                // const data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+                const data = await NodeManagerContract.URIDataFormatter(newUriAddresses);
+                // const _data = await ConsensusMechanismContract.TargetLocationSimulation(s_agents, s_announceTargets);
+                console.log(data);
 
                 console.log('Transaction sent:', data);
-                console.log('Transaction sent:', _data);
+                // console.log('Transaction sent:', _data);
 
             } catch (err) {
                 console.error('Error interacting with the contract:', err);
@@ -93,10 +85,15 @@ export const useInteractWithConsensusContractOnChainData = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [newUriAddresses]);
 
     return { error };
 }
+
+/*//////////////////////////////////////////////////////////////
+                          CONSENSUS FUNCTION
+    //////////////////////////////////////////////////////////////*/
+
 
 export const useInteractWithConsensusContract = (addresses, positions) => {
 

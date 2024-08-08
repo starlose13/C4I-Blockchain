@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import {MainContext} from "../../../hooks/useSimulationContext.jsx"
 
@@ -60,11 +60,11 @@ const AddressCard = ({addressData}) => {
 
 AddressCard.propTypes = {
     addressData: PropTypes.shape({
-        address: PropTypes.bigint.isRequired,
-        location: PropTypes.string.isRequired,
-        latitude: PropTypes.number.isRequired,
-        longitude: PropTypes.number.isRequired,
+        address: PropTypes.number.isRequired,
+        location: PropTypes.number.isRequired,
+        latitude: PropTypes.string.isRequired,
+        longitude: PropTypes.string.isRequired,
     }).isRequired,
 };
-
 export default AddressCard;
+

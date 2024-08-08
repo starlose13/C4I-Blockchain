@@ -85,10 +85,14 @@ function App() {
     const  result  = useInteractWithNodeManagerContract();
     const {res,err} = result
 
-    const URIDataFormmat = useInteractWithConsensusContractOnChainData();
-    const {URIDataFormmats,} = URIDataFormmat
+    // const { result: newUriAddresses, error: errNode } = useInteractWithNodeManagerContract();
+    
+    // const { error: errConsensus } = useInteractWithConsensusContractOnChainData(newUriAddresses);
 
-   console.log(URIDataFormmat);
+    // const URIDataFormmat = useInteractWithConsensusContractOnChainData();
+    // const {URIDataFormmats,} = URIDataFormmat
+
+//    console.log(URIDataFormmat);
    
 
     return (

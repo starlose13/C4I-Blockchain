@@ -1,7 +1,7 @@
 /*//////////////////////////////////////////////////////////////
                                imports
     //////////////////////////////////////////////////////////////*/
-import { existsSync, mkdirSync, readdir, copyFile } from 'fs';
+import { existsSync, mkdirSync, readdir, readFile, writeFile, stat } from 'fs';
 import { resolve, extname, join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -17,8 +17,8 @@ const __dirname = dirname(__filename);
 /*//////////////////////////////////////////////////////////////
             Define the source and destination directories
     //////////////////////////////////////////////////////////////*/
-const sourceDir = resolve(__dirname, '../out/ConsensusMechanism.sol');  // Adjust the path to your out directory
-const destDir = resolve(__dirname, '../src/utils/ConsensusMechanismABI');  // Copy ABI files to the public/abi directory
+const sourceDir = resolve(__dirname, '../out/NodeManager.sol');  // Adjust the path to your out directory
+const destDir = resolve(__dirname, '../src/utils/NodeManagerABI');  // Copy ABI files to the public/abi directory
 
 /*//////////////////////////////////////////////////////////////
                        Log paths for debugging
@@ -37,24 +37,58 @@ if (!existsSync(destDir)) {
 /*//////////////////////////////////////////////////////////////
           Copy all ABI JSON files from source to destination
     //////////////////////////////////////////////////////////////*/
-readdir(sourceDir, (err, files) => {
-    if (err) {
-        console.error(`Error reading directory: ${err.message}`);
-        return;
-    }
+const processFiles = (srcDir, destDir) => {
+    readdir(srcDir, (err, files) => {
+        if (err) {
+            console.error(`Error reading directory: ${err.message}`);
+            return;
+        }
 
-    files.forEach(file => {
-        if (extname(file) === '.json') {
-            const sourceFile = join(sourceDir, file);
+        files.forEach(file => {
+            const srcFile = join(srcDir, file);
             const destFile = join(destDir, file);
 
-            copyFile(sourceFile, destFile, (err) => {
+            stat(srcFile, (err, stats) => {
                 if (err) {
-                    console.error(`Error copying file: ${err.message}`);
-                } else {
-                    console.log(`Copied ${file} to ${destDir}`);
+                    console.error(`Error stating file: ${err.message}`);
+                    return;
+                }
+
+                if (stats.isDirectory()) {
+                    if (!existsSync(destFile)) {
+                        mkdirSync(destFile, { recursive: true });
+                    }
+                    processFiles(srcFile, destFile);
+                } else if (extname(file) === '.json') {
+                    readFile(srcFile, 'utf8', (err, data) => {
+                        if (err) {
+                            console.error(`Error reading file: ${err.message}`);
+                            return;
+                        }
+
+                        try {
+                            const json = JSON.parse(data);
+                            const abi = json.abi;
+
+                            if (abi) {
+                                const abiFile = join(destDir, file);
+                                writeFile(abiFile, JSON.stringify(abi, null, 2), 'utf8', (err) => {
+                                    if (err) {
+                                        console.error(`Error writing file: ${err.message}`);
+                                    } else {
+                                        console.log(`Extracted ABI to ${abiFile}`);
+                                    }
+                                });
+                            } else {
+                                console.error(`No ABI found in ${srcFile}`);
+                            }
+                        } catch (parseErr) {
+                            console.error(`Error parsing JSON in file ${srcFile}: ${parseErr.message}`);
+                        }
+                    });
                 }
             });
-        }
+        });
     });
-});
+};
+processFiles(sourceDir, destDir);
