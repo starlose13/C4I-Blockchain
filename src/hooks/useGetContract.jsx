@@ -3,7 +3,7 @@
     //////////////////////////////////////////////////////////////*/
 import { ethers } from 'ethers';
 import { useEffect, useState } from "react";
-import NodeManagerABI from "../../public/NodeManagerABI/NodeManager.json"
+import NodeManagerABI from "../utils/NodeManagerABI/NodeManager.json"
 import ConsensusMechanismABI from "../../public/ConsensusMechanismABI/ConsensusMechanism.json"
 
 /*//////////////////////////////////////////////////////////////
@@ -127,3 +127,5 @@ export const useInteractWithConsensusContract = (addresses, positions) => {
 
     return { error };
 }
+
+
