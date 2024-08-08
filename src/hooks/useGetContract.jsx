@@ -3,8 +3,8 @@
     //////////////////////////////////////////////////////////////*/
 import { ethers } from 'ethers';
 import { useEffect, useState } from "react";
-import NodeManagerABI from "../utils/NodeManagerABI.json"
-import ConsensusMechanismABI from "../utils/ConsensusMechanismABI.json"
+import NodeManagerABI from "../../public/NodeManagerABI/NodeManager.json"
+import ConsensusMechanismABI from "../../public/ConsensusMechanismABI/ConsensusMechanism.json"
 
 /*//////////////////////////////////////////////////////////////
                       LOAD ENVIROMENT VARIABLES
