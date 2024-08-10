@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.24;
+import {Strings} from "lib/openzeppelin-contracts/contracts/utils/Strings.sol";
 
 /**
  * @title Utils library
@@ -21,7 +22,7 @@ library Utils {
      */
     function findMaxUniqueValueWithCount(
         uint256[] memory numbers
-    ) public pure returns (uint256, uint256) {
+    ) external pure returns (uint256, uint256) {
         require(numbers.length > 0, "Array must not be empty");
 
         uint256 maxNumber;
@@ -43,5 +44,28 @@ library Utils {
         } else {
             return (maxIndex, maxNumber);
         }
+    }
+
+    /**
+     * @notice Converts an Ethereum address to its string representation in hexadecimal format
+     * @param user The Ethereum address to be converted
+     * @return A string representing the hexadecimal format of the provided address
+     */
+    function addressToString(
+        address user
+    ) external pure returns (string memory) {
+        return Strings.toHexString(user);
+    }
+
+    /**
+     * @notice Converts a uint256 timestamp to its string representation
+     * @param timestamp The uint256 timestamp to be converted
+     * @return A string representing the numeric value of the provided timestamp
+     */
+
+    function uint256ToString(
+        uint timestamp
+    ) external pure returns (string memory) {
+        return Strings.toString(timestamp);
     }
 }

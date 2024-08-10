@@ -1,16 +1,20 @@
 import React from 'react';
+import dataArea from './areas.json';
 
-const TargetTooltip = ({ area, visible, position }) => {
+const TargetTooltip = ({areaId, visible, position }) => {
     if (!visible) return null;
+
+
+    // Find the area data based on the areaId
+    const area = dataArea.find(a => a.name === areaId);
+    if (!area) return null;
 
     const circleRadius = 30; // Radius of the indicator circle
     const lineThickness = 6; // Thickness of the lines
     const horizontalLineLength = 70; // Length of the horizontal line
     const verticalLineLength = 50; // Length of the vertical line
-    const tooltipOffsetX = horizontalLineLength + 30; // Horizontal offset of the tooltip from
+    const tooltipOffsetX = horizontalLineLength + 30; // Horizontal offset of the tooltip from the horizontal line
     const tooltipOffsetY = verticalLineLength + 10; // Vertical offset of the tooltip from the horizontal line
-
-
 
     // Style for the indicator circle
     const indicatorStyle = {
@@ -54,7 +58,7 @@ const TargetTooltip = ({ area, visible, position }) => {
         backdropFilter: 'blur(10px)', // Blur effect
         padding: '1rem', // Padding inside the tooltip
         borderTop: '8px solid red', // Border around the tooltip
-        width: '31rem', // Tooltip width
+        width: '40rem', // Tooltip width
         top: position.y + verticalLineLength, // Position below the vertical line
         left: position.x // Position to the right of the horizontal line
     };
@@ -106,17 +110,19 @@ const TargetTooltip = ({ area, visible, position }) => {
             {/* Tooltip content */}
             <div style={tooltipStyle}>
                 <div className="flex">
-                    <div className="flex py-2 m-3 text-red-500 text-4xl items-center font-bold px-4">TARGET</div>
+                    <div className="flex py-2 m-3 text-red-500 text-4xl items-center font-bold px-4">
+                        TARGET
+                    </div>
                     <div className="text-gray-300">
                         <div className="mb-2">
                             <div className="font-semibold">Address: </div>
-                            <div className="text-[#5a6b6d]">0x13c857...a2297d2256</div>
+                            <div className="text-[#5a6b6d]">{area.publicAddress}</div>
                         </div>
                         <div>
-                            <div className="font-semibold">Position</div>
-                            <div className="text-[#5a6b6d]">Location: Eiffel Tower, Paris, France</div>
-                            <div className="text-[#5a6b6d]">Latitude: 48.8584° N</div>
-                            <div className="text-[#5a6b6d]">Longitude: 2.2945° E</div>
+                            <div className="font-semibold">Position: </div>
+                            <div className="text-[#5a6b6d]">Location: {area.TargetPositionName}</div>
+                            <div className="text-[#5a6b6d]">Latitude: {area.TargetLatitude}</div>
+                            <div className="text-[#5a6b6d]">Longitude: {area.TargetLongitude}</div>
                         </div>
                     </div>
                 </div>

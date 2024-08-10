@@ -14,8 +14,8 @@ library DataTypes {
      * @dev Enum to represent different node regions.
      */
     enum NodeRegion {
-        North,
-        South,
+        North, //0
+        South, //1
         East,
         West,
         Central
@@ -42,7 +42,9 @@ library DataTypes {
     struct RegisteredNodes {
         address nodeAddress;
         NodeRegion currentPosition;
-        string IPFSData;
+        string nodePosition;
+        string latitude;
+        string longitude;
     }
 
     /**

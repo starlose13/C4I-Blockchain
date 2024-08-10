@@ -23,13 +23,27 @@ contract NodeManagerScript is Script {
         initialNodeAddresses[3] = makeAddr("Dave"); //Sometimes used to represent additional parties in multiparty communication.
         initialNodeAddresses[4] = makeAddr("Eve"); // Represents an opponent or adversary.
         initialNodeAddresses[5] = makeAddr("Mallory"); //Mallory: Represents a malicious attacker who not only listens to the communication but may also alter it.
-        string[] memory nodesIPFSData = new string[](6);
-        nodesIPFSData[0] = "Position 0";
-        nodesIPFSData[1] = "Position 1";
-        nodesIPFSData[2] = "Position 2";
-        nodesIPFSData[3] = "Position 3";
-        nodesIPFSData[4] = "Position 4";
-        nodesIPFSData[5] = "Position 5";
+        string[] memory nodePosition = new string[](6);
+        nodePosition[0] = "Position 0";
+        nodePosition[1] = "Position 1";
+        nodePosition[2] = "Position 2";
+        nodePosition[3] = "Position 3";
+        nodePosition[4] = "Position 4";
+        nodePosition[5] = "Position 5";
+        string[] memory latitude = new string[](6);
+        latitude[0] = "Position 0";
+        latitude[1] = "Position 1";
+        latitude[2] = "Position 2";
+        latitude[3] = "Position 3";
+        latitude[4] = "Position 4";
+        latitude[5] = "Position 5";
+        string[] memory longitude = new string[](6);
+        longitude[0] = "Position 0";
+        longitude[1] = "Position 1";
+        longitude[2] = "Position 2";
+        longitude[3] = "Position 3";
+        longitude[4] = "Position 4";
+        longitude[5] = "Position 5";
         DataTypes.NodeRegion[] memory nodesRegions = new DataTypes.NodeRegion[](
             6
         );
@@ -48,7 +62,9 @@ contract NodeManagerScript is Script {
         NodeManager(address(nodeManagerProxy)).initialize(
             initialNodeAddresses,
             nodesRegions,
-            nodesIPFSData
+            nodePosition,
+            latitude,
+            longitude
         );
         return address(nodeManagerProxy);
     }

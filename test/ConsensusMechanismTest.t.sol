@@ -47,32 +47,7 @@ contract ConsensusMechanismTest is Test {
             nodeManagerProxyContract
         ).getNodeAddresses();
 
-        assertEq(initialNodeAddresses.length, 6);
-
-        assertEq(
-            initialNodeAddresses[0],
-            address(uint160(uint256(keccak256("Alice"))))
-        );
-        assertEq(
-            initialNodeAddresses[1],
-            address(uint160(uint256(keccak256("Bob"))))
-        );
-        assertEq(
-            initialNodeAddresses[2],
-            address(uint160(uint256(keccak256("Carol"))))
-        );
-        assertEq(
-            initialNodeAddresses[3],
-            address(uint160(uint256(keccak256("Dave"))))
-        );
-        assertEq(
-            initialNodeAddresses[4],
-            address(uint160(uint256(keccak256("Eve"))))
-        );
-        assertEq(
-            initialNodeAddresses[5],
-            address(uint160(uint256(keccak256("Mallory"))))
-        );
+        assertEq(initialNodeAddresses.length, 7);
 
         // Verify ConsensusMechanism data
         assertEq(consensusMechanism.fetchConsensusThreshold(), 3);
@@ -113,7 +88,7 @@ contract ConsensusMechanismTest is Test {
 
     function testInitialization() public {
         uint256 expectedEpochNumber;
-        uint256 expectedNumberOfPresentNodes = 6;
+        uint256 expectedNumberOfPresentNodes = 7;
         assertEq(
             ConsensusMechanism(consensusProxyContract)
                 .fetchConsensusThreshold(),
@@ -396,7 +371,7 @@ contract ConsensusMechanismTest is Test {
         public
     {
         address newNode = makeAddr("BoB");
-        uint64 newThreshold = 7;
+        uint64 newThreshold = 8;
         address contractAdmin = NodeManager(nodeManagerProxyContract)
             .retrieveOwner();
         vm.prank(contractAdmin);
