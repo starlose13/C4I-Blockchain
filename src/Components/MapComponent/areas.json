@@ -1,6 +1,6 @@
 [
   {
-    "name": "01",
+    "name": 1,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
@@ -23,7 +23,7 @@
     "NodePositionName": "Main Square, Paris, France"
   },
   {
-    "name": "02",
+    "name": 2,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
@@ -46,7 +46,7 @@
     "NodePositionName": "Central Park, Paris, France"
   },
   {
-    "name": "03",
+    "name": 3,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
@@ -69,7 +69,7 @@
     "NodePositionName": "City Hall, Paris, France"
   },
   {
-    "name": "04",
+    "name": 4,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
@@ -92,7 +92,7 @@
     "NodePositionName": "Library, Paris, France"
   },
   {
-    "name": "05",
+    "name": 5,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
@@ -115,7 +115,7 @@
     "NodePositionName": "Museum, Paris, France"
   },
   {
-    "name": "06",
+    "name": 6,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
@@ -138,72 +138,26 @@
     "NodePositionName": "University, Paris, France"
   },
   {
-    "name": "07",
-    "shape": "poly",
-    "preFillColor": "transparent",
-    "fillColor": "transparent",
-    "coords": [
-      0.38738738738738737,
-      0.49634273772204807,
-      0.4690690690690691,
-      0.49634273772204807,
-      0.4690690690690691,
-      0.5642633228840125,
-      0.38738738738738737,
-      0.5642633228840125
-    ],
-    "publicAddress": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
-    "TargetLatitude": 0.42822822822822826,
-    "TargetLongitude": 0.5303030303030303,
-    "TargetPositionName": "Stadium",
-    "NodeLatitude": "54.8584° N",
-    "NodeLongitude": "8.2945° E",
-    "NodePositionName": "Stadium, Paris, France"
-  },
-  {
-    "name": "08",
-    "shape": "poly",
-    "preFillColor": "transparent",
-    "fillColor": "transparent",
-    "coords": [
-      0.4690690690690691,
-      0.49634273772204807,
-      0.5507507507507508,
-      0.49634273772204807,
-      0.5507507507507508,
-      0.5642633228840125,
-      0.4690690690690691,
-      0.5642633228840125
-    ],
-    "publicAddress": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
-    "TargetLatitude": 0.5099099099099099,
-    "TargetLongitude": 0.5303030303030303,
-    "TargetPositionName": "Market",
-    "NodeLatitude": "55.8584° N",
-    "NodeLongitude": "9.2945° E",
-    "NodePositionName": "Market, Paris, France"
-  },
-  {
-    "name": "09",
+    "name": 7,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
     "coords": [
       0.5507507507507508,
-      0.49634273772204807,
+      0.4284221525600836,
+      0.6324324324324324,
+      0.4284221525600836,
       0.6324324324324324,
       0.49634273772204807,
-      0.6324324324324324,
-      0.5642633228840125,
       0.5507507507507508,
-      0.5642633228840125
+      0.49634273772204807
     ],
-    "publicAddress": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+    "publicAddress": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
     "TargetLatitude": 0.5915915915915916,
-    "TargetLongitude": 0.5303030303030303,
-    "TargetPositionName": "Station",
-    "NodeLatitude": "56.8584° N",
-    "NodeLongitude": "10.2945° E",
-    "NodePositionName": "Station, Paris, France"
+    "TargetLongitude": 0.46238244514106586,
+    "TargetPositionName": "University",
+    "NodeLatitude": "53.8584° N",
+    "NodeLongitude": "7.2945° E",
+    "NodePositionName": "University, Paris, France"
   }
 ]

@@ -4,6 +4,7 @@ import Sidebar from "./Components/Sidebar.jsx";
 import MapComponent from "./Components/MapComponent/MapComponents.jsx";
 import {MainContext} from "./hooks/useSimulationContext.jsx";
 import React, {useState} from "react";
+import {useInteractWithNodeManagerContract,useInteractWithConsensusContractOnChainData} from "./hooks/useGetContract.jsx";
 
 
 function App() {
@@ -13,8 +14,11 @@ function App() {
             id: 1,
             address: '0x13c857...a2297d22256',
             location: 'Eiffel Tower, Paris, France',
-            latitude: '48.8584° N',
-            longitude: '2.2945° E',
+            TargetLatitude: '48.8584° N',
+            TargetLongitude: '2.2945° E',
+            NodePositionName: 'Eiffel Tower, Paris, France',
+            NodeLatitude: '48.8584° N',
+            NodeLongitude: '2.2945° E',
         },
         {
             id: 2,
@@ -23,8 +27,8 @@ function App() {
             TargetLatitude: '48.8584° N',
             TargetLongitude: '2.2945° E',
             NodePositionName: 'Eiffel Tower, Paris, France',
-            NodeLatitude:'48.8584° N',
-            NodeLongitude:'2.2945° E',
+            NodeLatitude: '48.8584° N',
+            NodeLongitude: '2.2945° E',
         },
         {
             id: 3,
@@ -33,8 +37,8 @@ function App() {
             TargetLatitude: '48.8584° N',
             TargetLongitude: '2.2945° E',
             NodePositionName: 'Eiffel Tower, Paris, France',
-            NodeLatitude:'48.8584° N',
-            NodeLongitude:'2.2945° E',
+            NodeLatitude: '48.8584° N',
+            NodeLongitude: '2.2945° E',
         },
         {
             id: 4,
@@ -43,8 +47,8 @@ function App() {
             TargetLatitude: '48.8584° N',
             TargetLongitude: '2.2945° E',
             NodePositionName: 'Eiffel Tower, Paris, France',
-            NodeLatitude:'48.8584° N',
-            NodeLongitude:'2.2945° E',
+            NodeLatitude: '48.8584° N',
+            NodeLongitude: '2.2945° E',
         },
         {
             id: 5,
@@ -53,8 +57,8 @@ function App() {
             TargetLatitude: '48.8584° N',
             TargetLongitude: '2.2945° E',
             NodePositionName: 'Eiffel Tower, Paris, France',
-            NodeLatitude:'48.8584° N',
-            NodeLongitude:'2.2945° E',
+            NodeLatitude: '48.8584° N',
+            NodeLongitude: '2.2945° E',
         },
         {
             id: 6,
@@ -63,8 +67,8 @@ function App() {
             TargetLatitude: '48.8584° N',
             TargetLongitude: '2.2945° E',
             NodePositionName: 'Eiffel Tower, Paris, France',
-            NodeLatitude:'48.8584° N',
-            NodeLongitude:'2.2945° E',
+            NodeLatitude: '48.8584° N',
+            NodeLongitude: '2.2945° E',
         },
         {
             id: 7,
@@ -73,11 +77,19 @@ function App() {
             TargetLatitude: '48.8584° N',
             TargetLongitude: '2.2945° E',
             NodePositionName: 'Eiffel Tower, Paris, France',
-            NodeLatitude:'48.8584° N',
-            NodeLongitude:'2.2945° E',
+            NodeLatitude: '48.8584° N',
+            NodeLongitude: '2.2945° E',
         },
     ])
 
+    const  result  = useInteractWithNodeManagerContract();
+    const {res,err} = result
+
+    const URIDataFormmat = useInteractWithConsensusContractOnChainData();
+    const {URIDataFormmats,} = URIDataFormmat
+
+   console.log(URIDataFormmat);
+   
 
     return (
         <MainContext.Provider

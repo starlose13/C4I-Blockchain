@@ -1,8 +1,9 @@
 import AddressCard from './AddressCard';
 import "./scrollbar.css";
-import useAddressData from "../../../hooks/useAddressData.jsx";
-import {MainContext} from "../../../hooks/useSimulationContext.jsx";
-import {useContext, useEffect} from "react";
+import { MainContext } from "../../../hooks/useSimulationContext.jsx";
+import { useContext, useState } from "react";
+import { useInteractWithNodeManagerContract } from "../../../hooks/useGetContract.jsx"
+import { useInteractWithConsensusContract } from "../../../hooks/useGetContract.jsx"
 
 /**
  * Simulation Component
@@ -12,15 +13,24 @@ import {useContext, useEffect} from "react";
 
 const Simulation = () => {
 
-    let {targetData} = useContext(MainContext)
-    const {loading, error} = useAddressData();
+    const [transaction, setTransaction] = useState(null);
+    const [addresses, setAddresses] = useState([]);
+    const [positions, setPositions] = useState([]);
+    let { targetData } = useContext(MainContext)
 
-    useEffect(() => {
-        console.log('targetData changed:', targetData);
-    }, [targetData]);
+    const { result: nodeData, error: nodeError } = useInteractWithNodeManagerContract();
 
-    if (loading) return <div className="text-white">Loading...</div>;
-    if (error) return <div className="text-red-500">Error: {error.message}</div>;
+    const handleRunSimulationClick = async () => {
+        if (nodeData) {
+            const addresses = nodeData.map(node => node.address);
+            const positions = nodeData.map(node => node.position);
+            setAddresses(addresses);
+            setPositions(positions);
+        }
+    };
+
+    const { error: consensusError } = useInteractWithConsensusContract(addresses, positions);
+
 
 
     // Main render
@@ -37,7 +47,7 @@ const Simulation = () => {
                 ))}
             </div>
 
-            <button className="w-full text-sm bg-[#298bfe] text-[#d7e6f7] h-10">
+            <button className="w-full text-sm bg-[#298bfe] text-[#d7e6f7] h-10" onClick={handleRunSimulationClick}>
                 Run Simulation
             </button>
 
