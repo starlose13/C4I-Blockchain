@@ -4,7 +4,3 @@ sphinx:
 
 python:
   version: 3.8
-  
-
-build:
-  image: latest
