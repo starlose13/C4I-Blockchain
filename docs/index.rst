@@ -22,6 +22,4 @@ Table of Contents
 
    how_should_we_run
    backend
-   frontend
-   foundry
-   security
+
