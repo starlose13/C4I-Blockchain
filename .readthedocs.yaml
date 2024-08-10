@@ -1,0 +1,16 @@
+# Read the Docs configuration file for your project
+version: 2
+
+# Build settings
+sphinx:
+  configuration: docs/conf.py  # Path to your Sphinx configuration file
+
+python:
+  install:
+    - requirements: docs/requirements.txt  # Path to your requirements file
+  version: "3.8"  # Specify Python version; adjust if necessary
+
+# Optional: Configure additional settings if needed
+# Example for using a specific Sphinx theme
+theme:
+  name: 'sphinx_rtd_theme'
