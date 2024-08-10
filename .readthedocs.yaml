@@ -6,8 +6,6 @@ version: 2
 # Define the Python environment
 python:
   version: 3.8  # Specify the Python version you need
-  install:
-    - requirements: requirements.txt  # List of dependencies required for building
 
 # Define the Sphinx configuration
 sphinx:
@@ -16,29 +14,10 @@ sphinx:
 # Specify the build environment
 build:
   os: ubuntu-22.04  # Choose the OS environment; options include 'ubuntu-22.04', 'ubuntu-20.04', etc.
-  tools:
-    # Specify additional tools or packages to install
-    # Example for Node.js if using JavaScript-based Sphinx extensions
-    - nodejs
-    # Example for installing Git if your documentation depends on Git features
-    - git
 
-# Define any additional settings
-# For example, configuring the documentation versioning
-versioning:
-  type: git  # Use Git for versioning
-  branch: main  # Branch to build from; specify if different from 'main'
-
-# Custom commands or scripts
-# Define any additional build steps or scripts to run before or after the build
-custom:
-  build:
-    pre:
-      - pip install -r requirements.txt  # Ensure all dependencies are installed
-    post:
-      - echo "Build completed successfully!"  # Custom message or script
-
-# Build format
+# Define the formats to build
 formats:
-  - html  # Build HTML format
-  - pdf  # Optionally, build PDF format; requires additional configuration
+  - htmlzip  # Generate HTML documentation in a zip archive
+  # Uncomment below if you also want to build PDF and/or EPUB formats
+  # - pdf
+  # - epub
