@@ -297,6 +297,7 @@ contract NodeManager is
         return CONTRACT_ADMIN;
     }
 
+    //  The above code is a Solidity function named `getNodeAddresses` that is defined as an external view function. It returns an array of addresses (`address[]`) stored in the state variable `s_nodes`. The function does not modify the state of the contract and can be called externally to retrieve the array of node addresses.
     function getNodeAddresses() external view returns (address[] memory) {
         return s_nodes;
     }
