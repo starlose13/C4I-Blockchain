@@ -1,23 +1,13 @@
-# .readthedocs.yml
-
-# Define the version of the configuration file format
+# readthedocs.yml
 version: 2
 
-# Define the Python environment
-python:
-  version: 3.8  # Specify the Python version you need
-
-# Define the Sphinx configuration
-sphinx:
-  configuration: docs/conf.py  # Path to your Sphinx configuration file
-
-# Specify the build environment
+# The tools used to build the documentation
 build:
-  os: ubuntu-22.04  # Choose the OS environment; options include 'ubuntu-22.04', 'ubuntu-20.04', etc.
+  tools:
+    - sphinx
+    - mkdocs
 
-# Define the formats to build
-formats:
-  - htmlzip  # Generate HTML documentation in a zip archive
-  # Uncomment below if you also want to build PDF and/or EPUB formats
-  # - pdf
-  # - epub
+# The commands to run during the build process
+commands:
+  - pip install -r requirements.txt
+  - make html
