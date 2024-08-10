@@ -2,8 +2,8 @@ import AddressCard from './AddressCard';
 import "./scrollbar.css";
 import { MainContext } from "../../../hooks/useSimulationContext.jsx";
 import { useContext, useState } from "react";
-import { useInteractWithNodeManagerContract } from "../../../hooks/useGetContract.jsx"
-import { useInteractWithConsensusContract } from "../../../hooks/useGetContract.jsx"
+import { useFetchNodeAddresses  } from "../../../hooks/useGetContract.jsx"
+import { useSimulateTargetLocation } from "../../../hooks/useGetContract.jsx"
 
 /**
  * Simulation Component
@@ -17,7 +17,7 @@ const Simulation = () => {
     const [positions, setPositions] = useState([]);
     let { targetData } = useContext(MainContext)
 
-    const { result: nodeData, error: nodeError } = useInteractWithNodeManagerContract();
+    const { result: nodeData, error: nodeError } = useFetchNodeAddresses ();
 
     const handleRunSimulationClick = async () => {
         if (nodeData) {
@@ -30,7 +30,7 @@ const Simulation = () => {
 
  
 
-    const { error: consensusError } = useInteractWithConsensusContract(addresses, positions);
+    const { error: consensusError } = useSimulateTargetLocation(addresses, positions);
 
 
 

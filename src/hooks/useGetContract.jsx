@@ -32,7 +32,7 @@ const ConsensusMechanismContract = new ethers.Contract(ConsensusMechanismContrac
 /*//////////////////////////////////////////////////////////////
                         NODE MANAGER FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-export const useInteractWithNodeManagerContract = () => {
+export const useFetchNodeAddresses  = () => {
 
     const [result, setResult] = useState()
     const [error, setError] = useState()
@@ -42,29 +42,19 @@ export const useInteractWithNodeManagerContract = () => {
                 // const data = await NodeManagerContract.retrieveAllRegisteredNodeData();
                 const data = await NodeManagerContract.getNodeAddresses();
                 console.log("getnodeAddresses is: ", data);
-
-                // const structuredData = data.map((nodeData, index) => ({
-                //     // id: index,
-                //     // address: nodeData.nodeAddress,
-                //     // position: nodeData.currentPosition,
-                //     // ipfsData: nodeData.IPFSData
-
-                // }));
-
                 setResult(data);
             } catch (err) {
                 setError(err);
                 console.error('Error interacting with the contract:', err);
             }
         };
-
         fetchData();
     }, []);
     return { result, error };
 }
 
 
-export const useInteractWithConsensusContractOnChainData = (newUriAddresses) => {
+export const useFormatAndFetchURIData = (newUriAddresses) => {
     const [error, setError] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
@@ -95,7 +85,7 @@ export const useInteractWithConsensusContractOnChainData = (newUriAddresses) => 
     //////////////////////////////////////////////////////////////*/
 
 
-export const useInteractWithConsensusContract = (addresses, positions) => {
+export const useSimulateTargetLocation = (addresses, positions) => {
 
     const [error, setError] = useState(null);
     useEffect(() => {

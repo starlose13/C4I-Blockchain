@@ -4,7 +4,7 @@ import Sidebar from "./Components/Sidebar.jsx";
 import MapComponent from "./Components/MapComponent/MapComponents.jsx";
 import {MainContext} from "./hooks/useSimulationContext.jsx";
 import React, {useState} from "react";
-import {useInteractWithNodeManagerContract,useInteractWithConsensusContractOnChainData} from "./hooks/useGetContract.jsx";
+import {useFetchNodeAddresses} from "./hooks/useGetContract.jsx";
 
 
 function App() {
@@ -82,14 +82,14 @@ function App() {
         },
     ])
 
-    const  result  = useInteractWithNodeManagerContract();
+    const  result  = useFetchNodeAddresses ();
     const {res,err} = result
 
-    // const { result: newUriAddresses, error: errNode } = useInteractWithNodeManagerContract();
+    // const { result: newUriAddresses, error: errNode } = useFetchNodeAddresses ();
     
-    // const { error: errConsensus } = useInteractWithConsensusContractOnChainData(newUriAddresses);
+    // const { error: errConsensus } = useFormatAndFetchURIData(newUriAddresses);
 
-    // const URIDataFormmat = useInteractWithConsensusContractOnChainData();
+    // const URIDataFormmat = useFormatAndFetchURIData();
     // const {URIDataFormmats,} = URIDataFormmat
 
 //    console.log(URIDataFormmat);

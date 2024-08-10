@@ -6,7 +6,7 @@ import NodeTooltip from "./NodeTooltip.jsx";
 import TargetTooltip from "./TargetTooltip.jsx";
 import { MainContext } from "../../hooks/useSimulationContext.jsx";
 import dataArea from "./areas.json";
-import { useInteractWithNodeManagerContract,useInteractWithConsensusContractOnChainData } from "../../hooks/useGetContract.jsx";
+import { useFetchNodeAddresses ,useFormatAndFetchURIData } from "../../hooks/useGetContract.jsx";
 
 
 const MapComponent = () => {
@@ -47,9 +47,8 @@ const MapComponent = () => {
         })
     };
 
-
-    const getdata = useInteractWithNodeManagerContract();
-    const dataOnChain = useInteractWithConsensusContractOnChainData();
+    const getdata = useFetchNodeAddresses ();
+    const dataOnChain = useFormatAndFetchURIData();
 
     let {onChain} = dataOnChain;
     console.log("onChain is:",onChain) 
