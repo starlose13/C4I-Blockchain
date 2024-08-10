@@ -1,11 +1,11 @@
-# readthedocs.yml
-version: 2
+# .readthedocs.yml
+sphinx:
+  configuration: docs/source/conf.py
 
-# The tools used to build the documentation
+python:
+  version: 3.8
+  install:
+    - requirements: docs/requirements.txt
+
 build:
-  os: ubuntu-22.04
-  tools:
-    - sphinx
-    - mkdocs
-
-# The commands to run during the build process
+  image: latest
