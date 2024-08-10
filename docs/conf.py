@@ -3,6 +3,7 @@
 # Import the Sphinx RTD theme
 import sphinx_rtd_theme
 
+
 # Add the theme to the list of extensions
 extensions = [
     # other extensions

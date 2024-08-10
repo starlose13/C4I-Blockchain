@@ -33,3 +33,7 @@ sphinx:
 # python:
 #   install:
 #     - requirements: docs/requirements.txt
+python:
+  version: 3.8
+  install:
+    - requirements: requirements.txt
