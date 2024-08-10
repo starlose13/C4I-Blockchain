@@ -32,7 +32,7 @@ contract NodeManagerTest is Test {
      * @dev Verifies that the NodeManager is initialized with the expected number of nodes.
      */
     function testNodeManagerInitialization() public {
-        uint256 expectedValue = 6;
+        uint256 expectedValue = 7;
         assertEq(
             NodeManager(nodeManagerProxyContract).numberOfPresentNodes(),
             expectedValue,
@@ -61,15 +61,15 @@ contract NodeManagerTest is Test {
         DataTypes.RegisteredNodes[] memory nodes = NodeManager(
             nodeManagerProxyContract
         ).retrieveAllRegisteredNodeData();
-        assertEq(nodes.length, 7, "Node not added correctly");
-        assertEq(nodes[6].nodeAddress, newNode, "New node address mismatch");
+        assertEq(nodes.length, 8, "Node not added correctly");
+        assertEq(nodes[7].nodeAddress, newNode, "New node address mismatch");
         assertEq(
-            uint256(nodes[6].currentPosition),
+            uint256(nodes[7].currentPosition),
             uint256(newRegion),
             "New node region mismatch"
         );
         assertEq(
-            nodes[6].nodePosition,
+            nodes[7].nodePosition,
             newNodePosition,
             "New node IPFS data mismatch"
         );
@@ -164,7 +164,7 @@ contract NodeManagerTest is Test {
     function testNumberOfCurrentNodes() public {
         uint256 count = NodeManager(nodeManagerProxyContract)
             .numberOfPresentNodes();
-        uint256 expectedValue = 6;
+        uint256 expectedValue = 7;
         assertEq(count, expectedValue, "Number of present nodes mismatch");
     }
 
@@ -424,7 +424,7 @@ contract NodeManagerTest is Test {
         // Verify updated data
         DataTypes.RegisteredNodes memory updatedNode = NodeManager(
             nodeManagerProxyContract
-        ).retrieveAllRegisteredNodeData()[6];
+        ).retrieveAllRegisteredNodeData()[7];
         assertEq(
             updatedNode.nodePosition,
             newNodePosition,
@@ -480,16 +480,16 @@ contract NodeManagerTest is Test {
 
         assertEq(
             nodes.length,
-            8,
+            9,
             "The number of nodes retrieved does not match the expected"
         );
         assertEq(
-            nodes[6].nodeAddress,
+            nodes[7].nodeAddress,
             nodeAddress1,
             "First node address mismatch"
         );
         assertEq(
-            nodes[7].nodeAddress,
+            nodes[8].nodeAddress,
             nodeAddress2,
             "Second node address mismatch"
         );
@@ -527,11 +527,11 @@ contract NodeManagerTest is Test {
             .getNodeAddresses();
         assertEq(
             nodeAddresses.length,
-            7,
+            8,
             "The number of node addresses does not match the expected"
         );
         assertEq(
-            nodeAddresses[6],
+            nodeAddresses[7],
             nodeAddress,
             "The retrieved node address does not match the expected"
         );
