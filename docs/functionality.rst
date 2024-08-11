@@ -6,23 +6,19 @@ internally by readthedocs.org to build all Sphinx based documentation.
 
 Creating a build works like this:
 
-- change into the root of the project that you want to build the documentation
-  for
-- run ``rtd-build``
+- Change into the root directory of the project where you want to build the documentation.
+- Run ``rtd-build``.
 
 ``rtd-build`` will then perform the following actions:
 
-- it searches for all ``readthedocs.yml`` files below the current directory
-  and merges all found files into a list of configurations
-- it iterates over all configurations (order is not garuanteed) and performs
-  the following actions for each:
+- It searches for all ``readthedocs.yml`` files below the current directory and merges all found files into a list of configurations.
+- It iterates over all configurations (order is not guaranteed) and performs the following actions for each:
 
-  - create a fresh virtualenv
-  - ``cd`` into the base directory of the documentation
-  - ``pip install ...`` whatever is configured in the config
-  - ``python setup.py install`` if configured (from the path specified in
-    ``python.setup_path``.
-  - run ``sphinx-build``
+  - Create a fresh virtualenv.
+  - ``cd`` into the base directory of the documentation.
+  - ``pip install ...`` whatever is configured in the config.
+  - ``python setup.py install`` if configured (from the path specified in ``python.setup_path``).
+  - Run ``sphinx-build``.
 
 ``readthedocs.yml`` spec
 ------------------------
@@ -33,7 +29,7 @@ the top level is mapping, then the file describes a single configuration.
 
 A few complete examples:
 
-- config file living at the root of the repository, configuring only one
+- Config file living at the root of the repository, configuring only one
   documentation:
 
   .. code-block:: yaml
@@ -47,10 +43,9 @@ A few complete examples:
     python:
         setup_install: true
 
-
-- A project with multiple documentations. The on in ``docs/`` is the english
+- A project with multiple documentations. The one in ``docs/`` is the English
   one and considered the main documentation. ``docs-de/`` contains a second
-  documentation which is the german translation of ``docs/``.
+  documentation which is the German translation of ``docs/``.
 
   .. code-block:: yaml
 
@@ -68,89 +63,127 @@ A few complete examples:
       language: de
       base: docs-de/
 
+Project Specification
+=====================
 
-Following mapping keys are supported (all but the marked once are optional):
+``blockchain-c2-simulation`` is a project that simulates a Command and Control (C2) system using blockchain-based intelligent agents. It is designed to address security and efficiency challenges in military operations.
 
-``name``
-    An identifier of the documentation that this config is about. It might
-    simply be ``docs``, or ``docs-de``. It's arbitrary, but must be unique
-    with in all readthedocs configs in one project. It can be used to refer to
-    a different configuration.
+Creating a build works like this:
 
-    It defaults to the path of the file relative to the project root. E.g. the
-    config in ``api-docs/readthedocs.yml`` will get the name
-    ``api-docs/readthedocs.yml`` by default. Since the ``name`` must be
-    unique, it's an error to have two configurations without a name in the
-    same file.
+- Change into the root directory of the project where you want to build the documentation.
+- Run ``rtd-build``.
 
-``base``
-    The path to the root directory of the documentation that this config is
-    about. That is usually the path that contains the ``conf.py`` file. It
-    defaults to the directory that the ``readthedocs.yml`` file lives in. All
-    commands for building the documentation will have the ``base`` set as
-    working directory.
+``rtd-build`` will then perform the following actions:
 
-``type``, *required*
-    The documentation framework that this documentation is written in. Allowed
-    values are:
+- It searches for all ``readthedocs.yml`` files below the current directory and merges all found files into a list of configurations.
+- It iterates over all configurations (order is not guaranteed) and performs the following actions for each:
 
-    - ``sphinx``
-    - ``mkdocs``
+  - Create a fresh virtualenv.
+  - ``cd`` into the base directory of the documentation.
+  - ``pip install ...`` whatever is configured in the config.
+  - ``python setup.py install`` if configured (from the path specified in ``python.setup_path``).
+  - Run ``sphinx-build``.
 
-``formats``
-    A mapping of format types to shall be built. The following formats are
-    supported:
+``readthedocs.yml`` spec
+------------------------
 
-    - ``html``, default: ``true``
-    - ``pdf``, default: ``false``
-    - ``epub``, default: ``false``
+A ``readthedocs.yml`` file must be in YAML format. If the top level is a block
+sequence (i.e. a list), then the file describes multiple configurations. If
+the top level is mapping, then the file describes a single configuration.
 
-``build``
-  Options for setting the docker configuration.
+A few complete examples:
 
-    ``image``
-    This sets the build image to use on the build, as defined `here <https://github.com/rtfd/readthedocs-docker-images/blob/master/CONTRIBUTING.rst#releases>`_.
+- Config file living at the root of the repository, configuring only one
+  documentation:
 
-``python``
-    Python specific configuration. All builds are executed inside a
-    virtualenv. This config can customize the virtualenv before running the
-    build. The following subkeys are allowed:
+  .. code-block:: yaml
 
-    ``pip_requirements``
-        A list of arguments that will be passed down to a ``pip install``
-        call. You can specify requirements files with ``-r
-        path/to/requirements.txt``. Accepts version modifiers like
-        ``setuptools>=18.0``.
+    # in /readthedocs.yml
+    base: docs/
+    type: sphinx
+    formats:
+        html: true
+        pdf: true
+    python:
+        setup_install: true
 
-    ``pip_install``
-        If ``true``, ``pip install .`` will be executed before building the
-        docs. Mutually exclusive with ``setup_install``.
+- A project with multiple documentations. The one in ``docs/`` is the English
+  one and considered the main documentation. ``docs-de/`` contains a second
+  documentation which is the German translation of ``docs/``.
 
-    ``extra_requirements``
-        A list of `extra requirements`_ sections to install in addition to
-        the `package default dependencies`_. Only used if the ``pip_install``
-        option above is ``true``.
+  .. code-block:: yaml
 
-    ``setup_install``
-        If ``true``, then ``python setup.py install`` will be executed before
-        building the docs. Mutually exclusive with ``pip_install``.
+    - name: en
+      type: sphinx
+      language: en
+      base: docs/
+      python:
+        requirements:
+            - "-rrequirements.txt"
+        setup_install: true
 
-    ``version``
-        The Python interpreter version to use for all build calls. This value
-        should be a float or integer value.
+    - name: de
+      extend: en
+      language: de
+      base: docs-de/
 
-        Supported versions can be configured on config instantiation by passing
-        in the following to the `env_config`::
+Project Details
+----------------
 
-            {
-                'python': {
-                    'supported_versions': [2, 2.7, 3, 3.5],
-                }
-            }
+``blockchain-c2-simulation`` focuses on enhancing military command and control systems using blockchain technology and artificial intelligence. The project addresses key challenges such as information security, distributed decision-making, and situational awareness.
 
-``language``
-    The language the doc is written in. Defaults to empty string.
+Key Features
+------------
 
+- **Decentralized Data Storage**: Utilizes blockchain for secure and transparent data storage.
+- **Enhanced Security**: Incorporates advanced encryption methods to protect data.
+- **AI-Driven Processing**: Employs AI for sophisticated data processing and target identification.
+- **Distributed Decision-Making**: Uses Byzantine fault tolerance algorithms for decentralized decision-making.
+- **Real-Time Operations**: Enables real-time collaborative operations through decentralized consensus.
 
-.. _extra requirements: http://setuptools.readthedocs.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies
-.. _package default dependencies: http://setuptools.readthedocs.io/en/latest/setuptools.html#declaring-dependencies
+Configuration Example
+----------------------
+
+A sample ``readthedocs.yml`` for the project:
+
+.. code-block:: yaml
+
+  # in /readthedocs.yml
+  base: docs/
+  type: sphinx
+  formats:
+      html: true
+      pdf: true
+  python:
+      setup_install: true
+
+  # Additional configurations for multiple languages or setups can be added as needed.
+
+Getting Started
+----------------
+
+1. **Installation**: Instructions for setting up the necessary software and dependencies.
+2. **Configuration**: Guidelines for configuring the system.
+3. **Usage**: How to use the system effectively.
+4. **Troubleshooting**: Common issues and solutions.
+
+Contributing
+------------
+
+For contribution guidelines, please refer to the CONTRIBUTING.md file.
+
+License
+-------
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+Contact
+-------
+
+For inquiries, please contact [your-email@example.com](mailto:your-email@example.com).
+
+Acknowledgments
+---------------
+
+- [References or acknowledgments for any third-party tools or contributors]
+
