@@ -6,8 +6,7 @@
 Welcome to decentralized communication's documentation!
 =======================================================
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
    :glob:
-
-   overview
    functionality
+   overview
