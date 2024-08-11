@@ -1,0 +1,9 @@
+/* Custom CSS to add navigation buttons if using a theme without them */
+.navbar {
+    display: block;
+}
+
+.navbar .navbar-inner {
+    display: flex;
+    justify-content: space-between;
+}

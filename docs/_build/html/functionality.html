@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Specification &mdash; decentralized communication v0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=f4da867e" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=4c0d86c8"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Project Title" href="overview.html" />
+    <link rel="prev" title="Welcome to decentralized communication’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            decentralized communication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#readthedocs-yml-spec"><code class="docutils literal notranslate"><span class="pre">readthedocs.yml</span></code> spec</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#project-specification">Project Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">readthedocs.yml</span></code> spec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-details">Project Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-features">Key Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-example">Configuration Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contact">Contact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgments">Acknowledgments</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Project Title</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">decentralized communication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Specification</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/functionality.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="specification">
+<h1>Specification<a class="headerlink" href="#specification" title="Permalink to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">rtd-build</span></code> is a tool that can build Sphinx documentation. It is used
+internally by readthedocs.org to build all Sphinx based documentation.</p>
+<p>Creating a build works like this:</p>
+<ul class="simple">
+<li><p>Change into the root directory of the project where you want to build the documentation.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">rtd-build</span></code>.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">rtd-build</span></code> will then perform the following actions:</p>
+<ul class="simple">
+<li><p>It searches for all <code class="docutils literal notranslate"><span class="pre">readthedocs.yml</span></code> files below the current directory and merges all found files into a list of configurations.</p></li>
+<li><p>It iterates over all configurations (order is not guaranteed) and performs the following actions for each:</p>
+<ul>
+<li><p>Create a fresh virtualenv.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span></code> into the base directory of the documentation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">...</span></code> whatever is configured in the config.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code> if configured (from the path specified in <code class="docutils literal notranslate"><span class="pre">python.setup_path</span></code>).</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="readthedocs-yml-spec">
+<h2><code class="docutils literal notranslate"><span class="pre">readthedocs.yml</span></code> spec<a class="headerlink" href="#readthedocs-yml-spec" title="Permalink to this heading"></a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">readthedocs.yml</span></code> file must be in YAML format. If the top level is a block
+sequence (i.e. a list), then the file describes multiple configurations. If
+the top level is mapping, then the file describes a single configuration.</p>
+<p>A few complete examples:</p>
+<ul>
+<li><p>Config file living at the root of the repository, configuring only one
+documentation:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># in /readthedocs.yml</span>
+<span class="nt">base</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sphinx</span>
+<span class="nt">formats</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">html</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">pdf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">python</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">setup_install</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</li>
+<li><p>A project with multiple documentations. The one in <code class="docutils literal notranslate"><span class="pre">docs/</span></code> is the English
+one and considered the main documentation. <code class="docutils literal notranslate"><span class="pre">docs-de/</span></code> contains a second
+documentation which is the German translation of <code class="docutils literal notranslate"><span class="pre">docs/</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">en</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sphinx</span>
+<span class="w">  </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">en</span>
+<span class="w">  </span><span class="nt">base</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/</span>
+<span class="w">  </span><span class="nt">python</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">requirements</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;-rrequirements.txt&quot;</span>
+<span class="w">    </span><span class="nt">setup_install</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">de</span>
+<span class="w">  </span><span class="nt">extend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">en</span>
+<span class="w">  </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">de</span>
+<span class="w">  </span><span class="nt">base</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs-de/</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="project-specification">
+<h1>Project Specification<a class="headerlink" href="#project-specification" title="Permalink to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">blockchain-c2-simulation</span></code> is a project that simulates a Command and Control (C2) system using blockchain-based intelligent agents. It is designed to address security and efficiency challenges in military operations.</p>
+<p>Creating a build works like this:</p>
+<ul class="simple">
+<li><p>Change into the root directory of the project where you want to build the documentation.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">rtd-build</span></code>.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">rtd-build</span></code> will then perform the following actions:</p>
+<ul class="simple">
+<li><p>It searches for all <code class="docutils literal notranslate"><span class="pre">readthedocs.yml</span></code> files below the current directory and merges all found files into a list of configurations.</p></li>
+<li><p>It iterates over all configurations (order is not guaranteed) and performs the following actions for each:</p>
+<ul>
+<li><p>Create a fresh virtualenv.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span></code> into the base directory of the documentation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">...</span></code> whatever is configured in the config.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code> if configured (from the path specified in <code class="docutils literal notranslate"><span class="pre">python.setup_path</span></code>).</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<section id="id1">
+<h2><code class="docutils literal notranslate"><span class="pre">readthedocs.yml</span></code> spec<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">readthedocs.yml</span></code> file must be in YAML format. If the top level is a block
+sequence (i.e. a list), then the file describes multiple configurations. If
+the top level is mapping, then the file describes a single configuration.</p>
+<p>A few complete examples:</p>
+<ul>
+<li><p>Config file living at the root of the repository, configuring only one
+documentation:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># in /readthedocs.yml</span>
+<span class="nt">base</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sphinx</span>
+<span class="nt">formats</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">html</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">pdf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">python</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">setup_install</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</li>
+<li><p>A project with multiple documentations. The one in <code class="docutils literal notranslate"><span class="pre">docs/</span></code> is the English
+one and considered the main documentation. <code class="docutils literal notranslate"><span class="pre">docs-de/</span></code> contains a second
+documentation which is the German translation of <code class="docutils literal notranslate"><span class="pre">docs/</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">en</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sphinx</span>
+<span class="w">  </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">en</span>
+<span class="w">  </span><span class="nt">base</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/</span>
+<span class="w">  </span><span class="nt">python</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">requirements</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;-rrequirements.txt&quot;</span>
+<span class="w">    </span><span class="nt">setup_install</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">de</span>
+<span class="w">  </span><span class="nt">extend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">en</span>
+<span class="w">  </span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">de</span>
+<span class="w">  </span><span class="nt">base</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs-de/</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="project-details">
+<h2>Project Details<a class="headerlink" href="#project-details" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">blockchain-c2-simulation</span></code> focuses on enhancing military command and control systems using blockchain technology and artificial intelligence. The project addresses key challenges such as information security, distributed decision-making, and situational awareness.</p>
+</section>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Decentralized Data Storage</strong>: Utilizes blockchain for secure and transparent data storage.</p></li>
+<li><p><strong>Enhanced Security</strong>: Incorporates advanced encryption methods to protect data.</p></li>
+<li><p><strong>AI-Driven Processing</strong>: Employs AI for sophisticated data processing and target identification.</p></li>
+<li><p><strong>Distributed Decision-Making</strong>: Uses Byzantine fault tolerance algorithms for decentralized decision-making.</p></li>
+<li><p><strong>Real-Time Operations</strong>: Enables real-time collaborative operations through decentralized consensus.</p></li>
+</ul>
+</section>
+<section id="configuration-example">
+<h2>Configuration Example<a class="headerlink" href="#configuration-example" title="Permalink to this heading"></a></h2>
+<p>A sample <code class="docutils literal notranslate"><span class="pre">readthedocs.yml</span></code> for the project:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># in /readthedocs.yml</span>
+<span class="nt">base</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sphinx</span>
+<span class="nt">formats</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">html</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">pdf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">python</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">setup_install</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="c1"># Additional configurations for multiple languages or setups can be added as needed.</span>
+</pre></div>
+</div>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Installation</strong>: Instructions for setting up the necessary software and dependencies.</p></li>
+<li><p><strong>Configuration</strong>: Guidelines for configuring the system.</p></li>
+<li><p><strong>Usage</strong>: How to use the system effectively.</p></li>
+<li><p><strong>Troubleshooting</strong>: Common issues and solutions.</p></li>
+</ol>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h2>
+<p>For contribution guidelines, please refer to the CONTRIBUTING.md file.</p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading"></a></h2>
+<p>This project is licensed under the MIT License. See the LICENSE file for details.</p>
+</section>
+<section id="contact">
+<h2>Contact<a class="headerlink" href="#contact" title="Permalink to this heading"></a></h2>
+<p>For inquiries, please contact [<a class="reference external" href="mailto:your-email&#37;&#52;&#48;example&#46;com">your-email<span>&#64;</span>example<span>&#46;</span>com</a>](<a class="reference external" href="mailto:your-email&#37;&#52;&#48;example&#46;com">mailto:your-email<span>&#64;</span>example<span>&#46;</span>com</a>).</p>
+</section>
+<section id="acknowledgments">
+<h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>[References or acknowledgments for any third-party tools or contributors]</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to decentralized communication’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="overview.html" class="btn btn-neutral float-right" title="Project Title" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pouya.N.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
