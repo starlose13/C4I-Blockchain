@@ -94,7 +94,7 @@ Before you start, make sure you have the following tools installed:
 
       forge test
       forge build
-.. _depolyment:
+.. _deployment:
 6. **Deploying Smart Contracts**
 ---------------------------------
 
