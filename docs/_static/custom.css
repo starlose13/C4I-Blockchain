@@ -7,3 +7,11 @@
     display: flex;
     justify-content: space-between;
 }
+
+div.footer {
+    font-size: 0.9em;
+}
+
+div.footnote {
+    font-size: 0.8em;
+}

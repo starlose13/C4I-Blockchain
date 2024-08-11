@@ -4,8 +4,8 @@ Project Title
 Overview
 --------
 
-The Command and Control (C2) system consists of a set of communication and computer equipment designed to facilitate decision-making and battlefield management. In this system, the continuous collection, processing, and dissemination of environmental information, and maintaining communication between members, are crucial. Processed information provides commanders with a comprehensive picture of the environment, enabling organization, guidance, coordination, and control of forces.
-
+The Command and Control (C2) system consists of a set of communication and computer equipment designed to facilitate decision-making and battlefield management. In this system, the continuous collection, processing, and dissemination of environmental information, and maintaining communication between members, are crucial. Processed information provides commanders with a comprehensive picture of the environment, enabling organization, guidance, coordination, and control of forces.[1]
+.. [1] C2 - Command and Control: A System of Systems to Control Complexity. August 2022. Authors: Bernard Claverie, Gilles Desclaux. Ecole Nationale Supérieure de Cognitique.
 Due to the specialized and mission-oriented nature of drones and military equipment, issues such as information access, integrity, and confidentiality are of paramount importance in cybersecurity and military contexts. The speed of information transfer, data storage capacity, and accurate and transparent command exchange necessitate a secure and reliable infrastructure. Leveraging cutting-edge technologies such as blockchain and artificial intelligence (AI) can address many of these security risks and challenges. Since its emergence in 2009, blockchain technology has proven to be an effective tool in countering intrusions, facilitating secure data sharing and storage, and tracking processes. This project presents a simulation of a Command and Control system using blockchain-based intelligent agents, which represents a significant advancement in command and control management.
 
 Problem Definition
