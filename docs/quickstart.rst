@@ -7,7 +7,7 @@ Welcome to the Next-Generation Command and Control project! This guide will walk
 --------------------
 
 This project leverages the Foundry framework for smart contract development and deployment, offering a robust platform for creating and managing blockchain-based solutions. The system includes various scripts and tools for deploying smart contracts to multiple networks and integrating them into our Command and Control system.
-
+.. _prerequisites:
 2. **Prerequisites**
 ---------------------
 
@@ -17,7 +17,7 @@ Before you start, make sure you have the following tools installed:
 - **Python**: Required for Sphinx documentation (if you plan to build it).
 - **Node.js**: Necessary for certain development tasks.
 - **Git**: For version control and collaboration.
-
+.. _setting_up_environment:
 3. **Setting Up Your Environment**
 ------------------------------------
 
@@ -61,7 +61,7 @@ Before you start, make sure you have the following tools installed:
       PRIVATE_KEY=your_private_key
       ETHERSCAN_API_KEY=your_etherscan_api_key
       FANTOMSCAN_API_KEY=your_fantomscan_api_key
-
+.. _configuration:
 4. **Project Configuration**
 ----------------------------
 
@@ -94,7 +94,7 @@ Before you start, make sure you have the following tools installed:
 
       forge test
       forge build
-
+.. _depolyment:
 6. **Deploying Smart Contracts**
 ---------------------------------
 
@@ -125,7 +125,7 @@ Before you start, make sure you have the following tools installed:
    .. code-block:: bash
 
       make deploy-and-commit-nodeManager ARGS= "--network <name>"
-
+.. _troubleshooting:
 7. **Common Tasks**
 --------------------
 
@@ -167,5 +167,5 @@ Before you start, make sure you have the following tools installed:
 9. **Contact and Support**
 ----------------------------
 
-For any questions or support, please contact us at [your-email@example.com](mailto:your-email@example.com).
+For any questions or support, please contact us at [starlose13@gmail.com].
 

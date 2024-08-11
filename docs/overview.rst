@@ -26,7 +26,7 @@ Features
 - **Decentralized Data Storage**: Utilizes blockchain to store processed environmental data securely and transparently.
 - **Enhanced Security**: Employs advanced encryption techniques to ensure the confidentiality and integrity of data.
 - **AI-Driven Processing**: Uses AI for sophisticated data processing and target identification by drones.
-- **Distributed Decision-Making**: Implements Byzantine fault tolerance algorithms for decentralized decision-making among autonomous drones.
+- **Distributed Decision-Making**: Implements Byzantine fault tolerance algorithms for decentralized decision-making among autonomous agents.
 - **Real-Time Operations**: Facilitates real-time collaborative operations through decentralized consensus.
 
 Implementation Details
@@ -39,11 +39,13 @@ Implementation Details
 
 Getting Started
 ---------------
+For detailed instructions on setting up, configuring, using, and troubleshooting the project, refer to the `quickstart` guide:
 
-1. **Installation**: Instructions on how to set up the necessary software and dependencies.
-2. **Configuration**: Guide on configuring the system for optimal performance.
-3. **Usage**: Examples of how to use the system and its features.
-4. **Troubleshooting**: Common issues and their resolutions.
+- **Prerequisites**: See :ref:`prerequisites` in the :doc:`quickstart`.
+- **Setting Up Your Environment**: See :ref:`setting_up_environment` in the :doc:`quickstart`.
+- **Configuration**: See :ref:`configuration` in the :doc:`quickstart`.
+- **Deployment**: See :ref:`deployment` in the :doc:`quickstart`.
+- **Troubleshooting**: See :ref:`troubleshooting` in the :doc:`quickstart`.
 
 Contributing
 ------------
