@@ -6,7 +6,7 @@ Overview
 
 The Command and Control (C2) system consists of a set of communication and computer equipment designed to facilitate decision-making and battlefield management. In this system, the continuous collection, processing, and dissemination of environmental information, and maintaining communication between members, are crucial. Processed information provides commanders with a comprehensive picture of the environment, enabling organization, guidance, coordination, and control of forces.[1]
 
-.. image:: /_static/AlbertQube.jpg
+.. image:: ./_static/albertQube.jpg
    :alt: Description of the image
    :width: 600px
    :align: center
