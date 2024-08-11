@@ -11,3 +11,4 @@ Welcome to decentralized communication's documentation!
 
    
    overview
+   quickstart

@@ -6,7 +6,7 @@ Overview
 
 The Command and Control (C2) system consists of a set of communication and computer equipment designed to facilitate decision-making and battlefield management. In this system, the continuous collection, processing, and dissemination of environmental information, and maintaining communication between members, are crucial. Processed information provides commanders with a comprehensive picture of the environment, enabling organization, guidance, coordination, and control of forces.[1]
 
-.. image:: ./_static/AlbertQube.jpg
+.. image:: ./_static/albertQube.jpg
    :alt: Description of the image
    :width: 600px
    :align: center
@@ -33,9 +33,9 @@ Implementation Details
 ----------------------
 
 1. **Blockchain Integration**: Detailed description of how blockchain technology is integrated into the system.
-2. **AI Algorithms**: Explanation of the AI algorithms used for data processing and target identification.
+2. **Agents Management**: Explanation of the how agents are added.
 3. **Encryption Methods**: Overview of encryption methods used to secure data exchanges.
-4. **Consensus Mechanism**: Description of the Byzantine fault tolerance algorithm and its implementation for decision-making.
+4. **Consensus Mechanism**: Description of the decentralized decision-making algorithm and its implementation for reach out to a target.
 
 Getting Started
 ---------------
@@ -53,14 +53,14 @@ If you wish to contribute to the project, please follow the guidelines outlined 
 License
 -------
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the SunAur Inistitue License. Contact with SunAir Inistitue for details.
 
 Contact
 -------
 
-For any inquiries, please contact [your-email@example.com](mailto:your-email@example.com).
+For any inquiries, please contact [info@sunair.com].
 
-Acknowledgments
+References
 ---------------
 
 - [1]. C2 - Command and Control: A System of Systems to Control Complexity. August 2022. Authors: Bernard Claverie, Gilles Desclaux. Ecole Nationale Supérieure de Cognitique.
