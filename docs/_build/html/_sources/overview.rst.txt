@@ -1,4 +1,4 @@
-Project Title
+Next-Generation Command and Control
 =============
 
 Overview
