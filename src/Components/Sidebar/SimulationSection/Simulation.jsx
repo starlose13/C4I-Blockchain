@@ -30,6 +30,7 @@ const Simulation = () => {
 
  
 
+    
     const { error: consensusError } = useSimulateTargetLocation(addresses, positions);
 
 
@@ -58,3 +59,6 @@ const Simulation = () => {
 };
 
 export default Simulation;
+
+
+// make deploy-contract ARGS="--network local"

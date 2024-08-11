@@ -41,7 +41,7 @@ export const useFetchNodeAddresses  = () => {
             try {
                 // const data = await NodeManagerContract.retrieveAllRegisteredNodeData();
                 const data = await NodeManagerContract.getNodeAddresses();
-                console.log("getnodeAddresses is: ", data);
+                // console.log("getnodeAddresses is: ", data);
                 setResult(data);
             } catch (err) {
                 setError(err);
@@ -53,29 +53,29 @@ export const useFetchNodeAddresses  = () => {
     return { result, error };
 }
 
+const storedNodeAddresses = JSON.parse(localStorage.getItem('nodeAddresses'));
+console.log(storedNodeAddresses);
 
-export const useFormatAndFetchURIData = (newUriAddresses) => {
+
+export const useFormatAndFetchURIData = (storedNodeAddresses) => {
     const [error, setError] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
-            if (!newUriAddresses) return; // Wait until newUriAddresses is available
+             // Wait until newUriAddresses is available
             try {
                 // const data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
-                const data = await NodeManagerContract.URIDataFormatter(newUriAddresses);
+                const data = await NodeManagerContract.URIDataFormatter(storedNodeAddresses,);
                 // const _data = await ConsensusMechanismContract.TargetLocationSimulation(s_agents, s_announceTargets);
                 console.log(data);
-
                 console.log('Transaction sent:', data);
                 // console.log('Transaction sent:', _data);
-
             } catch (err) {
                 console.error('Error interacting with the contract:', err);
                 setError(err);
-
             }
         };
         fetchData();
-    }, [newUriAddresses]);
+    }, [storedNodeAddresses]);
 
     return { error };
 }

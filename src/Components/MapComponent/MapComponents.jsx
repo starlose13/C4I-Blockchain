@@ -5,8 +5,7 @@ import nodes from './node.json';
 import NodeTooltip from "./NodeTooltip.jsx";
 import TargetTooltip from "./TargetTooltip.jsx";
 import { MainContext } from "../../hooks/useSimulationContext.jsx";
-import dataArea from "./areas.json";
-import { useFetchNodeAddresses ,useFormatAndFetchURIData } from "../../hooks/useGetContract.jsx";
+import { useFetchNodeAddresses } from "../../hooks/useGetContract.jsx";
 
 
 const MapComponent = () => {
@@ -48,16 +47,10 @@ const MapComponent = () => {
     };
 
     const getdata = useFetchNodeAddresses ();
-    const dataOnChain = useFormatAndFetchURIData();
-
-    let {onChain} = dataOnChain;
-    console.log("onChain is:",onChain) 
 
     const handleAreaClick = (area, index, event) => {
-        let { result } = getdata;
+        let { result } = getdata;     
 
-        console.log("data Area is :", dataArea);
-        console.log("result is: ", result);
         console.log("area is: ", area);
 
         let _area_;
@@ -70,7 +63,7 @@ const MapComponent = () => {
         if (_area_) {
             console.log("_area_ :", _area_);
         } else {
-            console.error("Area not found in result");
+            console.log("Area not found in result");
             return;
         }
         console.log(_area_);
@@ -114,7 +107,7 @@ const MapComponent = () => {
     };
 
     // useEffect(() => {
-        console.log("Updated positionArray: ", positionArray);
+        // console.log("Updated positionArray: ", positionArray);
     // }, [positionArray]);
 
 

@@ -2,9 +2,9 @@ import './App.css';
 import Navbar from "./Components/Navbar.jsx";
 import Sidebar from "./Components/Sidebar.jsx";
 import MapComponent from "./Components/MapComponent/MapComponents.jsx";
-import {MainContext} from "./hooks/useSimulationContext.jsx";
-import React, {useState} from "react";
-import {useFetchNodeAddresses} from "./hooks/useGetContract.jsx";
+import { MainContext } from "./hooks/useSimulationContext.jsx";
+import React, { useState } from "react";
+import { useFetchNodeAddresses } from "./hooks/useGetContract.jsx";
 
 
 function App() {
@@ -82,30 +82,33 @@ function App() {
         },
     ])
 
-    const  result  = useFetchNodeAddresses ();
-    const {res,err} = result
 
-    // const { result: newUriAddresses, error: errNode } = useFetchNodeAddresses ();
+    const { result: newAddresses, error: Error } = useFetchNodeAddresses()
+    // console.log("newAddresses is:", newAddresses);
+    // let nodeAddresses = [];
+    // nodeAddresses.push(newAddresses)
+    // console.log("nodeAddresses is:", nodeAddresses);
+    localStorage.setItem('nodeAddresses', JSON.stringify(newAddresses));
     
+    
+
     // const { error: errConsensus } = useFormatAndFetchURIData(newUriAddresses);
-
     // const URIDataFormmat = useFormatAndFetchURIData();
-    // const {URIDataFormmats,} = URIDataFormmat
+    // const { URIDataFormmats, } = URIDataFormmat
+    // console.log(URIDataFormmat);
 
-//    console.log(URIDataFormmat);
-   
 
     return (
         <MainContext.Provider
-            value={{selectedNode, setSelectedNode, targetData, setTargetData}}>
+            value={{ selectedNode, setSelectedNode, targetData, setTargetData }}>
             <div className="w-full h-screen relative bg-[#00030c]">
-                <Navbar/>
+                <Navbar />
                 <div className="flex">
                     <div>
-                        <Sidebar/>
+                        <Sidebar />
                     </div>
                     <div className="flex-grow mx-2 ">
-                        <MapComponent/>
+                        <MapComponent />
                     </div>
                 </div>
             </div>
