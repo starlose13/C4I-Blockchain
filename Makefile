@@ -47,3 +47,6 @@ git-add-commit-push: git-add git-commit git-push
 
 # Target to run deployment and then commit changes to git
 deploy-and-commit-nodeManager: deploy git-add-commit-push
+
+html: 
+	@sphinx-build -b html docs/ docs/_build/html/
