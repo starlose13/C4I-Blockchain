@@ -27,8 +27,8 @@ Before you start, make sure you have the following tools installed:
 
    .. code-block:: bash
 
-      git clone https://github.com/yourusername/your-repository.git
-      cd your-repository
+      git clone https://github.com/starlose13/C4I-Blockchain.git
+      cd C4I-Blockchain
 
 2. **Create and Activate a Virtual Environment (Optional)**
 
@@ -104,19 +104,19 @@ Before you start, make sure you have the following tools installed:
 
    .. code-block:: bash
 
-      make deploy-nm
+      make deploy-nm ARGS= "--network <name>"
 
    Deploy the Consensus Mechanism smart contract:
 
    .. code-block:: bash
 
-      make deploy-cm
+      make deploy-cm ARGS= "--network <name>"
 
    Deploy integrated scripts:
 
    .. code-block:: bash
 
-      make deploy-contract
+      make deploy-contract ARGS= "--network <name>"
 
 2. **Deploy and Commit Changes**
 
@@ -124,7 +124,7 @@ Before you start, make sure you have the following tools installed:
 
    .. code-block:: bash
 
-      make deploy-and-commit-nodeManager
+      make deploy-and-commit-nodeManager ARGS= "--network <name>"
 
 7. **Common Tasks**
 --------------------
@@ -135,7 +135,7 @@ Before you start, make sure you have the following tools installed:
 
    .. code-block:: bash
 
-      make git-add-commit-push
+      make git-add-commit-push ARGS= "--network <name>"
 
 2. **Troubleshoot Build Issues**
 
