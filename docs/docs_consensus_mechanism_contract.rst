@@ -1,7 +1,8 @@
+ConsensusMechanism Contract Documentation
+=========================================
 
-# ConsensusMechanism Contract Documentation
-
-## Overview
+Overview
+--------
 
 The `ConsensusMechanism` contract orchestrates decision-making processes among network agents. It manages critical functions such as target location reporting, simulation execution, consensus automation, and epoch management. It collaborates with the `NodeManager` contract to verify node registration and validate participation, ensuring the integrity of consensus operations.
 
