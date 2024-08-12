@@ -35,8 +35,7 @@ Features
    :align: center
 
 
-
-
+---
 Implementation Details
 ----------------------
 
