@@ -1,6 +1,4 @@
 
----
-
 # ConsensusMechanism Contract Documentation
 
 ## Overview
