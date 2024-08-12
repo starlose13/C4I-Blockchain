@@ -177,6 +177,11 @@ forge<span class="w"> </span>build
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy-nm<span class="w"> </span><span class="nv">ARGS</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--network &lt;name&gt;&quot;</span>
 </pre></div>
 </div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Important:</strong> If you want to run the project on localhost, ensure you have <cite>anvil</cite> running first.</p>
 <p>Deploy the Consensus Mechanism smart contract:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy-cm<span class="w"> </span><span class="nv">ARGS</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--network &lt;name&gt;&quot;</span>
 </pre></div>
@@ -185,7 +190,8 @@ forge<span class="w"> </span>build
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy-contract<span class="w"> </span><span class="nv">ARGS</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--network &lt;name&gt;&quot;</span>
 </pre></div>
 </div>
-</li>
+</div>
+<ol class="arabic" start="2">
 <li><p><strong>Deploy and Commit Changes</strong></p>
 <p>To deploy and automatically commit changes to Git:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>deploy-and-commit-nodeManager<span class="w"> </span><span class="nv">ARGS</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;--network &lt;name&gt;&quot;</span>

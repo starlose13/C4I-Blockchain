@@ -12,3 +12,8 @@ Welcome to decentralized communication's documentation!
    
    overview
    quickstart
+   contracts_structure
+   docs_node_manager_contract
+   docs_consensus_mechanism_contract
+   docs_chainlink_automation_contract
+   docs_minimal_account_abstraction

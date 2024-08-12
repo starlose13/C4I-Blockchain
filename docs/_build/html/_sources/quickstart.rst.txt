@@ -114,6 +114,12 @@ Before you start, make sure you have the following tools installed:
 
       make deploy-nm ARGS= "--network <name>"
 
+
+
+.. note::
+
+   **Important:** If you want to run the project on localhost, ensure you have `anvil` running first.
+
    Deploy the Consensus Mechanism smart contract:
 
    .. code-block:: bash
