@@ -53,7 +53,7 @@ Functions
 ---------
 
 Initialization
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 The `initialize` function is critical for setting up the contract during its deployment or upgrade phase. It initializes the contract’s state and ensures that all necessary parameters and dependencies are correctly configured.
 
@@ -120,7 +120,7 @@ Security Considerations
 - **Access Control:** Implement access control to restrict function usage to authorized users.
 
 Consensus Automation Execution
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The `consensusAutomationExecution` function automates the execution of consensus tasks, triggered by Chainlink Automation after a defined epoch duration.
 
@@ -129,7 +129,7 @@ The `consensusAutomationExecution` function automates the execution of consensus
    function consensusAutomationExecution() external returns (bool isReached, uint256 target)
 
 Returns
-~~~~~~~~
+~~~~~~~
 
 - **`isReached`** (`bool`):  
   Indicates whether consensus criteria have been met (`true` for reached, `false` otherwise).
@@ -155,7 +155,7 @@ Security Considerations
 - **Consensus Criteria:** Validate criteria for consensus to avoid incorrect target announcements.
 
 TargetLocationSimulation
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The `TargetLocationSimulation` function facilitates bulk reporting of target locations for testing and simulation purposes. It allows multiple agents to report target locations in a single transaction, aiding in the validation of target reporting mechanisms.
 
@@ -194,7 +194,7 @@ Notices
 - **Access Control:** Restrict function access to authorized addresses.
 
 Events
-~~~~~~~
+~~~~~~
 
 - **`TargetLocationSimulated`** (`DataTypes.TargetLocationSimulated`):  
   Emitted for each simulated target location, recording the agent and target zone.
@@ -209,11 +209,3 @@ Application
 ------------
 
 The `ConsensusMechanism` contract is pivotal for decentralized applications requiring reliable and automated consensus. It is applicable in scenarios such as decentralized voting systems, governance frameworks, and any context where multiple nodes must converge on a unified decision.
-
-Security Considerations
-------------------------
-
-- **Node Registration:** Ensure only registered nodes can report target locations to maintain system integrity.
-- **Access Control:** Implement stringent access controls for sensitive functions to prevent unauthorized access and manipulation.
-```
-
