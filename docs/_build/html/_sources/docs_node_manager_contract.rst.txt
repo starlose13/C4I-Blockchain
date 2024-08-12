@@ -1,8 +1,3 @@
-Here is the corrected version of your fifth document:
-
-```rst
-.. _node-manager:
-
 NodeManager Contract Documentation
 ====================================
 

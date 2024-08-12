@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ConsensusMechanism Contract Documentation &mdash; decentralized communication v0.1 documentation</title>
+  <title>&lt;no title&gt; &mdash; decentralized communication v0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=8e6f1441" />
@@ -45,19 +45,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Next-Generation Command and Control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contracts_structure.html">General Structure of Solidity Smart Contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs_node_manager_contract.html">NodeManager Contract Documentation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ConsensusMechanism Contract Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#key-components">Key Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#functions"><strong>Functions</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#application">Application</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#security-considerations">Security Considerations</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="docs_chainlink_automation_contract.html">ChainlinkAutomation Contract Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs_minimal_account_abstraction.html">MinimalAccountAbstraction Contract Documentation</a></li>
 </ul>
@@ -76,7 +68,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">ConsensusMechanism Contract Documentation</li>
+      <li class="breadcrumb-item active">&lt;no title&gt;</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/docs_consensus_mechanism_contract.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -86,182 +78,158 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>rst
-.. _consensus-mechanism:</p>
-<section id="consensusmechanism-contract-documentation">
-<h1>ConsensusMechanism Contract Documentation<a class="headerlink" href="#consensusmechanism-contract-documentation" title="Permalink to this heading"></a></h1>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
-<p>The <cite>ConsensusMechanism</cite> contract orchestrates the decision-making processes among network agents, managing critical functions such as target location reporting, simulation execution, consensus automation, and epoch management. It collaborates with the <cite>NodeManager</cite> contract to verify node registration and validate participation, thereby ensuring the integrity of consensus operations.</p>
-</section>
-<section id="key-components">
-<h2>Key Components<a class="headerlink" href="#key-components" title="Permalink to this heading"></a></h2>
-<p><strong>State Variables:</strong></p>
+  <p>Got it! For Read the Docs with the <cite>sphinx_rtd_theme</cite>, the correct Markdown formatting uses <cite>#</cite> for headings. Here’s your documentation rewritten in a format compatible with Read the Docs, using Markdown:</p>
+<p>—</p>
+<p># ConsensusMechanism Contract Documentation</p>
+<p>## Overview</p>
+<p>The <cite>ConsensusMechanism</cite> contract orchestrates decision-making processes among network agents. It manages critical functions such as target location reporting, simulation execution, consensus automation, and epoch management. Collaborating with the <cite>NodeManager</cite> contract, it verifies node registration and validates participation, ensuring the integrity of consensus operations.</p>
+<p>## Key Components</p>
+<p>### State Variables</p>
 <ul class="simple">
 <li><p><strong>`nodeManager`</strong> (<cite>address</cite>):
-- The address of the <cite>NodeManager</cite> smart contract, which oversees node management and registration.</p></li>
+The address of the <cite>NodeManager</cite> smart contract, overseeing node management and registration.</p></li>
 <li><p><strong>`POLICY_CUSTODIAN`</strong> (<cite>address</cite>):
-- The address of the policy custodian. This entity is vested with the authority to manage and enforce policy-related decisions and can act as the contract owner.</p></li>
+The address of the policy custodian, with the authority to manage and enforce policy-related decisions and potentially act as the contract owner.</p></li>
 <li><p><strong>`s_consensusThreshold`</strong> (<cite>uint8</cite>):
-- The threshold value required for consensus. It defines the minimum level of agreement necessary among agents for a decision to be considered valid.</p></li>
+The threshold value required for consensus, defining the minimum level of agreement necessary among agents for a decision to be considered valid.</p></li>
 <li><p><strong>`s_epochCounter`</strong> (<cite>uint256</cite>):
-- A counter that tracks the number of epochs, facilitating the management of epoch-based operations and transitions.</p></li>
+A counter tracking the number of epochs, facilitating the management of epoch-based operations and transitions.</p></li>
 <li><p><strong>`s_startTime`</strong> (<cite>uint256</cite>):
-- The timestamp marking the beginning of each epoch. This variable is crucial for managing epoch timing and duration.</p></li>
+The timestamp marking the start of each epoch, crucial for managing epoch timing and duration.</p></li>
 <li><p><strong>`s_lastTimeStamp`</strong> (<cite>uint256</cite>), <strong>`s_interval`</strong> (<cite>uint256</cite>):
-- Variables associated with Chainlink automation, used for scheduling and executing periodic tasks.</p></li>
+Variables related to Chainlink automation, used for scheduling and executing periodic tasks.</p></li>
 <li><p><strong>`isEpochNotStarted`</strong> (<cite>bool</cite>):
-- A flag indicating whether the current epoch has commenced. This status helps in managing epoch transitions.</p></li>
+A flag indicating whether the current epoch has commenced, assisting in managing epoch transitions.</p></li>
 <li><p><strong>`CONSENSUS_NOT_REACHED`</strong> (<cite>uint256</cite>):
-- A constant indicating that consensus has not been achieved. This value serves as a reference for determining the success of the consensus process.</p></li>
+A constant indicating that consensus has not been achieved, serving as a reference for determining the success of the consensus process.</p></li>
 </ul>
-<p><strong>Mappings:</strong></p>
+<p>### Mappings</p>
 <ul class="simple">
 <li><p><strong>`s_target`</strong> (<cite>mapping(address =&gt; DataTypes.TargetZone)</cite>):
-- Stores the target locations reported by each node agent. This mapping is essential for tracking reported data.</p></li>
+Stores the target locations reported by each node agent, essential for tracking reported data.</p></li>
 <li><p><strong>`s_epochResolution`</strong> (<cite>mapping(uint256 =&gt; DataTypes.ConsensusData)</cite>):
-- Records consensus data for each epoch, enabling the assessment of consensus results over time.</p></li>
+Records consensus data for each epoch, enabling assessment of consensus results over time.</p></li>
 <li><p><strong>`s_resultInEachEpoch`</strong> (<cite>mapping(uint256 =&gt; uint256)</cite>):
-- Maintains consensus results for each epoch, providing a historical record of consensus outcomes.</p></li>
+Maintains consensus results for each epoch, providing a historical record of consensus outcomes.</p></li>
 </ul>
-</section>
-<section id="functions">
-<h2><strong>Functions</strong><a class="headerlink" href="#functions" title="Permalink to this heading"></a></h2>
-<p>—</p>
-<p>## <strong>Initialization</strong></p>
-<p>The <cite>initialize</cite> function is critical for setting up the contract during its deployment or upgrade phase. It initializes the contract’s state and ensures that all necessary parameters and dependencies are correctly configured.</p>
+<p>## Functions</p>
+<p>### Initialization</p>
+<p>The <cite>initialize</cite> function sets up the contract during deployment or upgrade. It initializes the contract’s state and ensures all necessary parameters and dependencies are correctly configured.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
 <span class="pre">function</span> <span class="pre">initialize(uint8</span> <span class="pre">_s_consensusThreshold,</span> <span class="pre">address</span> <span class="pre">nodeManagerContractAddress,</span> <span class="pre">address</span> <span class="pre">policyCustodian)</span> <span class="pre">public</span> <span class="pre">initializer</span>
 <span class="pre">`</span></code></p>
-<p>### <strong>Parameters</strong></p>
+<p>#### Parameters</p>
 <ul class="simple">
 <li><p><strong>`_s_consensusThreshold`</strong> (<cite>uint8</cite>):
-- Defines the threshold required for achieving consensus. This value is pivotal for determining the agreement level necessary among participants.</p></li>
+Defines the threshold required for achieving consensus, crucial for determining the agreement level necessary among participants.</p></li>
 <li><p><strong>`nodeManagerContractAddress`</strong> (<cite>address</cite>):
-- Specifies the address of the <cite>NodeManager</cite> contract, which manages node operations and validations.</p></li>
+Specifies the address of the <cite>NodeManager</cite> contract, managing node operations and validations.</p></li>
 <li><p><strong>`policyCustodian`</strong> (<cite>address</cite>):
-- The address of the policy custodian responsible for overseeing policy decisions and contract ownership.</p></li>
+The address of the policy custodian responsible for overseeing policy decisions and contract ownership.</p></li>
 </ul>
-<p>### <strong>Usage</strong></p>
-<p>Invoke the <cite>initialize</cite> function once during the contract’s deployment or upgrade process to configure its initial state. Proper initialization is essential for the contract’s effective operation.</p>
-<p>### <strong>Security Considerations</strong></p>
+<p>#### Usage</p>
+<p>Invoke the <cite>initialize</cite> function once during deployment or upgrade to configure its initial state. Proper initialization is essential for effective contract operation.</p>
+<p>#### Security Considerations</p>
 <ul class="simple">
-<li><p><strong>Initialization Security:</strong> Ensure that the <cite>initialize</cite> function is invoked only once to prevent re-initialization vulnerabilities.</p></li>
-<li><p><strong>Parameter Validation:</strong> Validate input parameters to avoid configuration errors that could impact contract functionality.</p></li>
+<li><p><strong>Initialization Security:</strong> Ensure the <cite>initialize</cite> function is called only once to prevent vulnerabilities from re-initialization.</p></li>
+<li><p><strong>Parameter Validation:</strong> Validate input parameters to avoid configuration errors impacting contract functionality.</p></li>
 </ul>
-<p>—</p>
-<p>## <strong>Reporting Target Location</strong></p>
-<p>The <cite>reportTargetLocation</cite> function enables users to report the location of a target associated with their address. This function captures and records positional data, which is vital for system operations.</p>
+<p>### Reporting Target Location</p>
+<p>The <cite>reportTargetLocation</cite> function enables users to report the location of a target associated with their address. This function captures and records positional data, vital for system operations.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
 <span class="pre">function</span> <span class="pre">reportTargetLocation(address</span> <span class="pre">agent,</span> <span class="pre">DataTypes.TargetZone</span> <span class="pre">announceTarget)</span> <span class="pre">public</span>
 <span class="pre">`</span></code></p>
-<p>### <strong>Parameters</strong></p>
+<p>#### Parameters</p>
 <ul class="simple">
 <li><p><strong>`agent`</strong> (<cite>address</cite>):
-- The address of the user or entity reporting the target location.</p></li>
+The address of the user or entity reporting the target location.</p></li>
 <li><p><strong>`announceTarget`</strong> (<cite>DataTypes.TargetZone</cite>):
-- An enumerated type or struct representing the target zone or location being reported.</p></li>
+An enumerated type or struct representing the target zone or location being reported.</p></li>
 </ul>
-<p>### <strong>Usage</strong></p>
-<p>Users must execute this function from their own devices to ensure data authenticity. This approach prevents unauthorized reporting and maintains data integrity.</p>
-<p>### <strong>Operational Flow</strong></p>
+<p>#### Usage</p>
+<p>Users must execute this function from their own devices to ensure data authenticity, preventing unauthorized reporting and maintaining data integrity.</p>
+<p>#### Operational Flow</p>
 <ol class="arabic simple">
-<li><p><strong>User Interaction:</strong>
-Each user should report their target location directly from their device.</p></li>
-<li><p><strong>Data Recording:</strong>
-The function captures the <cite>announceTarget</cite> data and stores it within the contract.</p></li>
+<li><p><strong>User Interaction:</strong> Each user should report their target location directly from their device.</p></li>
+<li><p><strong>Data Recording:</strong> The function captures the <cite>announceTarget</cite> data and stores it within the contract.</p></li>
 </ol>
-<p>### <strong>Security Considerations</strong></p>
+<p>#### Security Considerations</p>
 <ul class="simple">
 <li><p><strong>Data Authenticity:</strong> Ensure the function is called from verified addresses to maintain data integrity.</p></li>
 <li><p><strong>Access Control:</strong> Implement access control to restrict function usage to authorized users.</p></li>
 </ul>
-<p>—</p>
-<p>## <strong>Consensus Automation Execution</strong></p>
+<p>### Consensus Automation Execution</p>
 <p>The <cite>consensusAutomationExecution</cite> function automates the execution of consensus tasks, triggered by Chainlink Automation after a defined epoch duration.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
 <span class="pre">function</span> <span class="pre">consensusAutomationExecution()</span> <span class="pre">external</span> <span class="pre">returns</span> <span class="pre">(bool</span> <span class="pre">isReached,</span> <span class="pre">uint256</span> <span class="pre">target)</span>
 <span class="pre">`</span></code></p>
-<p>### <strong>Returns</strong></p>
+<p>#### Returns</p>
 <ul class="simple">
 <li><p><strong>`isReached`</strong> (<cite>bool</cite>):
-- Indicates whether consensus criteria have been met (<cite>true</cite> for reached, <cite>false</cite> otherwise).</p></li>
+Indicates whether consensus criteria have been met (<cite>true</cite> for reached, <cite>false</cite> otherwise).</p></li>
 <li><p><strong>`target`</strong> (<cite>uint256</cite>):
-- Represents the final target value determined by the consensus process.</p></li>
+Represents the final target value determined by the consensus process.</p></li>
 </ul>
-<p>### <strong>Usage</strong></p>
+<p>#### Usage</p>
 <p>The function is triggered automatically by Chainlink Automation based on the configured epoch duration. It finalizes the consensus and announces the target value.</p>
-<p>### <strong>Operational Flow</strong></p>
+<p>#### Operational Flow</p>
 <ol class="arabic simple">
-<li><p><strong>Automated Trigger:</strong>
-Triggered by Chainlink Automation once the epoch duration has elapsed.</p></li>
-<li><p><strong>Consensus Finalization:</strong>
-Finalizes and announces the target value based on the consensus results.</p></li>
+<li><p><strong>Automated Trigger:</strong> Triggered by Chainlink Automation once the epoch duration has elapsed.</p></li>
+<li><p><strong>Consensus Finalization:</strong> Finalizes and announces the target value based on consensus results.</p></li>
 </ol>
-<p>### <strong>Security Considerations</strong></p>
+<p>#### Security Considerations</p>
 <ul class="simple">
 <li><p><strong>Chainlink Configuration:</strong> Ensure correct Chainlink Automation setup to trigger the function as intended.</p></li>
 <li><p><strong>Consensus Criteria:</strong> Validate criteria for consensus to avoid incorrect target announcements.</p></li>
 </ul>
-<p>—</p>
-<p>## <strong>TargetLocationSimulation</strong></p>
-<p>The <cite>TargetLocationSimulation</cite> function facilitates bulk reporting of target locations for testing and simulation purposes. It allows multiple agents to report target locations in a single transaction, aiding in the validation of target reporting mechanisms.</p>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a>solidity
+<p>### TargetLocationSimulation</p>
+<p>The <cite>TargetLocationSimulation</cite> function facilitates bulk reporting of target locations for testing and simulation purposes, allowing multiple agents to report target locations in a single transaction.</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>solidity
 function TargetLocationSimulation(</p>
 <blockquote>
 <div><p>address[] memory agents,
 DataTypes.TargetZone[] memory announceTargets</p>
 </div></blockquote>
 <p>) public
-<a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
-<p>### <strong>Parameters</strong></p>
+<a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+<p>#### Parameters</p>
 <ul class="simple">
 <li><p><strong>`agents`</strong> (<cite>address[] memory</cite>):
-- An array of addresses representing the node agents reporting target locations.</p></li>
+An array of addresses representing the node agents reporting target locations.</p></li>
 <li><p><strong>`announceTargets`</strong> (<cite>DataTypes.TargetZone[] memory</cite>):
-- An array of <cite>TargetZone</cite> structs corresponding to the target zones being reported.</p></li>
+An array of <cite>TargetZone</cite> structs corresponding to the target zones being reported.</p></li>
 </ul>
-<p>### <strong>Usage</strong></p>
+<p>#### Usage</p>
 <p>Use this function for testing and simulations to verify target reporting functionality. It helps streamline the process by allowing bulk reporting in one transaction.</p>
-<p>### <strong>Operational Flow</strong></p>
+<p>#### Operational Flow</p>
 <ol class="arabic simple">
-<li><p><strong>Input Validation:</strong>
-Checks that the lengths of <cite>agents</cite> and <cite>announceTargets</cite> arrays match.</p></li>
-<li><p><strong>Target Reporting:</strong>
-Simulates target location reporting and emits <cite>TargetLocationSimulated</cite> events for each reported target.</p></li>
-<li><p><strong>Epoch Status Update:</strong>
-Sets <cite>isEpochNotStarted</cite> to <cite>false</cite> to indicate simulation completion.</p></li>
+<li><p><strong>Input Validation:</strong> Checks that the lengths of <cite>agents</cite> and <cite>announceTargets</cite> arrays match.</p></li>
+<li><p><strong>Target Reporting:</strong> Simulates target location reporting and emits <cite>TargetLocationSimulated</cite> events for each reported target.</p></li>
+<li><p><strong>Epoch Status Update:</strong> Sets <cite>isEpochNotStarted</cite> to <cite>false</cite> to indicate simulation completion.</p></li>
 </ol>
-<p>### <strong>Notices</strong></p>
+<p>#### Notices</p>
 <ul class="simple">
 <li><p><strong>Array Length Validation:</strong> Ensure arrays are of equal length to avoid transaction reverts.</p></li>
 <li><p><strong>Access Control:</strong> Restrict function access to authorized addresses.</p></li>
 </ul>
-<p>### <strong>Events</strong></p>
+<p>#### Events</p>
 <ul class="simple">
 <li><p><strong>`TargetLocationSimulated`</strong> (<cite>DataTypes.TargetLocationSimulated</cite>):
-- Emitted for each simulated target location, recording the agent and target zone.</p></li>
+Emitted for each simulated target location, recording the agent and target zone.</p></li>
 </ul>
-<p>### <strong>Security Considerations</strong></p>
+<p>#### Security Considerations</p>
 <ul class="simple">
 <li><p><strong>Input Validation:</strong> Ensure correct matching of <cite>agents</cite> and <cite>announceTargets</cite> to prevent data inconsistencies.</p></li>
 <li><p><strong>Access Control:</strong> Restrict access to authorized entities to prevent unauthorized simulations.</p></li>
 </ul>
-<p>—</p>
-</section>
-<section id="application">
-<h2>Application<a class="headerlink" href="#application" title="Permalink to this heading"></a></h2>
-<p>The <cite>ConsensusMechanism</cite> contract is pivotal for decentralized applications requiring reliable and automated consensus. It is applicable in scenarios such as decentralized voting systems, governance frameworks, and any context where multiple nodes must converge on a unified decision.</p>
-</section>
-<section id="security-considerations">
-<h2>Security Considerations<a class="headerlink" href="#security-considerations" title="Permalink to this heading"></a></h2>
+<p>## Application</p>
+<p>The <cite>ConsensusMechanism</cite> contract is pivotal for decentralized applications requiring reliable and automated consensus. It is suitable for scenarios such as decentralized voting systems, governance frameworks, and contexts where multiple nodes must reach a unified decision.</p>
+<p>## Security Considerations</p>
 <ul class="simple">
 <li><p><strong>Node Registration:</strong> Ensure only registered nodes can report target locations to maintain system integrity.</p></li>
 <li><p><strong>Access Control:</strong> Implement stringent access controls for sensitive functions to prevent unauthorized access and manipulation.</p></li>
 </ul>
-<p><a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
-</section>
-</section>
+<p>—</p>
 
 
            </div>

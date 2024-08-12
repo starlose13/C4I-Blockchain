@@ -1,7 +1,4 @@
 
-```rst
-.. _chainlink-automation:
-
 ChainlinkAutomation Contract Documentation
 ==========================================
 

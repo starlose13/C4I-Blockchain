@@ -1,7 +1,4 @@
 
-```rst
-.. _minimal-account-abstraction:
-
 MinimalAccountAbstraction Contract Documentation
 ===================================================
 

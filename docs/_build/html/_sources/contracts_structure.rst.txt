@@ -1,7 +1,4 @@
 
-```rst
-.. _general-structure-of-solidity-smart-contracts:
-
 General Structure of Solidity Smart Contracts
 =============================================
 
