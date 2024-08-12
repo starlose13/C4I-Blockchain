@@ -1,6 +1,3 @@
-```rst
-.. _consensus-mechanism:
-
 ConsensusMechanism Contract Documentation
 ==========================================
 

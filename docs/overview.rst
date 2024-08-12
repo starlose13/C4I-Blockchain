@@ -27,7 +27,7 @@ Features
 - **Enhanced Security**: Employs advanced techniques to ensure the confidentiality and integrity of data and node management.
 - **Distributed Decision-Making**: Implements in-system consensus algorithms for decentralized decision-making among autonomous agents.
 - **Real-Time Operations**: Facilitates real-time collaborative operations through decentralized consensus.
-- **Transaction Monitoring**: Provides tools for monitoring and auditing transactions on the blockchain to ensure transparency and traceability.----------------------
+- **Transaction Monitoring**: Provides tools for monitoring and auditing transactions on the blockchain to ensure transparency and traceability.
 
 Implementation Details
 ----------------------
