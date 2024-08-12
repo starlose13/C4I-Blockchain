@@ -24,10 +24,10 @@ Features
 --------
 
 - **Decentralized Data Storage**: Utilizes blockchain to store processed environmental data securely and transparently.
-- **Enhanced Security**: Employs advanced encryption techniques to ensure the confidentiality and integrity of data.
-- **AI-Driven Processing**: Uses AI for sophisticated data processing and target identification by drones.
-- **Distributed Decision-Making**: Implements Byzantine fault tolerance algorithms for decentralized decision-making among autonomous agents.
+- **Enhanced Security**: Employs advanced techniques to ensure the confidentiality and integrity of data and node management.
+- **Distributed Decision-Making**: Implements in-system consensus algorithms for decentralized decision-making among autonomous agents.
 - **Real-Time Operations**: Facilitates real-time collaborative operations through decentralized consensus.
+- **Transaction Monitoring**: Provides tools for monitoring and auditing transactions on the blockchain to ensure transparency and traceability.----------------------
 
 Implementation Details
 ----------------------
@@ -39,18 +39,13 @@ Implementation Details
 
 Getting Started
 ---------------
-For detailed instructions on setting up, configuring, using, and troubleshooting the project, refer to the `quickstart` guide:
+For detailed instructions on setting up, configuring, deployment and troubleshooting the project, refer to the `quickstart` guide:
 
 - **Prerequisites**: See :ref:`prerequisites` in the :doc:`quickstart`.
 - **Setting Up Your Environment**: See :ref:`setting_up_environment` in the :doc:`quickstart`.
 - **Configuration**: See :ref:`configuration` in the :doc:`quickstart`.
 - **Deployment**: See :ref:`deployment` in the :doc:`quickstart`.
 - **Troubleshooting**: See :ref:`troubleshooting` in the :doc:`quickstart`.
-
-Contributing
-------------
-
-If you wish to contribute to the project, please follow the guidelines outlined in the CONTRIBUTING.md file.
 
 License
 -------
