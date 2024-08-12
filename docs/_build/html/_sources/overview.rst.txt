@@ -29,6 +29,12 @@ Features
 - **Real-Time Operations**: Facilitates real-time collaborative operations through decentralized consensus.
 - **Transaction Monitoring**: Provides tools for monitoring and auditing transactions on the blockchain to ensure transparency and traceability.
 
+.. image:: ./_static/latest_transactions.png
+   :alt: Description of the image
+   :width: 600px
+   :align: center
+
+
 Implementation Details
 ----------------------
 
