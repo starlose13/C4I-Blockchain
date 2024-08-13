@@ -5,13 +5,13 @@ import nodes from './node.json';
 import NodeTooltip from "./NodeTooltip.jsx";
 import TargetTooltip from "./TargetTooltip.jsx";
 import { MainContext } from "../../hooks/useSimulationContext.jsx";
-import { useFetchNodeAddresses } from "../../hooks/useGetContract.jsx";
 
 
 const MapComponent = () => {
 
-    const { targetData, setTargetData, selectedNode } = useContext(MainContext);
-    const [positionArray, setPositionArray] = useState([]);
+    const { targetData, setTargetData, selectedNode, setClickedData, clickedData } = useContext(MainContext);
+    // const [clickedData, setClickedData] = useState([]); // Array to store the accumulated click data
+
 
     const URL = "/x.jpg";
     const width = 2100;
@@ -46,60 +46,43 @@ const MapComponent = () => {
         })
     };
 
-    const getdata = useFetchNodeAddresses ();
 
     const handleAreaClick = (area, index, event) => {
-        let { result } = getdata;     
-
         console.log("area is: ", area);
-
-        let _area_;
-        result.map(a => {
-            if (area.name === a.id) {
-                _area_ = a;
-            }
-        });
-
-        if (_area_) {
-            console.log("_area_ :", _area_);
-        } else {
-            console.log("Area not found in result");
-            return;
+        // console.log("Area clicked: ", area.name);
+        setClickedData(prevData => [...prevData, area.name]);
+        if (clickedData.length > 6) {
+            console.log('bigger than 6');
+        }else{
+            console.log('smaller than 6');
         }
-        console.log(_area_);
+        console.log('clickedData is : ', clickedData);
+
+
+
 
         const x = event.clientX - 25;
         const y = event.clientY;
 
-        // Update positionArray outside of setTargetData to avoid state update during rendering
-        setPositionArray(prevPositionArray => {
-            const positionExists = prevPositionArray.some(position => position === _area_.position);
-            if (!positionExists) {
-                return [...prevPositionArray, _area_.position];
-            }
-            return prevPositionArray;
-        });
+        // setTargetData(prevData => {
+        //     const updatedData = prevData.map((node, idx) => {
+        //         if (idx === selectedNode - 1 ) {
 
-        // Update targetData
-        setTargetData(prevData => {
-            const updatedData = prevData.map((node, idx) => {
-                if (idx === selectedNode - 1 ) {
-
-                    return {
-                        ...node,
-                        address: _area_.address,//URIDATAFORMAT /// nodeData (pref)
-                        TargetLatitude: _area_.ipfsData,//send by front-ned
-                        TargetLongitude: _area_.ipfsData, //send by front-ned
-                        location: _area_.position, 
-                        NodeLatitude: _area_.ipfsData, //URIDATAFORMAT
-                        NodeLongitude: _area_.ipfsData, //URIDATAFORMAT
-                        NodePositionName: _area_.ipfsData,// URIDATAFORMAT
-                    };
-                }
-                return node;
-            });
-            return updatedData;
-        });
+        //             return {
+        //                 ...node,
+        //                 address: _area_.address,//URIDATAFORMAT /// nodeData (pref)
+        //                 TargetLatitude: _area_.ipfsData,//send by front-ned
+        //                 TargetLongitude: _area_.ipfsData, //send by front-ned
+        //                 location: _area_.position, 
+        //                 NodeLatitude: _area_.ipfsData, //URIDATAFORMAT
+        //                 NodeLongitude: _area_.ipfsData, //URIDATAFORMAT
+        //                 NodePositionName: _area_.ipfsData,// URIDATAFORMAT
+        //             };
+        //         }
+        //         return node;
+        //     });
+        //     return updatedData;
+        // });
 
         const adjustedX = Math.min(x, window.innerWidth - 500);
         const adjustedY = Math.min(y, window.innerHeight - 300);
@@ -107,7 +90,7 @@ const MapComponent = () => {
     };
 
     // useEffect(() => {
-        // console.log("Updated positionArray: ", positionArray);
+    // console.log("Updated positionArray: ", positionArray);
     // }, [positionArray]);
 
 
