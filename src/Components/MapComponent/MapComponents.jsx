@@ -50,15 +50,18 @@ const MapComponent = () => {
     const handleAreaClick = (area, index, event) => {
         console.log("area is: ", area);
         // console.log("Area clicked: ", area.name);
-        setClickedData(prevData => [...prevData, area.name]);
-        if (clickedData.length > 6) {
-            console.log('bigger than 6');
-        }else{
-            console.log('smaller than 6');
-        }
-        console.log('clickedData is : ', clickedData);
-
-
+        
+        console.log(clickedData);
+        setClickedData(prevData => {
+            if (prevData.length < 7) {
+                const newData = [...prevData, area.name];
+                console.log('clickedData after adding new item:', newData);
+                return newData;
+            } else {
+                alert('Length of clickedData is already 7. No new item added.');
+                return prevData;
+            }
+        });
 
 
         const x = event.clientX - 25;
