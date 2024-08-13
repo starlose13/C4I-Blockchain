@@ -2,9 +2,10 @@
                                IMPORTS
     //////////////////////////////////////////////////////////////*/
 import { ethers } from 'ethers';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import NodeManagerABI from "../utils/NodeManagerABI/NodeManager.json"
 import ConsensusMechanismABI from "../utils/ConsensusMechanismABI/ConsensusMechanism.json"
+// import { MainContext } from './useSimulationContext';
 
 /*//////////////////////////////////////////////////////////////
                       LOAD ENVIROMENT VARIABLES
@@ -32,7 +33,7 @@ const ConsensusMechanismContract = new ethers.Contract(ConsensusMechanismContrac
 /*//////////////////////////////////////////////////////////////
                         NODE MANAGER FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-export const useFetchNodeAddresses  = () => {
+export const useFetchNodeAddresses = () => {
 
     const [result, setResult] = useState()
     const [error, setError] = useState()
@@ -53,31 +54,38 @@ export const useFetchNodeAddresses  = () => {
     return { result, error };
 }
 
-const storedNodeAddresses = JSON.parse(localStorage.getItem('nodeAddresses'));
-console.log(storedNodeAddresses);
+// const storedNodeAddresses = JSON.parse(localStorage.getItem('nodeAddresses'));
+// console.log(storedNodeAddresses);
+
+
+// const { clickData } = useContext(MainContext)
+// console.log("click data is here:", clickData);
 
 
 export const useFormatAndFetchURIData = (storedNodeAddresses) => {
     const [error, setError] = useState(null);
+
     useEffect(() => {
         const fetchData = async () => {
-             // Wait until newUriAddresses is available
             try {
                 // const data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
-                const data = await NodeManagerContract.URIDataFormatter(storedNodeAddresses,);
+                const data = await NodeManagerContract.URIDataFormatter(storedNodeAddresses);
                 // const _data = await ConsensusMechanismContract.TargetLocationSimulation(s_agents, s_announceTargets);
                 console.log(data);
                 console.log('Transaction sent:', data);
+
                 // console.log('Transaction sent:', _data);
+
             } catch (err) {
                 console.error('Error interacting with the contract:', err);
                 setError(err);
             }
         };
         fetchData();
+
     }, [storedNodeAddresses]);
 
-    return { error };
+    return { data, error };
 }
 
 /*//////////////////////////////////////////////////////////////
