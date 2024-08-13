@@ -28,11 +28,6 @@ const Simulation = () => {
         }
     };
 
- 
-
-    
-    const { error: consensusError } = useSimulateTargetLocation(addresses, positions);
-
 
 
     // Main render

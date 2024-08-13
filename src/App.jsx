@@ -81,26 +81,18 @@ function App() {
             NodeLongitude: '2.2945° E',
         },
     ])
+    const [clickedData, setClickedData] = useState([]);
 
 
     const { result: newAddresses, error: Error } = useFetchNodeAddresses()
-    // console.log("newAddresses is:", newAddresses);
-    // let nodeAddresses = [];
-    // nodeAddresses.push(newAddresses)
-    // console.log("nodeAddresses is:", nodeAddresses);
     localStorage.setItem('nodeAddresses', JSON.stringify(newAddresses));
+    console.log(newAddresses);
     
     
-
-    // const { error: errConsensus } = useFormatAndFetchURIData(newUriAddresses);
-    // const URIDataFormmat = useFormatAndFetchURIData();
-    // const { URIDataFormmats, } = URIDataFormmat
-    // console.log(URIDataFormmat);
-
-
+    
     return (
         <MainContext.Provider
-            value={{ selectedNode, setSelectedNode, targetData, setTargetData }}>
+            value={{ selectedNode, setSelectedNode, targetData, setTargetData, clickedData, setClickedData }}>
             <div className="w-full h-screen relative bg-[#00030c]">
                 <Navbar />
                 <div className="flex">
