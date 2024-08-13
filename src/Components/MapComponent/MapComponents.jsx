@@ -126,7 +126,7 @@ const MapComponent = () => {
         <div className="ml-48 mt-10">
             <div className="drop-shadow relative">
                 <ImageMapper
-                    src={URL}
+                    // src={URL}
                     map={MAP}
                     onClick={handleAreaClick}
                     width={width}
