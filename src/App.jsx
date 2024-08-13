@@ -86,7 +86,7 @@ function App() {
 
     const { result: newAddresses, error: Error } = useFetchNodeAddresses()
     localStorage.setItem('nodeAddresses', JSON.stringify(newAddresses));
-    console.log(newAddresses);
+    // console.log(newAddresses);
     
     
     
