@@ -1,5 +1,4 @@
 
-```rst
 Upgradable Smart Contracts
 ==========================
 
@@ -146,6 +145,4 @@ Summary
 The upgradable smart contracts in this project are designed to support ongoing enhancements while maintaining operational integrity. By incorporating `UUPSUpgradeable`, `AddressUpgradeable`, `AccessControlUpgradeable`, and `Initializable`, these contracts provide a secure and efficient framework for managing upgrades, addresses, and access controls.
 
 The **Policy Custodian** address, as the owner of the UUPS address, ensures proper management of upgrades. The `initialize` functions in both the Node Manager and Consensus Mechanism contracts set up the necessary parameters and roles, ensuring that each contract is configured correctly for its role within the system.
-
-```
 
