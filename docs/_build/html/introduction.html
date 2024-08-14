@@ -51,7 +51,13 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Next-Generation Command and Control</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#proposed-network-components">Proposed Network Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#public-key-management-and-security">Public Key Management and Security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transaction-process">Transaction Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#consensus-process">Consensus Process</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contracts_structure.html">General Structure of Solidity Smart Contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs_node_manager_contract.html">NodeManager Contract Documentation</a></li>
@@ -87,31 +93,36 @@
              
   <section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
-<p>## Proposed Network Components</p>
+<section id="proposed-network-components">
+<h2>Proposed Network Components<a class="headerlink" href="#proposed-network-components" title="Permalink to this heading"></a></h2>
 <p>The proposed network can be divided into three main components:</p>
 <ol class="arabic simple">
 <li><p><strong>Distributed Ledger (Blockchain)</strong></p></li>
-<li><p><strong>Smart Contracts : Consensus Mechanism and Node Management</strong></p></li>
+<li><p><strong>Smart Contracts: Consensus Mechanism and Node Management</strong></p></li>
 <li><p><strong>Security (Asymmetric Cryptography)</strong></p></li>
 </ol>
-<p>### Public Key Management and Security</p>
+</section>
+<section id="public-key-management-and-security">
+<h2>Public Key Management and Security<a class="headerlink" href="#public-key-management-and-security" title="Permalink to this heading"></a></h2>
 <p>Each agent or device that wishes to participate in writing/reading on the blockchain-based platform must have its public key listed in the authorized agent list within the smart contract. Additionally, messages and interactions must be secured against potential attackers. Asymmetric cryptography is used to protect agent data within the network. Messages and interactions (local models) from each agent are first secured using a private key and can only be read with the public key of the same agent. Each agent also has a public key that serves as a type of cryptographic address, allowing other members of the swarm to interact with it.</p>
 <a class="reference internal image-reference" href="_images/communication-concept.png"><img alt="Description of the image" class="align-center" src="_images/communication-concept.png" style="width: 600px;" /></a>
-<p>&lt;p style=”margin-bottom: 20px;”&gt;&lt;/p&gt;</p>
 <p>In the cryptographic method mentioned, private keys are used to digitally sign each transaction performed by the agent. However, in blockchain technology, although messages encrypted with a user’s private key are accessible to other users through their public key, achieving consensus among users without the need for the same private key is a distinguishing factor. The larger the number of swarm members, the more decentralized the network becomes, which enhances security.</p>
-<p>### Transaction Process</p>
+</section>
+<section id="transaction-process">
+<h2>Transaction Process<a class="headerlink" href="#transaction-process" title="Permalink to this heading"></a></h2>
 <p>When two or more nodes or agents in the network want to transfer or share information, such as battlefield data, trained AI models, etc., which are primary information reports from the agent’s perspective, they must go through a process known as a transaction. When a transaction occurs, a node creates a file containing information and target location. These transactions are collected into blocks of transactions, with the block size depending on the application. The blocks are then confirmed and added to the blockchain according to the used consensus mechanism.</p>
 <p>Each agent collects environmental data based on sensor specifications and situational awareness of the battlefield, considering sensor limitations. The collected data is processed by environmental agents, and each agent independently broadcasts its decision in the network.</p>
-<p>### Consensus Process</p>
+</section>
+<section id="consensus-process">
+<h2>Consensus Process<a class="headerlink" href="#consensus-process" title="Permalink to this heading"></a></h2>
 <p>After an agent announces a target, other agents present in the network must also announce their targets within an epoch (approximately 10 minutes). They can also declare that there is no target. After the epoch concludes, the votes from participating agents are counted. If a quorum is reached, consensus is achieved. Consensus is calculated using the following formula:</p>
 <div class="math notranslate nohighlight">
-\[\]</div>
-<p>C_j = sum_{i=1}^{N} text{if } Z_i = j text{ then } 1 text{ else } 0</p>
+\[C_j = \sum_{i=1}^{N} \text{if } Z_i = j \text{ then } 1 \text{ else } 0\]</div>
 <p>Find the maximum count and its index:</p>
 <div class="math notranslate nohighlight">
-\[\]</div>
-<p>text{maxCount} = max(C_1, C_2, C_3, C_4)</p>
+\[\text{maxCount} = \max(C_1, C_2, C_3, C_4)\]</div>
 <p>If consensus is achieved, the final target is announced to all parties. Otherwise, it is announced that either the votes did not reach a quorum or no consensus was reached in that specific epoch.</p>
+</section>
 </section>
 
 
