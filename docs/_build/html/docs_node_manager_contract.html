@@ -50,11 +50,15 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Next-Generation Command and Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contracts_structure.html">General Structure of Solidity Smart Contracts</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">NodeManager Contract Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#key-components">Key Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#register-node">Register Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#update-node-status">Update Node Status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-node-status">Get Node Status</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#application">Application</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#security-considerations">Security Considerations</a></li>
 </ul>
@@ -93,101 +97,97 @@
 <h1>NodeManager Contract Documentation<a class="headerlink" href="#nodemanager-contract-documentation" title="Permalink to this heading"></a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
-<p>The <cite>NodeManager</cite> contract is pivotal in the administration and regulation of nodes within a decentralized network. It handles critical functionalities related to node registration, status management, and provides mechanisms for querying node information. By maintaining an organized registry of nodes, it ensures network integrity and efficient node management.</p>
+<p>The <cite>NodeManager</cite> contract plays a critical role in the administration and regulation of nodes within a decentralized network. It is responsible for node registration, status management, and querying node information. By maintaining a well-organized registry, it ensures network integrity and effective node management.</p>
 </section>
 <section id="key-components">
 <h2>Key Components<a class="headerlink" href="#key-components" title="Permalink to this heading"></a></h2>
 <p><strong>State Variables:</strong></p>
 <ul class="simple">
 <li><p><strong>`s_registeredNodes`</strong> (<cite>mapping(address =&gt; bool)</cite>):
-- A mapping that tracks the registration status of nodes. Each address represents a node, and the corresponding boolean value indicates whether the node is registered and active.</p></li>
+A mapping that tracks whether nodes are registered. Each address represents a node, with a boolean value indicating its registration status (active or inactive).</p></li>
 <li><p><strong>`s_nodeCount`</strong> (<cite>uint256</cite>):
-- Tracks the total number of nodes currently registered within the network. This counter helps in managing node-related operations and provides insights into network scale.</p></li>
+This variable tracks the total number of nodes currently registered within the network, aiding in node management and providing insights into the network’s scale.</p></li>
 <li><p><strong>`s_admin`</strong> (<cite>address</cite>):
-- The address of the contract administrator. This address has exclusive privileges for performing administrative tasks, such as node registration and status updates.</p></li>
+The address of the contract administrator who holds exclusive rights to perform administrative tasks such as node registration and status updates.</p></li>
 </ul>
 <p><strong>Functions:</strong></p>
-<p>—</p>
-<p>## <strong>Register Node</strong></p>
-<p>The <cite>registerNode</cite> function allows for the registration of new nodes within the network. It is a fundamental operation for onboarding new nodes and expanding the network.</p>
+</section>
+<section id="register-node">
+<h2>Register Node<a class="headerlink" href="#register-node" title="Permalink to this heading"></a></h2>
+<p>The <cite>registerNode</cite> function facilitates the registration of new nodes in the network. This operation is essential for onboarding and expanding the network.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
 <span class="pre">function</span> <span class="pre">registerNode(address</span> <span class="pre">nodeAddress)</span> <span class="pre">external</span>
 <span class="pre">`</span></code></p>
-<p>### <strong>Parameters</strong></p>
+<p><em>Parameters:</em></p>
 <ul class="simple">
 <li><p><strong>`nodeAddress`</strong> (<cite>address</cite>):
-- The address of the node to be registered. This address must be unique and comply with network standards.</p></li>
+The address of the node to be registered. It must be unique and comply with network standards.</p></li>
 </ul>
-<p>### <strong>Usage</strong></p>
-<p>Invoke this function to add a new node to the network. The function will update the <cite>s_registeredNodes</cite> mapping to reflect the node’s registration status.</p>
-<p>### <strong>Security Considerations</strong></p>
+<p><em>Usage:</em></p>
+<p>Invoke this function to register a new node. It updates the <cite>s_registeredNodes</cite> mapping to reflect the node’s registration status.</p>
+<p><em>Security Considerations:</em></p>
 <ul class="simple">
-<li><p><strong>Access Control:</strong> Ensure that only authorized entities can call this function. Unauthorized registration could lead to network integrity issues.</p></li>
-<li><p><strong>Validation:</strong> Validate the <cite>nodeAddress</cite> to prevent duplicate or invalid node registrations.</p></li>
+<li><p><strong>Access Control:</strong> Ensure only authorized entities can call this function to prevent unauthorized registrations.</p></li>
+<li><p><strong>Validation:</strong> Validate the <cite>nodeAddress</cite> to avoid duplicates or invalid registrations.</p></li>
 </ul>
-<p>—</p>
-<p>## <strong>Update Node Status</strong></p>
-<p>The <cite>updateNodeStatus</cite> function is used to modify the registration status of a node. It allows for updating a node’s status to active or inactive, reflecting its current state in the network.</p>
+</section>
+<section id="update-node-status">
+<h2>Update Node Status<a class="headerlink" href="#update-node-status" title="Permalink to this heading"></a></h2>
+<p>The <cite>updateNodeStatus</cite> function modifies a node’s registration status, allowing it to be set as active or inactive, thereby reflecting its current state.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
 <span class="pre">function</span> <span class="pre">updateNodeStatus(address</span> <span class="pre">nodeAddress,</span> <span class="pre">bool</span> <span class="pre">status)</span> <span class="pre">external</span>
 <span class="pre">`</span></code></p>
-<p>### <strong>Parameters</strong></p>
+<p><em>Parameters:</em></p>
 <ul class="simple">
 <li><p><strong>`nodeAddress`</strong> (<cite>address</cite>):
-- The address of the node whose status is being updated.</p></li>
+The address of the node whose status is being updated.</p></li>
 <li><p><strong>`status`</strong> (<cite>bool</cite>):
-- The new status of the node. <cite>true</cite> indicates the node is active, while <cite>false</cite> indicates it is inactive.</p></li>
+The new status of the node. <cite>true</cite> indicates active, while <cite>false</cite> indicates inactive.</p></li>
 </ul>
-<p>### <strong>Usage</strong></p>
-<p>Call this function to change the status of a registered node. This functionality is crucial for dynamically managing node participation in the network.</p>
-<p>### <strong>Security Considerations</strong></p>
+<p><em>Usage:</em></p>
+<p>Call this function to change the status of a registered node. This is crucial for dynamically managing node participation in the network.</p>
+<p><em>Security Considerations:</em></p>
 <ul class="simple">
-<li><p><strong>Access Control:</strong> Limit this function’s access to the contract administrator or other authorized roles to prevent unauthorized status updates.</p></li>
-<li><p><strong>Data Integrity:</strong> Ensure the <cite>nodeAddress</cite> exists in the network before attempting to update its status.</p></li>
+<li><p><strong>Access Control:</strong> Limit this function’s access to the contract administrator or other authorized roles to prevent unauthorized updates.</p></li>
+<li><p><strong>Data Integrity:</strong> Ensure the <cite>nodeAddress</cite> exists in the network before updating its status.</p></li>
 </ul>
-<p>—</p>
-<p>## <strong>Get Node Status</strong></p>
-<p>The <cite>getNodeStatus</cite> function allows for querying the current registration status of a node. This function is essential for retrieving node information and assessing the network’s status.</p>
+</section>
+<section id="get-node-status">
+<h2>Get Node Status<a class="headerlink" href="#get-node-status" title="Permalink to this heading"></a></h2>
+<p>The <cite>getNodeStatus</cite> function queries the current registration status of a node, providing essential information about the network’s state.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
 <span class="pre">function</span> <span class="pre">getNodeStatus(address</span> <span class="pre">nodeAddress)</span> <span class="pre">external</span> <span class="pre">view</span> <span class="pre">returns</span> <span class="pre">(bool)</span>
 <span class="pre">`</span></code></p>
-<p>### <strong>Parameters</strong></p>
+<p><em>Parameters:</em></p>
 <ul class="simple">
 <li><p><strong>`nodeAddress`</strong> (<cite>address</cite>):
-- The address of the node whose status is being queried.</p></li>
+The address of the node whose status is queried.</p></li>
 </ul>
-<p>### <strong>Returns</strong></p>
+<p><em>Returns:</em></p>
 <ul class="simple">
 <li><p><strong>`bool`</strong>:
-- The current registration status of the node. Returns <cite>true</cite> if the node is active and <cite>false</cite> if it is inactive.</p></li>
+The current registration status of the node. Returns <cite>true</cite> if active, <cite>false</cite> if inactive.</p></li>
 </ul>
-<p>### <strong>Usage</strong></p>
-<p>Invoke this function to retrieve the status of a node. This is useful for monitoring and validating the current state of nodes within the network.</p>
-<p>### <strong>Security Considerations</strong></p>
+<p><em>Usage:</em></p>
+<p>Use this function to retrieve a node’s status, useful for monitoring and validating node states within the network.</p>
+<p><em>Security Considerations:</em></p>
 <ul class="simple">
-<li><p><strong>Access Control:</strong> Although this function is external and view-only, ensure it does not inadvertently expose sensitive network details.</p></li>
+<li><p><strong>Access Control:</strong> Though this function is external and view-only, ensure it does not inadvertently expose sensitive network details.</p></li>
 </ul>
-<p>—</p>
 </section>
 <section id="application">
 <h2>Application<a class="headerlink" href="#application" title="Permalink to this heading"></a></h2>
-<p>The <cite>NodeManager</cite> contract is crucial for managing nodes in a decentralized network, ensuring proper registration, status management, and information retrieval. It supports network scalability and reliability by handling essential administrative tasks and providing transparency regarding node participation.</p>
+<p>The <cite>NodeManager</cite> contract is vital for effective node management in a decentralized network. It ensures proper registration, status updates, and information retrieval, supporting network scalability and reliability through essential administrative functions.</p>
 </section>
 <section id="security-considerations">
 <h2>Security Considerations<a class="headerlink" href="#security-considerations" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>Access Control:</strong>
-Implement rigorous access control mechanisms to restrict critical functions, such as node registration and status updates, to authorized administrators. Unauthorized access can compromise network security and integrity.</p></li>
-<li><p><strong>Data Integrity:</strong>
-Validate all node-related data to prevent incorrect or malicious registrations. Implement input validation and consistency checks to ensure only legitimate nodes are registered.</p></li>
-<li><p><strong>Administrative Privileges:</strong>
-Restrict administrative functions to trusted and audited entities. Regularly review and audit administrative privileges to prevent misuse and ensure the security of network management operations.</p></li>
-<li><p><strong>Scalability and Performance:</strong>
-Consider the impact of node management functions on contract performance and gas costs, especially in large networks. Optimize state variable usage and function logic to maintain efficient contract operations.</p></li>
-<li><p><strong>Error Handling:</strong>
-Implement robust error handling to manage unexpected conditions. Ensure that operations fail gracefully and provide clear error messages to facilitate debugging and maintenance.</p></li>
+<li><p><strong>Access Control:</strong> Implement strict access controls for critical functions like node registration and status updates to prevent unauthorized access and maintain network security.</p></li>
+<li><p><strong>Data Integrity:</strong> Validate all node-related data to prevent incorrect or malicious registrations. Implement input validation and consistency checks to ensure legitimate nodes are registered.</p></li>
+<li><p><strong>Administrative Privileges:</strong> Restrict administrative functions to trusted, audited entities. Regularly review and audit these privileges to prevent misuse and ensure secure network management.</p></li>
+<li><p><strong>Scalability and Performance:</strong> Assess the impact of node management functions on contract performance and gas costs, especially in large networks. Optimize state variable usage and function logic for efficient operations.</p></li>
+<li><p><strong>Error Handling:</strong> Implement comprehensive error handling to manage unexpected conditions gracefully, providing clear error messages for debugging and maintenance.</p></li>
 </ul>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a></p>
 </section>
 </section>
 

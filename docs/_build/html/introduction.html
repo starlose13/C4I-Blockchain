@@ -112,10 +112,13 @@
 <h2>Transaction Process<a class="headerlink" href="#transaction-process" title="Permalink to this heading"></a></h2>
 <p>When two or more nodes or agents in the network want to transfer or share information, such as battlefield data, trained AI models, etc., which are primary information reports from the agent’s perspective, they must go through a process known as a transaction. When a transaction occurs, a node creates a file containing information and target location. These transactions are collected into blocks of transactions, with the block size depending on the application. The blocks are then confirmed and added to the blockchain according to the used consensus mechanism.</p>
 <p>Each agent collects environmental data based on sensor specifications and situational awareness of the battlefield, considering sensor limitations. The collected data is processed by environmental agents, and each agent independently broadcasts its decision in the network.</p>
+<a class="reference internal image-reference" href="_images/Transaction-process.png"><img alt="Description of the image" class="align-center" src="_images/Transaction-process.png" style="width: 600px;" /></a>
 </section>
 <section id="consensus-process">
 <h2>Consensus Process<a class="headerlink" href="#consensus-process" title="Permalink to this heading"></a></h2>
-<p>After an agent announces a target, other agents present in the network must also announce their targets within an epoch (approximately 10 minutes). They can also declare that there is no target. After the epoch concludes, the votes from participating agents are counted. If a quorum is reached, consensus is achieved. Consensus is calculated using the following formula:</p>
+<p>After an agent announces a target, other agents present in the network must also announce their targets within an epoch (approximately 10 minutes).</p>
+<a class="reference internal image-reference" href="_images/consensusProcess.png"><img alt="Description of the image" class="align-center" src="_images/consensusProcess.png" style="width: 600px;" /></a>
+<p>They can also declare that there is no target. After the epoch concludes, the votes from participating agents are counted. If a quorum is reached, consensus is achieved. Consensus is calculated using the following formula:</p>
 <div class="math notranslate nohighlight">
 \[C_j = \sum_{i=1}^{N} \text{if } Z_i = j \text{ then } 1 \text{ else } 0\]</div>
 <p>Find the maximum count and its index:</p>
