@@ -146,7 +146,15 @@ Operational Flow
 ~~~~~~~~~~~~~~~~
 
 1. **Automated Trigger:** Triggered by Chainlink Automation once the epoch duration has elapsed.
-2. **Consensus Finalization:** Finalizes and announces the target value based on the consensus results.
+2. **Consensus Compute Outcome:** Compute the target value and announce the target value.
+
+.. image:: ./_static/consensus-mechanism-code-snippet.png
+   :alt: Description of the image
+   :width: 600px
+   :align: center
+
+
+3. **Consensus Finalization:** Finalizes and announces the target value based on the consensus results.
 
 Security Considerations
 ~~~~~~~~~~~~~~~~~~~~~~~

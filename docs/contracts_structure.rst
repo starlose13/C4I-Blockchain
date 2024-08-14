@@ -27,5 +27,12 @@ The project encompasses a suite of interrelated smart contracts, each engineered
 4. **Minimal Account Abstraction Contract**
    - Provides a simplified account abstraction layer, streamlining interactions and reducing complexity in user account management.
 
+
+.. image:: ./_static/architecture-image.png
+   :alt: Description of the image
+   :width: 600px
+   :align: center
+
+
 Each of these contracts is integral to the overall functionality and efficiency of the decentralized system, and their orchestration is crucial for the seamless execution of the project's objectives.
 ```

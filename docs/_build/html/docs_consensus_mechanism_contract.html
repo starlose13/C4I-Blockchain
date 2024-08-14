@@ -22,7 +22,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ChainlinkAutomation Contract Documentation" href="docs_chainlink_automation_contract.html" />
+    <link rel="next" title="Upgradable Smart Contracts" href="docs_upgradable_contract.html" />
     <link rel="prev" title="NodeManager Contract Documentation" href="docs_node_manager_contract.html" /> 
 </head>
 
@@ -84,6 +84,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#application">Application</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="docs_upgradable_contract.html">Upgradable Smart Contracts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs_chainlink_automation_contract.html">ChainlinkAutomation Contract Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs_minimal_account_abstraction.html">MinimalAccountAbstraction Contract Documentation</a></li>
 </ul>
@@ -242,6 +243,10 @@ Represents the final target value determined by the consensus process.</p></li>
 <h3>Operational Flow<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
 <ol class="arabic simple">
 <li><p><strong>Automated Trigger:</strong> Triggered by Chainlink Automation once the epoch duration has elapsed.</p></li>
+<li><p><strong>Consensus Compute Outcome:</strong> Compute the target value and announce the target value.</p></li>
+</ol>
+<a class="reference internal image-reference" href="_images/consensus-mechanism-code-snippet.png"><img alt="Description of the image" class="align-center" src="_images/consensus-mechanism-code-snippet.png" style="width: 600px;" /></a>
+<ol class="arabic simple" start="3">
 <li><p><strong>Consensus Finalization:</strong> Finalizes and announces the target value based on the consensus results.</p></li>
 </ol>
 </section>
@@ -316,7 +321,7 @@ Emitted for each simulated target location, recording the agent and target zone.
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="docs_node_manager_contract.html" class="btn btn-neutral float-left" title="NodeManager Contract Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="docs_chainlink_automation_contract.html" class="btn btn-neutral float-right" title="ChainlinkAutomation Contract Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="docs_upgradable_contract.html" class="btn btn-neutral float-right" title="Upgradable Smart Contracts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
