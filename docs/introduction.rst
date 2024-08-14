@@ -29,10 +29,24 @@ When two or more nodes or agents in the network want to transfer or share inform
 
 Each agent collects environmental data based on sensor specifications and situational awareness of the battlefield, considering sensor limitations. The collected data is processed by environmental agents, and each agent independently broadcasts its decision in the network.
 
+
+.. image:: ./_static/Transaction-process.png
+   :alt: Description of the image
+   :width: 600px
+   :align: center
+..
+
 Consensus Process
 -----------------
 
-After an agent announces a target, other agents present in the network must also announce their targets within an epoch (approximately 10 minutes). They can also declare that there is no target. After the epoch concludes, the votes from participating agents are counted. If a quorum is reached, consensus is achieved. Consensus is calculated using the following formula:
+After an agent announces a target, other agents present in the network must also announce their targets within an epoch (approximately 10 minutes).
+
+.. image:: ./_static/consensusProcess.png
+   :alt: Description of the image
+   :width: 600px
+   :align: center
+..
+They can also declare that there is no target. After the epoch concludes, the votes from participating agents are counted. If a quorum is reached, consensus is achieved. Consensus is calculated using the following formula:
 
 .. math::
 

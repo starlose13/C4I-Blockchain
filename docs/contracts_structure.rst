@@ -10,6 +10,14 @@ Contracts Structure and Architecture
 
 This document elucidates the architecture and structural design of the smart contracts employed within the project. The system has been meticulously crafted to support decentralized functionalities such as consensus automation, target location reporting, and contract upgradability. Each smart contract within the system serves a specialized purpose, and their interactions are pivotal to achieving the project's strategic goals.
 
+
+.. image:: ./_static/network-architecture.png
+   :alt: Description of the image
+   :width: 600px
+   :align: center
+..
+
+
 **1. Contract Overview**
 ++++++++++++++++++++++++
 
