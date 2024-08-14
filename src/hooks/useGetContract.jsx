@@ -1,15 +1,15 @@
 /*//////////////////////////////////////////////////////////////
                                IMPORTS
-    //////////////////////////////////////////////////////////////*/
+//////////////////////////////////////////////////////////////*/
 import { ethers } from 'ethers';
 import { useContext, useEffect, useState } from "react";
 import NodeManagerABI from "../utils/NodeManagerABI/NodeManager.json"
 import ConsensusMechanismABI from "../utils/ConsensusMechanismABI/ConsensusMechanism.json"
-// import { MainContext } from './useSimulationContext';
+import { MainContext } from './useSimulationContext';
 
 /*//////////////////////////////////////////////////////////////
                       LOAD ENVIROMENT VARIABLES
-    //////////////////////////////////////////////////////////////*/
+//////////////////////////////////////////////////////////////*/
 const anvilUrl = import.meta.env.VITE_RPC_URL;
 const privateKey = import.meta.env.VITE_PRIVATE_KEY;
 const NodeManagerContractAddress = import.meta.env.VITE_NODEMANAGER_CONTRACT_ADDRESS;
@@ -18,21 +18,21 @@ const ConsensusMechanismContractAddress = import.meta.env.VITE_CONSENSUS_CONTRAC
 
 /*//////////////////////////////////////////////////////////////
                   INITIALIZE THE PROVIDER AND WALLET
-    //////////////////////////////////////////////////////////////*/
+//////////////////////////////////////////////////////////////*/
 const provider = new ethers.JsonRpcProvider(anvilUrl);
 const wallet = new ethers.Wallet(privateKey, provider);
 
 
 /*//////////////////////////////////////////////////////////////
                       CREATE A CONTRACT INSTANCE
-    //////////////////////////////////////////////////////////////*/
+//////////////////////////////////////////////////////////////*/
 const NodeManagerContract = new ethers.Contract(NodeManagerContractAddress, NodeManagerABI, wallet);
 const ConsensusMechanismContract = new ethers.Contract(ConsensusMechanismContractAddress, ConsensusMechanismABI, wallet);
 
 
 /*//////////////////////////////////////////////////////////////
                         NODE MANAGER FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
+//////////////////////////////////////////////////////////////*/
 export const useFetchNodeAddresses = () => {
 
     const [result, setResult] = useState()
@@ -54,22 +54,27 @@ export const useFetchNodeAddresses = () => {
     return { result, error };
 }
 
-// const storedNodeAddresses = JSON.parse(localStorage.getItem('nodeAddresses'));
-// console.log(storedNodeAddresses);
 
 
-// const { clickData } = useContext(MainContext)
-// console.log("click data is here:", clickData);
 
 
-export const useFormatAndFetchURIData = (storedNodeAddresses) => {
+
+export const useFormatAndFetchURIData = () => {
+
     const [error, setError] = useState(null);
+
+    // const storedNodeAddresses = JSON.parse(localStorage.getItem('nodeAddresses') || "[]");
+    console.log(storedNodeAddresses);
+
+    const { clickData} = useContext(MainContext)
+    console.log("click data is here:", clickData);
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // const data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
-                const data = await NodeManagerContract.URIDataFormatter(storedNodeAddresses);
+                const data = await NodeManagerContract.URIDataFormatter(storedNodeAddresses, clickData);
                 // const _data = await ConsensusMechanismContract.TargetLocationSimulation(s_agents, s_announceTargets);
                 console.log(data);
                 console.log('Transaction sent:', data);
@@ -83,14 +88,14 @@ export const useFormatAndFetchURIData = (storedNodeAddresses) => {
         };
         fetchData();
 
-    }, [storedNodeAddresses]);
+    }, [storedNodeAddresses, clickData]);
 
     return { data, error };
 }
 
 /*//////////////////////////////////////////////////////////////
                           CONSENSUS FUNCTION
-    //////////////////////////////////////////////////////////////*/
+//////////////////////////////////////////////////////////////*/
 
 
 export const useSimulateTargetLocation = (addresses, positions) => {

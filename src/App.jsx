@@ -4,7 +4,6 @@ import Sidebar from "./Components/Sidebar.jsx";
 import MapComponent from "./Components/MapComponent/MapComponents.jsx";
 import { MainContext } from "./hooks/useSimulationContext.jsx";
 import React, { useState } from "react";
-import { useFetchNodeAddresses } from "./hooks/useGetContract.jsx";
 
 
 function App() {
@@ -79,20 +78,14 @@ function App() {
             NodePositionName: 'Eiffel Tower, Paris, France',
             NodeLatitude: '48.8584° N',
             NodeLongitude: '2.2945° E',
-        },
-    ])
+        },])
     const [clickedData, setClickedData] = useState([]);
 
+   // localStorage.setItem('nodeAddresses', JSON.stringify(newAddresses));
 
-    const { result: newAddresses, error: Error } = useFetchNodeAddresses()
-    localStorage.setItem('nodeAddresses', JSON.stringify(newAddresses));
-    // console.log(newAddresses);
-    
-    
-    
     return (
         <MainContext.Provider
-            value={{ selectedNode, setSelectedNode, targetData, setTargetData, clickedData, setClickedData }}>
+            value={{ selectedNode, setSelectedNode, targetData, setTargetData, clickedData, setClickedData}}>
             <div className="w-full h-screen relative bg-[#00030c]">
                 <Navbar />
                 <div className="flex">

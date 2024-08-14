@@ -2,15 +2,24 @@ import React, { useContext, useState } from 'react';
 import ImageMapper from 'react-image-mapper';
 import areas from './areas.json';
 import nodes from './node.json';
-import NodeTooltip from "./NodeTooltip.jsx";
-import TargetTooltip from "./TargetTooltip.jsx";
-import { MainContext } from "../../hooks/useSimulationContext.jsx";
+import NodeTooltip from './NodeTooltip.jsx';
+import TargetTooltip from './TargetTooltip.jsx';
+import { MainContext } from '../../hooks/useSimulationContext.jsx';
+import { useFetchNodeAddresses } from "../../hooks/useGetContract.jsx";
 
 
 const MapComponent = () => {
 
+
+    /*//////////////////////////////////////////////////////////////
+                                 add context
+    //////////////////////////////////////////////////////////////*/
     const { targetData, setTargetData, selectedNode, setClickedData, clickedData } = useContext(MainContext);
-    // const [clickedData, setClickedData] = useState([]); // Array to store the accumulated click data
+
+    const { result: newAddresses } = useFetchNodeAddresses()
+    console.log('newAddresses is :', newAddresses);
+
+
 
 
     const URL = "/x.jpg";
@@ -47,26 +56,41 @@ const MapComponent = () => {
     };
 
 
+
+    /*//////////////////////////////////////////////////////////////
+                               handle areaclick
+    //////////////////////////////////////////////////////////////*/
     const handleAreaClick = (area, index, event) => {
-        console.log("area is: ", area);
+        // console.log("area is: ", area);
         // console.log("Area clicked: ", area.name);
-        
-        console.log(clickedData);
+
+
+
+        /*//////////////////////////////////////////////////////////////
+                      set length of the array when click
+        //////////////////////////////////////////////////////////////*/
         setClickedData(prevData => {
             if (prevData.length < 7) {
                 const newData = [...prevData, area.name];
-                console.log('clickedData after adding new item:', newData);
+                // console.log('clickedData after adding new item:', newData);
                 return newData;
             } else {
-                alert('Length of clickedData is already 7. No new item added.');
+                // alert('Length of clickedData is already enogh. No new item added.');
                 return prevData;
             }
         });
+        // console.log(clickedData);
+
 
 
         const x = event.clientX - 25;
         const y = event.clientY;
 
+
+
+        /*//////////////////////////////////////////////////////////////
+              Equalizing the clicked area with the data inside the card
+        //////////////////////////////////////////////////////////////*/
         // setTargetData(prevData => {
         //     const updatedData = prevData.map((node, idx) => {
         //         if (idx === selectedNode - 1 ) {
@@ -92,12 +116,10 @@ const MapComponent = () => {
         setTooltipData({ visible: true, areaId: area.name, position: { x: adjustedX, y: adjustedY } });
     };
 
-    // useEffect(() => {
-    // console.log("Updated positionArray: ", positionArray);
-    // }, [positionArray]);
 
-
-
+    /*//////////////////////////////////////////////////////////////
+                            the blue node
+    //////////////////////////////////////////////////////////////*/
     const renderNodes = () => {
         return nodes.map((node, index) => {
             const scaledX = node.coords[0] * nodeWidth;
@@ -126,14 +148,14 @@ const MapComponent = () => {
         <div className="ml-48 mt-10">
             <div className="drop-shadow relative">
                 <ImageMapper
-                    // src={URL}
+                    src={URL}
                     map={MAP}
                     onClick={handleAreaClick}
                     width={width}
                     height={height}
                     imgWidth={imgWidth}
                     imgHeight={imgHeight}
-                    strokeColor={"red"}
+                    strokeColor={"transparent"}
                     alt="Map Image"
                 />
                 {renderNodes()}
