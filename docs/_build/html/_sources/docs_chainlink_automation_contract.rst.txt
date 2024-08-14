@@ -24,6 +24,13 @@ Key Components
 - `CHAINLINK_ORACLE_ADDRESS` (address):
   - Contains the address of the Chainlink oracle responsible for executing the automation tasks. Ensuring the correctness of this address is vital for successful integration with Chainlink services.
 
+.. image:: ./_static/chainlink-automation.png
+   :alt: Description of the image
+   :width: 600px
+   :align: center
+..
+
+
 **Functions:**
 
 - **Set Interval**

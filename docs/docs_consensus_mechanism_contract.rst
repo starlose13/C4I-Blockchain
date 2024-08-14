@@ -152,7 +152,7 @@ Operational Flow
    :alt: Description of the image
    :width: 600px
    :align: center
-
+..
 
 3. **Consensus Finalization:** Finalizes and announces the target value based on the consensus results.
 

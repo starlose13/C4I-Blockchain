@@ -34,7 +34,7 @@ Features
    :width: 600px
    :align: center
 
-
+..
 
 
 Implementation Details

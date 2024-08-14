@@ -32,7 +32,7 @@ The project encompasses a suite of interrelated smart contracts, each engineered
    :alt: Description of the image
    :width: 600px
    :align: center
-
+..
 
 Each of these contracts is integral to the overall functionality and efficiency of the decentralized system, and their orchestration is crucial for the seamless execution of the project's objectives.
 ```

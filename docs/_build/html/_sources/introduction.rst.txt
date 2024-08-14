@@ -42,6 +42,10 @@ Find the maximum count and its index:
 
 .. math::
 
-    \text{maxCount} = \max(C_1, C_2, C_3, C_4)
+    \text{maxCount} = \max(C_1, C_2, C_3, C_4, C_5, C_6, C_7)
+
+.. note::
+
+   **Important:** We have assumed that number of agents is 7.
 
 If consensus is achieved, the final target is announced to all parties. Otherwise, it is announced that either the votes did not reach a quorum or no consensus was reached in that specific epoch.
