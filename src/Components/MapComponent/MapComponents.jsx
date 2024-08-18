@@ -1,25 +1,32 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import ImageMapper from 'react-image-mapper';
 import areas from './areas.json';
 import nodes from './node.json';
 import NodeTooltip from './NodeTooltip.jsx';
 import TargetTooltip from './TargetTooltip.jsx';
 import { MainContext } from '../../hooks/useSimulationContext.jsx';
-import { useFetchNodeAddresses } from "../../hooks/useGetContract.jsx";
+import { useFetchNodeAddresses, useFormatAndFetchURIData } from "../../hooks/useGetContract.jsx";
+
 
 
 const MapComponent = () => {
 
+    const { targetData, setTargetData, selectedNode, setClickedData, clickedData, address, setAddresses } = useContext(MainContext);
 
-    /*//////////////////////////////////////////////////////////////
-                                 add context
-    //////////////////////////////////////////////////////////////*/
-    const { targetData, setTargetData, selectedNode, setClickedData, clickedData } = useContext(MainContext);
+    const { result: addressResult } = useFetchNodeAddresses()
+    useEffect(() => {
+        if (addressResult) {
+            console.log("🚀 ~ MapComponent ~ addressResult:", addressResult);
+            setAddresses(addressResult);
 
-    const { result: newAddresses } = useFetchNodeAddresses()
-    console.log('newAddresses is :', newAddresses);
+            addressResult.forEach(async (ad) => {
+                console.log("🚀 ~ addressResult.map ~ ar:", ad);
+                const { data: URIformatterAddress } = await useFormatAndFetchURIData(ad);
+                console.log("🚀 ~ MapComponent ~ URIformatterAddress:", URIformatterAddress);
 
-
+            });
+        }
+    }, [addressResult, setAddresses]);
 
 
     const URL = "/x.jpg";
@@ -55,8 +62,6 @@ const MapComponent = () => {
         })
     };
 
-
-
     /*//////////////////////////////////////////////////////////////
                                handle areaclick
     //////////////////////////////////////////////////////////////*/
@@ -72,15 +77,17 @@ const MapComponent = () => {
         setClickedData(prevData => {
             if (prevData.length < 7) {
                 const newData = [...prevData, area.name];
-                // console.log('clickedData after adding new item:', newData);
+                console.log('clickedData after adding new item:', newData);
                 return newData;
             } else {
-                // alert('Length of clickedData is already enogh. No new item added.');
+
+                // const {data: uriformat } =useFormatAndFetchURIData(clickedData)
+                // console.log('uriformat is:',uriformat);
+                alert('Length of clickedData is already enogh. No new item added.');
                 return prevData;
             }
         });
         // console.log(clickedData);
-
 
 
         const x = event.clientX - 25;
@@ -91,6 +98,7 @@ const MapComponent = () => {
         /*//////////////////////////////////////////////////////////////
               Equalizing the clicked area with the data inside the card
         //////////////////////////////////////////////////////////////*/
+
         // setTargetData(prevData => {
         //     const updatedData = prevData.map((node, idx) => {
         //         if (idx === selectedNode - 1 ) {
@@ -180,6 +188,7 @@ const MapComponent = () => {
         </div>
     );
 };
+
 
 export default MapComponent;
 
