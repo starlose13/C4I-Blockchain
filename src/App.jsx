@@ -80,13 +80,12 @@ function App() {
             NodeLongitude: '2.2945° E',
         },])
     const [clickedData, setClickedData] = useState([]);
-
-   // localStorage.setItem('nodeAddresses', JSON.stringify(newAddresses));
+    const [address , setAddresses] = useState([])
 
     return (
         <MainContext.Provider
-            value={{ selectedNode, setSelectedNode, targetData, setTargetData, clickedData, setClickedData}}>
-            <div className="w-full h-screen relative bg-[#00030c]">
+            value={{ selectedNode, setSelectedNode, targetData, setTargetData, clickedData, setClickedData,address , setAddresses}}>
+            <div className=" w-screen h-screen relative bg-[#00030c]">
                 <Navbar />
                 <div className="flex">
                     <div>
