@@ -1,32 +1,33 @@
 import React, { useContext, useState, useEffect } from 'react';
 import ImageMapper from 'react-image-mapper';
-import areas from './areas.json';
-import nodes from './node.json';
+import areas from './JsonData/areas.json';
+import nodes from './JsonData/node.json';
 import NodeTooltip from './NodeTooltip.jsx';
 import TargetTooltip from './TargetTooltip.jsx';
 import { MainContext } from '../../hooks/useSimulationContext.jsx';
 import { useFetchNodeAddresses, useFormatAndFetchURIData } from "../../hooks/useGetContract.jsx";
 
 
-
 const MapComponent = () => {
 
     const { targetData, setTargetData, selectedNode, setClickedData, clickedData, address, setAddresses } = useContext(MainContext);
 
-    const { result: addressResult } = useFetchNodeAddresses()
-    useEffect(() => {
-        if (addressResult) {
-            console.log("🚀 ~ MapComponent ~ addressResult:", addressResult);
-            setAddresses(addressResult);
+    // const { result: addressResult } = useFetchNodeAddresses()
+    // useEffect(() => {
+    //     if (addressResult) {
+    //         // console.log("🚀 ~ MapComponent ~ addressResult:", addressResult);
+    //         setAddresses(addressResult);
 
-            addressResult.forEach(async (ad) => {
-                console.log("🚀 ~ addressResult.map ~ ar:", ad);
-                const { data: URIformatterAddress } = await useFormatAndFetchURIData(ad);
-                console.log("🚀 ~ MapComponent ~ URIformatterAddress:", URIformatterAddress);
+    //         addressResult.forEach(async (ad) => {
+    //             // console.log("🚀 ~ addressResult.map ~ ar:", ad);
+    //             const { data: URIformatterAddress } = await useFormatAndFetchURIData(ad);
+    //             // console.log("🚀 ~ MapComponent ~ URIformatterAddress:", URIformatterAddress);
+    //         });
+    //     }
 
-            });
-        }
-    }, [addressResult, setAddresses]);
+    // }, [addressResult, setAddresses]);
+
+    
 
 
     const URL = "/x.jpg";
