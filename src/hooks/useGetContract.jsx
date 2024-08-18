@@ -54,23 +54,24 @@ export const useFetchNodeAddresses = () => {
 
 
 export const useFormatAndFetchURIData = (ad) => {
-    console.log("addressResult is here:", ad);
+    // console.log("addressResult is here:", ad);
     let data;
     const fetchData = async () => {
         try {
             // data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
             data = await NodeManagerContract.URIDataFormatter(ad);
-            console.log(data);
-            console.log('Transaction sent:', data);
 
+            console.log(`Transaction sent ${data} from this address ${ad}`);
             // console.log('Transaction sent:', _data);
         } catch (err) {
             console.log('Error interacting with the contract:', err);
             // setError(err);
         }
     };
+    console.log('============================================');
     fetchData()
     return { data };
+
 }
 
 
