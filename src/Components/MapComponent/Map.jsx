@@ -6,57 +6,40 @@ import NodeTooltip from './NodeTooltip.jsx';
 import TargetTooltip from './TargetTooltip.jsx';
 import { MainContext } from '../../hooks/useSimulationContext.jsx';
 import { useFetchNodeAddresses, useFormatAndFetchURIData } from "../../hooks/useGetContract.jsx";
-import decodeBase64Data from "../../utils/decodeBase64.jsx"
 
 
 
 const Map = () => {
 
     const { targetData, setTargetData, selectedNode, setClickedData, clickedData, address, setAddresses } = useContext(MainContext);
-    const { result: addressResult } = useFetchNodeAddresses()
-
-
-    // useEffect(() => {
-    //     if (addressResult) {
-    //         setAddresses(addressResult);
-
-    //         addressResult.forEach(async (ad) => {
-    //             const { data: URIformatterAddress, error } = useFormatAndFetchURIData(ad);
-    //             if (URIformatterAddress) {
-    //                 let decodedData = decodeBase64Data(URIformatterAddress);
-    //                 console.log("Decoded Data:", decodedData);
-    //             }
-    //             if (error) {
-    //                 console.error('Error fetching URI data:', error);
-    //             }
-    //         });
-    //     }
-    // }, [addressResult]);
+    const { result: addressResult } = useFetchNodeAddresses();
 
 
 
 
     useEffect(() => {
         if (addressResult) {
-            // console.log("🚀 ~ Map ~ addressResult:", addressResult);
             setAddresses(addressResult);
-
-            addressResult.forEach(async (ad) => {
-                console.log("🚀 ~ addressResult.map ~ ar:", ad);
-                const { data: URIformatterAddress } = await useFormatAndFetchURIData(ad);
-                // console.log("🚀 ~ Map ~ URIformatterAddress:", URIformatterAddress);
+            address.forEach(async (ad) => {
+                // console.log("ad:", ad);
+                const { data } = await useFormatAndFetchURIData(ad);
+                // console.log(`URIformatterAddress: ${data} and the address is ${ad}`);
             });
         }
-
     }, [addressResult, setAddresses]);
 
+    const { data: decodeData } = useFormatAndFetchURIData(address);
 
-    // const {data:dataBase64} = useFormatAndFetchURIData()
-    // console.log(dataBase64);
-    
-    // const decodedData = decodeBase64Data(dataBase64);
-    // console.log(`decodedData is ${decodedData}`);
-    
+
+    useEffect(() => {
+        if (decodeData.length > 0) {
+            console.log(`decodeData is ${decodeData}`);
+        }
+    }, [decodeData]);
+
+
+
+
 
     const URL = "/x.jpg";
     const width = 2100;
