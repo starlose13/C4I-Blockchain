@@ -6,29 +6,57 @@ import NodeTooltip from './NodeTooltip.jsx';
 import TargetTooltip from './TargetTooltip.jsx';
 import { MainContext } from '../../hooks/useSimulationContext.jsx';
 import { useFetchNodeAddresses, useFormatAndFetchURIData } from "../../hooks/useGetContract.jsx";
+import decodeBase64Data from "../../utils/decodeBase64.jsx"
 
 
-const MapComponent = () => {
+
+const Map = () => {
 
     const { targetData, setTargetData, selectedNode, setClickedData, clickedData, address, setAddresses } = useContext(MainContext);
+    const { result: addressResult } = useFetchNodeAddresses()
 
-    // const { result: addressResult } = useFetchNodeAddresses()
+
     // useEffect(() => {
     //     if (addressResult) {
-    //         // console.log("🚀 ~ MapComponent ~ addressResult:", addressResult);
     //         setAddresses(addressResult);
 
     //         addressResult.forEach(async (ad) => {
-    //             // console.log("🚀 ~ addressResult.map ~ ar:", ad);
-    //             const { data: URIformatterAddress } = await useFormatAndFetchURIData(ad);
-    //             // console.log("🚀 ~ MapComponent ~ URIformatterAddress:", URIformatterAddress);
+    //             const { data: URIformatterAddress, error } = useFormatAndFetchURIData(ad);
+    //             if (URIformatterAddress) {
+    //                 let decodedData = decodeBase64Data(URIformatterAddress);
+    //                 console.log("Decoded Data:", decodedData);
+    //             }
+    //             if (error) {
+    //                 console.error('Error fetching URI data:', error);
+    //             }
     //         });
     //     }
+    // }, [addressResult]);
 
-    // }, [addressResult, setAddresses]);
 
+
+
+    useEffect(() => {
+        if (addressResult) {
+            // console.log("🚀 ~ Map ~ addressResult:", addressResult);
+            setAddresses(addressResult);
+
+            addressResult.forEach(async (ad) => {
+                console.log("🚀 ~ addressResult.map ~ ar:", ad);
+                const { data: URIformatterAddress } = await useFormatAndFetchURIData(ad);
+                // console.log("🚀 ~ Map ~ URIformatterAddress:", URIformatterAddress);
+            });
+        }
+
+    }, [addressResult, setAddresses]);
+
+
+    // const {data:dataBase64} = useFormatAndFetchURIData()
+    // console.log(dataBase64);
     
-
+    // const decodedData = decodeBase64Data(dataBase64);
+    // console.log(`decodedData is ${decodedData}`);
+    
 
     const URL = "/x.jpg";
     const width = 2100;
@@ -191,5 +219,5 @@ const MapComponent = () => {
 };
 
 
-export default MapComponent;
+export default Map;
 
