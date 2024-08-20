@@ -1,7 +1,7 @@
 import './App.css';
 import Navbar from "./Components/Navbar.jsx";
 import Sidebar from "./Components/Sidebar.jsx";
-import MapComponent from "./Components/MapComponent/MapComponents.jsx";
+import Map from "./Components/MapComponent/Map.jsx";
 import { MainContext } from "./hooks/useSimulationContext.jsx";
 import React, { useState } from "react";
 
@@ -92,7 +92,7 @@ function App() {
                         <Sidebar />
                     </div>
                     <div className="flex-grow mx-2 ">
-                        <MapComponent />
+                        <Map />
                     </div>
                 </div>
             </div>
