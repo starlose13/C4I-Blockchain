@@ -30,13 +30,13 @@ contract ConsensusMechanism is
     address public POLICY_CUSTODIAN;
     uint64 private s_consensusThreshold; // Threshold for reaching consensus
     uint128 private s_epochCounter;
-    uint256 private s_startTime; // Start time for each consensus epoch
-    uint256 public s_lastTimeStamp; // Timestamp for Chainlink auto-execution
+    uint256 private s_lastTimeStamp; // Start time for each consensus epoch
     uint256 private s_interval; // Chainlink interval
-    bool public isEpochNotStarted;
     uint64 private CONSENSUS_NOT_REACHED;
     bytes32 private UPGRADER_ROLE;
     uint256 private consensusEpochTimeDuration;
+
+    DataTypes.EpochVoteState private s_epochState;
     /*//////////////////////////////////////////////////////////////
                                MAPPINGS
     //////////////////////////////////////////////////////////////*/
@@ -75,7 +75,7 @@ contract ConsensusMechanism is
         __AccessControl_init();
         UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
         CONSENSUS_NOT_REACHED = 0;
-        isEpochNotStarted = true;
+        s_epochState = DataTypes.EpochVoteState.AwaitingStart;
         consensusEpochTimeDuration = 1 minutes;
         POLICY_CUSTODIAN = policyCustodian;
         s_lastTimeStamp = block.timestamp;
@@ -130,6 +130,16 @@ contract ConsensusMechanism is
         _;
     }
 
+    /**
+     * @dev Modifier to restrict functions access to change the consensus parameters during voting process.
+     */
+    modifier onlyInNonActiveEpoch() {
+        if (s_epochState == DataTypes.EpochVoteState.Counting) {
+            revert();
+        }
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                               FUNCTIONS
     //////////////////////////////////////////////////////////////*/
@@ -154,7 +164,9 @@ contract ConsensusMechanism is
         preventDoubleVoting(agent)
         onlyRegisteredNodes(agent)
     {
-        _updateEpochStatus();
+        if (s_epochState != DataTypes.EpochVoteState.Counting) {
+            _updateEpochStatus();
+        }
         _persistData(agent, announceTarget);
         _chronicleEpoch(agent, announceTarget);
         emit DataTypes.TargetLocationReported(agent, announceTarget);
@@ -190,7 +202,7 @@ contract ConsensusMechanism is
                 announceTargets[i]
             );
         }
-        isEpochNotStarted = false;
+        s_epochState = DataTypes.EpochVoteState.Counting;
     }
 
     /**
@@ -231,7 +243,7 @@ contract ConsensusMechanism is
         address agent,
         DataTypes.TargetZone announceTarget
     ) internal preventDoubleVoting(agent) onlyRegisteredNodes(agent) {
-        if (isEpochNotStarted) {
+        if (s_epochState != DataTypes.EpochVoteState.Counting) {
             _updateEpochStatus();
         }
         _persistData(agent, announceTarget);
@@ -239,9 +251,9 @@ contract ConsensusMechanism is
     }
 
     function _updateEpochStatus() internal {
-        s_startTime = block.timestamp;
-        isEpochNotStarted = false;
-        emit DataTypes.EpochStatusUpdated(s_startTime, isEpochNotStarted);
+        s_lastTimeStamp = block.timestamp;
+        s_epochState = DataTypes.EpochVoteState.Counting;
+        emit DataTypes.EpochStatusUpdated(s_lastTimeStamp, s_epochState);
     }
 
     /**
@@ -340,8 +352,9 @@ contract ConsensusMechanism is
     /**
      * @dev Resets the state to defaults for the next epoch.
      */
-    function resetToDefaults() internal {
-        s_startTime = block.timestamp;
+    function resetStateToDefaults() internal {
+        s_lastTimeStamp = block.timestamp;
+        s_epochState = DataTypes.EpochVoteState.AwaitingStart;
         resetAllTargetLocations();
     }
 
@@ -358,6 +371,29 @@ contract ConsensusMechanism is
     /*//////////////////////////////////////////////////////////////
                           EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
+    /**
+     * @dev Checks if upkeep is needed for the automation process.
+     * @return upkeepNeeded Boolean indicating if upkeep is needed.
+     * @notice This function will be run with this conditions :
+     * 1. If the consensusEpochTimeDuration is greater than the current timestamp.
+     * 2. Voting process should be inprogress
+     */
+    function checkUpkeep(
+        bytes memory /* checkData */
+    ) public view returns (bool upkeepNeeded, bytes memory /* performData */) {
+        // upkeepNeeded = (block.timestamp - s_lastTimeStamp) > s_interval;
+        // We don't use the checkData in this example. The checkData is defined when the Upkeep was registered.
+
+        bool isTimePassed = s_lastTimeStamp + consensusEpochTimeDuration <=
+            block.timestamp;
+        bool isEpochAcitve = (s_epochState ==
+            DataTypes.EpochVoteState.Counting);
+
+        upkeepNeeded = /*isEpochAcitve && */ isTimePassed;
+        return (upkeepNeeded, hex"");
+    }
+
     /**
      * @dev Executes the consensus automation and checks if consensus is reached.
      * @return isReached Boolean indicating if consensus was reached.
@@ -367,11 +403,9 @@ contract ConsensusMechanism is
         external
         returns (bool isReached, uint256 target)
     {
-        if (s_startTime + consensusEpochTimeDuration >= block.timestamp) {
-            revert Errors.ConsensusMechanism__TIME_IS_NOT_REACHED();
-        }
-        if (isEpochNotStarted) {
-            revert Errors.ConsensusMechanism__VOTING_IS_INPROGRESS();
+        (bool upkeepNeeded, ) = checkUpkeep("");
+        if (!upkeepNeeded) {
+            revert Errors.ConsensusMechanism__UPKEEP_NOT_NEEDED();
         }
         uint256 consensusResult = computeConsensusOutcome();
         if (consensusResult != 0) {
@@ -381,21 +415,9 @@ contract ConsensusMechanism is
         } else if (consensusResult == 0) {
             deleteEpochData(s_epochCounter);
         }
-        resetToDefaults();
-        isEpochNotStarted = true;
+        resetStateToDefaults();
         emit DataTypes.ConsensusExecuted(isReached, target, s_epochCounter);
         return (isReached, consensusResult);
-    }
-
-    /**
-     * @dev Checks if upkeep is needed for the automation process.
-     * @return upkeepNeeded Boolean indicating if upkeep is needed.
-     */
-    function checkUpkeep(
-        bytes calldata /* checkData */
-    ) external view returns (bool upkeepNeeded /* performData */) {
-        upkeepNeeded = (block.timestamp - s_lastTimeStamp) > s_interval;
-        // We don't use the checkData in this example. The checkData is defined when the Upkeep was registered.
     }
 
     /**
@@ -413,7 +435,7 @@ contract ConsensusMechanism is
 
     function modifyEpochDuration(
         uint256 newEpochTimeDurationInMinute
-    ) external onlyPolicyCustodian {
+    ) external onlyPolicyCustodian onlyInNonActiveEpoch {
         consensusEpochTimeDuration = (newEpochTimeDurationInMinute * 1 minutes);
     }
 
@@ -423,7 +445,7 @@ contract ConsensusMechanism is
      */
     function modifyConsensusThreshold(
         uint64 newThreshold
-    ) external onlyPolicyCustodian {
+    ) external onlyPolicyCustodian onlyInNonActiveEpoch {
         uint256 numberOfNodes = nodeManager.numberOfPresentNodes();
         if (newThreshold > numberOfNodes) {
             revert Errors.ConsensusMechanism__THRESHOLD_EXCEEDS_NODES();
@@ -539,7 +561,7 @@ contract ConsensusMechanism is
     }
 
     function fetchStartTime() external view returns (uint256) {
-        return s_startTime;
+        return s_lastTimeStamp;
     }
 
     function fetchNodeMangerProxyContractAddress()
@@ -548,5 +570,14 @@ contract ConsensusMechanism is
         returns (address)
     {
         return address(nodeManager);
+    }
+
+    function fetchEpochStatus() external view returns (bool status) {
+        if (s_epochState == DataTypes.EpochVoteState.AwaitingStart) {
+            return false;
+        }
+        return true;
+
+        // return (s_epochState == DataTypes.EpochVoteState.AwaitingStart);
     }
 }

@@ -21,9 +21,10 @@ library Errors {
     error ConsensusMechanism__YOU_ARE_NOT_CORRECT_SENDER();
     error ConsensusMechanism__ONLY_POLICY_CUSTODIAN();
     error ConsensusMechanism__THRESHOLD_EXCEEDS_NODES();
-    error ConsensusMechanism__VOTING_IS_INPROGRESS();
-    error ConsensusMechanism__TIME_IS_NOT_REACHED();
+    error ConsensusMechanism__THERE_ARE_NO_ACTIVE_EPOCH();
     error ConsensusMechanism__ELECTION_IS_FINISHED();
+    error ConsensusMechanism__UPKEEP_NOT_NEEDED();
+    error ConsensusMechanism__VOTING_IS_INPROGRESS_AND_NOT_REACHED();
 
     /*//////////////////////////////////////////////////////////////
                       ACCOUNT ABSTRACTION ERRORS

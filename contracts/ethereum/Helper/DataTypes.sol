@@ -32,6 +32,11 @@ library DataTypes {
         ObservationPosts // 4
     }
 
+    enum EpochVoteState {
+        AwaitingStart, // 0
+        Counting // 1
+    }
+
     /*//////////////////////////////////////////////////////////////
                                STRUCTS
     //////////////////////////////////////////////////////////////*/
@@ -77,7 +82,7 @@ library DataTypes {
         address indexed agent,
         DataTypes.TargetZone announceTarget
     );
-    event EpochStatusUpdated(uint256 startTime, bool epochStatus);
+    event EpochStatusUpdated(uint256 startTime, EpochVoteState epochStatus);
     event ConsensusExecuted(
         bool isReached,
         uint256 target,
