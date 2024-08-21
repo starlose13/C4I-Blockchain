@@ -13,31 +13,37 @@ const Map = () => {
 
     const { targetData, setTargetData, selectedNode, setClickedData, clickedData, address, setAddresses } = useContext(MainContext);
     const { result: addressResult } = useFetchNodeAddresses();
-
-
+    const [formattedData, setFormattedData] = useState([]);
 
 
     useEffect(() => {
         if (addressResult) {
             setAddresses(addressResult);
-            address.forEach(async (ad) => {
-                // console.log("ad:", ad);
-                const { data } = await useFormatAndFetchURIData(ad);
-                // console.log(`URIformatterAddress: ${data} and the address is ${ad}`);
-            });
         }
-    }, [addressResult, setAddresses]);
-
-    const { data: decodeData } = useFormatAndFetchURIData(address);
-
+    }, [addressResult]);
 
     useEffect(() => {
-        if (decodeData.length > 0) {
-            console.log(`decodeData is ${decodeData}`);
+        const fetchFormattedData = async () => {
+            const results = await Promise.all(
+                address.map(async (ad) => {
+                    const data = await useFormatAndFetchURIData(ad);
+                    console.log(`data is ${data}`);
+                    return { ad, data };
+                })
+            );
+            setFormattedData(results);
+        };
+    
+        if (address.length > 0) {
+            fetchFormattedData();
         }
-    }, [decodeData]);
+    }, [address]);
 
-
+    useEffect(() => {
+        if (formattedData.length > 0) {
+            console.log("Formatted Data:", formattedData);
+        }
+    }, [formattedData]);
 
 
 
@@ -61,6 +67,7 @@ const Map = () => {
         });
     };
 
+    
     const MAP = {
         name: "Map",
         areas: areas.map((area) => {
