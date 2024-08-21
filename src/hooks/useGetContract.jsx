@@ -54,30 +54,65 @@ export const useFetchNodeAddresses = () => {
 
 
 
+/*//////////////////////////////////////////////////////////////
+                                UNSAFE
+    //////////////////////////////////////////////////////////////*/
+
+// export const useFormatAndFetchURIData = (ad) => {
+//         const [data, setData] = useState([]);
+//     useEffect(() => {
+//         const fetchData = async () => {
+//             try {
+//                 const result = await NodeManagerContract.URIDataFormatter(ad);
+//                 setData(result);
+//                 console.log(result);
+//             } catch (err) {
+//                 // console.error('Error interacting with the contract:', err);
+//             }
+//         };
+//         if (ad) {
+//             fetchData();
+//         }
+//     }, [ad]); 
+//     return { data };
+// }
 
 
 
-
+/*//////////////////////////////////////////////////////////////
+                                 SAFE
+    //////////////////////////////////////////////////////////////*/
 export const useFormatAndFetchURIData = (ad) => {
-    const [data, setData] = useState([]);
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await NodeManagerContract.URIDataFormatter(ad);
-                setData(result);
-                console.log(result);
-            } catch (err) {
-                console.error('Error interacting with the contract:', err);
-            }
-        };
-        if (ad) {
-            fetchData();
+        let data;
+        try {
+            // data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+            return data = NodeManagerContract.URIDataFormatter(ad).then(result => result);
+            // console.log(`Transaction sent ${data} from this address ${ad}`);
+            // console.log('Transaction sent:', data);
+        } catch (err) {
+            console.error('Error interacting with the contract:', err);
+            return err
+            // setError(err);
         }
-    }, [ad]); 
-    return { data };
+
+
+    // console.log("addressResult is here:", ad);
+    // let data;
+    // const fetchData = async () => {
+    //     try {
+    //         // data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+    //         data = await NodeManagerContract.URIDataFormatter(ad);
+    //         console.log(`Transaction sent ${data} from this address ${ad}`);
+    //         // console.log('Transaction sent:', data);
+    //         return data 
+    //     } catch (err) {
+    //         console.log('Error interacting with the contract:', err);
+    //         // setError(err);
+    //     }
+    // };
+    // fetchData()
+    // return { data };
 }
-
-
 
 /*//////////////////////////////////////////////////////////////
                           CONSENSUS FUNCTION
