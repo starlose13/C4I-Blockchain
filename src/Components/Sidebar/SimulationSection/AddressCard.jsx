@@ -17,40 +17,41 @@ import {MainContext} from "../../../hooks/useSimulationContext.jsx"
 const AddressCard = ({addressData}) => {
     const {
         id,
-        address,
-        location,
-        TargetLatitude,
-        TargetLongitude,
-        NodePositionName,
-        NodeLatitude,
-        NodeLongitude
+        // address,
+        // location,
+        // TargetLatitude,
+        // TargetLongitude,
+        // NodePositionName,
+        // NodeLatitude,
+        // NodeLongitude
+        data
     } = addressData;
 
     const {selectedNode, setSelectedNode} = useContext(MainContext);
     const isSelected = selectedNode === id;
-
+    // ${isSelected ? 'raise border-2 border-blue-500 bg-[#0d2f5c]' : 'bg-[#0d2f5c]'} 
     return (
         <div
-            className={`w-full p-2 ${isSelected ? 'raise border-2 border-blue-500 bg-[#0d2f5c]' : 'bg-[#0d2f5c]'} cursor-pointer`}
+            className={`w-full p-2  ${isSelected ? 'raise border-2 border-blue-500 bg-[#0d2f5c]' : 'bg-[#0d2f5c]'}  cursor-pointer`}
             onClick={() => setSelectedNode(id)}
         >
             <h3 className="text-sm text-[#dfeeff]">Address</h3>
-            <h4 className="text-[11px] text-[#5178a6] ">{address}</h4>
+            <h4 className="text-[11px] text-[#5178a6] ">{data.wallet_address}</h4>
 
 
             <div className="pt-2 grid grid-rows-3">
                 <h3 className="text-sm text-red-500">Target Position </h3>
-                <h2 className="text-xs text-[#5178a6]">Location: {location}</h2>
-                <h2 className="text-xs text-[#5178a6]">Latitude: {TargetLatitude}</h2>
-                <h2 className="text-xs text-[#5178a6] ">Longitude: {TargetLongitude}</h2>
+                <h2 className="text-xs text-[#5178a6]">Location: {data.position}</h2>
+                <h2 className="text-xs text-[#5178a6]">Latitude: {data.location.latitude}</h2>
+                <h2 className="text-xs text-[#5178a6] ">Longitude: {data.location.longitude}</h2>
             </div>
 
 
             <div className="pt-2 grid grid-rows-3">
                 <h3 className="text-sm text-blue-500">Node Position </h3>
-                <h2 className="text-xs text-[#5178a6]">Location: {NodePositionName}</h2>
-                <h2 className="text-xs text-[#5178a6]">Latitude: {NodeLatitude}</h2>
-                <h2 className="text-xs text-[#5178a6]">Longitude: {NodeLongitude}</h2>
+                <h2 className="text-xs text-[#5178a6]">Location: {data.position}</h2>
+                {/* <h2 className="text-xs text-[#5178a6]">Latitude: {NodeLatitude}</h2>
+                <h2 className="text-xs text-[#5178a6]">Longitude: {NodeLongitude}</h2> */}
             </div>
 
 
