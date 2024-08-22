@@ -11,63 +11,9 @@ import { useFetchNodeAddresses, useFormatAndFetchURIData } from "../../hooks/use
 
 const Map = () => {
 
-    const { targetData, setTargetData, selectedNode, setClickedData, clickedData, address, setAddresses } = useContext(MainContext);
+    const { targetData, setTargetData, selectedNode, setClickedData, clickedData, address, setAddresses, formattedData, setFormattedData } = useContext(MainContext);
     const { result: addressResult } = useFetchNodeAddresses();
-    const [formattedData, setFormattedData] = useState([]);
-
-    const decodeBase64Data = (dataObject) => {
-        try {
-            // console.log("DataObject before decoding:", dataObject);
-            
-            if (!dataObject || typeof dataObject !== 'string') {
-                throw new Error("Invalid dataObject or missing 'data' property");
-            }
-    
-            // Splitting the dataObject itself instead of dataObject.data
-            const base64String = dataObject.split(',')[1]; // Extract Base64 part
-            if (!base64String) {
-                throw new Error("Failed to extract Base64 string");
-            }
-
-            const decodedString = atob(base64String); // Decode Base64 string
-            const jsonData = JSON.parse(decodedString); // Parse JSON string
-            return jsonData;
-        } catch (error) {
-            console.error('Error decoding and parsing JSON:', error);
-            return null;
-        }
-    };
-
-
-    useEffect(() => {
-        if (addressResult) {
-            setAddresses(addressResult);
-        }
-        const fetchFormattedData = async () => {
-            const results = await Promise.all(
-                address.map(async (ad) => {
-                    const data = await useFormatAndFetchURIData(ad);
-                    const decodedData = decodeBase64Data(data);
-                    // console.log(`Decoded data for ${ad}:`, decodedData);
-                    return { ad, data: decodedData || 'Decoding failed or no data' };
-                    // return {ad , data}
-                })
-            );
-            setFormattedData(results);
-        };
-    
-        if (address.length > 0) {
-            fetchFormattedData();
-        }
-    }, [address]);
-    
-    useEffect(() => {
-        if (formattedData.length > 0) {
-            console.log("Formatted Data:", formattedData);
-        }
-    }, [formattedData]);
-    
-
+    setAddresses(addressResult)
 
     const URL = "/x.jpg";
     const width = 2100;
@@ -89,7 +35,6 @@ const Map = () => {
         });
     };
 
-
     const MAP = {
         name: "Map",
         areas: areas.map((area) => {
@@ -102,64 +47,46 @@ const Map = () => {
             };
         })
     };
-
+    
     /*//////////////////////////////////////////////////////////////
                                handle areaclick
     //////////////////////////////////////////////////////////////*/
     const handleAreaClick = (area, index, event) => {
-        // console.log("area is: ", area);
-        // console.log("Area clicked: ", area.name);
 
+        // console.log(address)
+        console.log(area.name)
 
-
-        /*//////////////////////////////////////////////////////////////
-                      set length of the array when click
-        //////////////////////////////////////////////////////////////*/
         setClickedData(prevData => {
             if (prevData.length < 7) {
                 const newData = [...prevData, area.name];
-                console.log('clickedData after adding new item:', newData);
                 return newData;
             } else {
-
-                // const {data: uriformat } =useFormatAndFetchURIData(clickedData)
-                // console.log('uriformat is:',uriformat);
                 alert('Length of clickedData is already enogh. No new item added.');
                 return prevData;
             }
         });
-        // console.log(clickedData);
-
-
+        
         const x = event.clientX - 25;
         const y = event.clientY;
 
-
-
-        /*//////////////////////////////////////////////////////////////
-              Equalizing the clicked area with the data inside the card
-        //////////////////////////////////////////////////////////////*/
-
-        // setTargetData(prevData => {
-        //     const updatedData = prevData.map((node, idx) => {
-        //         if (idx === selectedNode - 1 ) {
-
-        //             return {
-        //                 ...node,
-        //                 address: _area_.address,//URIDATAFORMAT /// nodeData (pref)
-        //                 TargetLatitude: _area_.ipfsData,//send by front-ned
-        //                 TargetLongitude: _area_.ipfsData, //send by front-ned
-        //                 location: _area_.position, 
-        //                 NodeLatitude: _area_.ipfsData, //URIDATAFORMAT
-        //                 NodeLongitude: _area_.ipfsData, //URIDATAFORMAT
-        //                 NodePositionName: _area_.ipfsData,// URIDATAFORMAT
-        //             };
-        //         }
-        //         return node;
-        //     });
-        //     return updatedData;
-        // });
-
+        setTargetData(prevData => {
+            const updatedData = prevData.map((node, idx) => {
+                if (idx === selectedNode - 1) {
+                    return {
+                        ...node,
+                        address: node.data.wallet_address,
+                        // TargetLatitude: area.TargetLatitude,//send by front-ned
+                        // TargetLongitude: area.TargetLongitude, //send by front-ned
+                        location: node.data.position,
+                        NodeLatitude: node.data.location.latitude, //URIDATAFORMAT
+                        NodeLongitude: node.data.location.longitude, //URIDATAFORMAT
+                        NodePositionName: node.data.position,// URIDATAFORMAT
+                    };
+                }
+                return node;
+            });
+            return updatedData;
+        });
         const adjustedX = Math.min(x, window.innerWidth - 500);
         const adjustedY = Math.min(y, window.innerHeight - 300);
         setTooltipData({ visible: true, areaId: area.name, position: { x: adjustedX, y: adjustedY } });
