@@ -11,10 +11,9 @@ import { useFetchNodeAddresses, useFormatAndFetchURIData } from "../../hooks/use
 
 const Map = () => {
 
-    const { targetData, setTargetData, selectedNode, setClickedData, clickedData, address, setAddresses, formattedData, setFormattedData } = useContext(MainContext);
-    const { result: addressResult } = useFetchNodeAddresses();
-    setAddresses(addressResult)
-
+    const { targetData, setTargetData, selectedNode, setClickedData, clickedData, address, setAddresses} = useContext(MainContext);
+    
+    
     const URL = "/x.jpg";
     const width = 2100;
     const height = 1200;
@@ -55,7 +54,8 @@ const Map = () => {
 
         // console.log(address)
         console.log(area.name)
-
+        
+        
         setClickedData(prevData => {
             if (prevData.length < 7) {
                 const newData = [...prevData, area.name];
@@ -69,33 +69,32 @@ const Map = () => {
         const x = event.clientX - 25;
         const y = event.clientY;
 
+        
         setTargetData(prevData => {
             const updatedData = prevData.map((node, idx) => {
                 if (idx === selectedNode - 1) {
                     return {
                         ...node,
-                        address: node.data.wallet_address,
-                        // TargetLatitude: area.TargetLatitude,//send by front-ned
-                        // TargetLongitude: area.TargetLongitude, //send by front-ned
-                        location: node.data.position,
-                        NodeLatitude: node.data.location.latitude, //URIDATAFORMAT
-                        NodeLongitude: node.data.location.longitude, //URIDATAFORMAT
-                        NodePositionName: node.data.position,// URIDATAFORMAT
+                        TargetLatitude: area.TargetLatitude,
+                        TargetLongitude: area.TargetLongitude,
+                        location: area.TargetPositionName,
+                        NodeLatitude: area.NodeLatitude,
+                        NodeLongitude: area.NodeLongitude,
+                        NodePositionName: area.NodePositionName
                     };
                 }
                 return node;
             });
             return updatedData;
         });
+
+
         const adjustedX = Math.min(x, window.innerWidth - 500);
         const adjustedY = Math.min(y, window.innerHeight - 300);
         setTooltipData({ visible: true, areaId: area.name, position: { x: adjustedX, y: adjustedY } });
     };
 
 
-    /*//////////////////////////////////////////////////////////////
-                            the blue node
-    //////////////////////////////////////////////////////////////*/
     const renderNodes = () => {
         return nodes.map((node, index) => {
             const scaledX = node.coords[0] * nodeWidth;
@@ -156,7 +155,6 @@ const Map = () => {
         </div>
     );
 };
-
 
 export default Map;
 

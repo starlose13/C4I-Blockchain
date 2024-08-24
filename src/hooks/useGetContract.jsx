@@ -83,35 +83,35 @@ export const useFetchNodeAddresses = () => {
                                  SAFE
     //////////////////////////////////////////////////////////////*/
 export const useFormatAndFetchURIData = (ad) => {
-        let data;
-        try {
-            // data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
-            return data = NodeManagerContract.URIDataFormatter(ad).then(result => result);
-            // console.log(`Transaction sent ${data} from this address ${ad}`);
-            // console.log('Transaction sent:', data);
-        } catch (err) {
-            console.error('Error interacting with the contract:', err);
-            return err
-            // setError(err);
-        }
+        // let data;
+        // try {
+        //     // data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+        //     return data = NodeManagerContract.URIDataFormatter(ad).then(result => result);
+        //     // console.log(`Transaction sent ${data} from this address ${ad}`);
+        //     // console.log('Transaction sent:', data);
+        // } catch (err) {
+        //     console.error('Error interacting with the contract:', err);
+        //     return err
+        //     // setError(err);
+        // }
 
 
     // console.log("addressResult is here:", ad);
-    // let data;
-    // const fetchData = async () => {
-    //     try {
-    //         // data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
-    //         data = await NodeManagerContract.URIDataFormatter(ad);
-    //         console.log(`Transaction sent ${data} from this address ${ad}`);
-    //         // console.log('Transaction sent:', data);
-    //         return data 
-    //     } catch (err) {
-    //         console.log('Error interacting with the contract:', err);
-    //         // setError(err);
-    //     }
-    // };
-    // fetchData()
-    // return { data };
+    let data;
+    const fetchData = async () => {
+        try {
+            // data = await NodeManagerContract.URIDataFormatter('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+            data = await NodeManagerContract.URIDataFormatter(ad);
+            // console.log(`Transaction sent ${data} from this address ${ad}`);
+            // console.log('Transaction sent:', data);
+            return data 
+        } catch (err) {
+            console.log('Error interacting with the contract:', err);
+            // setError(err);
+        }
+    };
+    fetchData()
+    return { data };
 }
 
 /*//////////////////////////////////////////////////////////////
