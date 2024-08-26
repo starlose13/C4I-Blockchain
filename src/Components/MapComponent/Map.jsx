@@ -1,14 +1,92 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import ImageMapper from "react-image-mapper";
 import areas from "./JsonData/areas.json";
 import nodes from "./JsonData/node.json";
 import NodeTooltip from "./NodeTooltip.jsx";
 import TargetTooltip from "./TargetTooltip.jsx";
 import { MainContext } from "../../hooks/useSimulationContext.jsx";
+import {
+  useFetchNodeAddresses,
+  useFormatAndFetchURIData,
+} from "../../hooks/useGetContract";
 
 const Map = () => {
-  const { setTargetData, selectedNode, setClickedData } =
+  const { targetData, setTargetData, selectedNode, setClickedData } =
     useContext(MainContext);
+
+  const { address, setAddresses } = useContext(MainContext);
+  const [formattedData, setFormattedData] = useState([]);
+  const mappedDataRef = useRef([]);  // Store mappedData here
+  const { result: addressResult } = useFetchNodeAddresses();
+
+  const decodeBase64Data = (dataObject) => {
+    try {
+      if (!dataObject || typeof dataObject !== "string") {
+        throw new Error("Invalid dataObject or missing 'data' property");
+      }
+
+      const base64String = dataObject.split(",")[1];
+      if (!base64String) {
+        throw new Error("Failed to extract Base64 string");
+      }
+
+      const decodedString = atob(base64String);
+      const jsonData = JSON.parse(decodedString);
+      return jsonData;
+
+    } catch (error) {
+      console.error("Error decoding and parsing JSON:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    if (addressResult) {
+      setAddresses(addressResult);
+    }
+  }, [addressResult]);
+
+  useEffect(() => {
+    const fetchAndFormatData = async () => {
+      const results = await Promise.all(
+        address.map(async (ad) => {
+          const data = await useFormatAndFetchURIData(ad);
+          const decodedData = decodeBase64Data(data);
+          return { ad, data: decodedData || "Decoding failed or no data" };
+        })
+      );
+      setFormattedData(results);
+    };
+
+    if (address.length > 0) {
+      fetchAndFormatData();
+    }
+  }, [address]);
+
+  useEffect(() => {
+    if (formattedData.length > 0) {
+      const newMappedData = formattedData.map((data, index) => {
+        let template = targetData[index];
+        let temp = {
+          address: data.ad,
+          NodePosition: data.data.position,
+          unitName: data.data.unit.name,
+          NodeLatitude: data.data.location.latitude,
+          NodeLongitude: data.data.location.longitude,
+        };
+
+        return Object.assign(
+          {},
+          template,
+          ...Object.keys(template).map(k => k in temp && { [k]: temp[k] })
+        );
+
+      });
+
+      mappedDataRef.current = newMappedData; // Update the ref value
+      setTargetData(newMappedData); // Update targetData once
+    }
+  }, [formattedData, targetData]);
 
   const URL = "/x.jpg";
   const width = 2100;
@@ -37,25 +115,26 @@ const Map = () => {
         name: area.name,
         shape: area.shape,
         preFillColor: area.preFillColor,
+        TargetLatitude: area.TargetLatitude,
+        TargetLongitude: area.TargetLongitude,
+        TargetPositionName: area.TargetPositionName,
+
         fillColor: area.fillColor,
         coords: scaleCoords(area.coords, imgWidth, imgHeight),
       };
     }),
   };
 
-  /*//////////////////////////////////////////////////////////////
-                               handle areaclick
-    //////////////////////////////////////////////////////////////*/
   const handleAreaClick = (area, index, event) => {
-    // console.log(address)
-    console.log(area.name);
+
+
 
     setClickedData((prevData) => {
       if (prevData.length < 7) {
         const newData = [...prevData, area.name];
         return newData;
       } else {
-        alert("Length of clickedData is already enogh. No new item added.");
+        alert("Length of clickedData is already enough. No new item added.");
         return prevData;
       }
     });
@@ -66,14 +145,16 @@ const Map = () => {
     setTargetData((prevData) => {
       const updatedData = prevData.map((node, idx) => {
         if (idx === selectedNode - 1) {
+          console.log(area.TargetLatitude)
+          console.log("hora")
           return {
             ...node,
             TargetLatitude: area.TargetLatitude,
             TargetLongitude: area.TargetLongitude,
-            location: area.TargetPositionName,
-            NodeLatitude: area.NodeLatitude,
-            NodeLongitude: area.NodeLongitude,
-            NodePositionName: area.NodePositionName,
+            TargetPositionName: area.TargetPositionName,
+            // NodeLatitude: area.NodeLatitude,
+            // NodeLongitude: area.NodeLongitude,
+            // NodePositionName: area.NodePositionName,
           };
         }
         return node;
@@ -104,9 +185,12 @@ const Map = () => {
           }}
         >
           <NodeTooltip
-            area={node}
+            area={targetData[index]?.NodePosition}
             visible={true}
             position={{ x: scaledX, y: scaledY }}
+            nodeLan={targetData[index].NodeLongitude}
+            nodeLat={targetData[index].NodeLatitude}
+            address={targetData[index].address}
             radius={node.coords[2]}
           />
         </div>
