@@ -6,7 +6,7 @@ FANTOM_NETWORK_ARGS := --rpc-url $(FANTOM_RPC_URL) --private-key $(PRIVATE_KEY) 
 AMOY_NETWORK_ARGS := --rpc-url $(AMOY_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -vvvv --verify --etherscan-api-key $(ETHERSCAN_API_KEY) 
 LOCAL_NETWORK_ARGS := --rpc-url $(VITE_RPC_URL) --private-key $(VITE_PRIVATE_KEY) --broadcast -vvvv
 # Default network
-NETWORK_ARGS := $(HOLESKY_NETWORK_ARGS)
+NETWORK_ARGS := $(LOCAL_NETWORK_ARGS)
 
 # Print the value of ARGS for debugging
 $(info ARGS: $(ARGS))
