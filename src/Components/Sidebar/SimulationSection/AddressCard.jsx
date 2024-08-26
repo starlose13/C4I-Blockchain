@@ -18,10 +18,10 @@ const AddressCard = ({ addressData }) => {
     const {
         id,
         address,
-        location,
+        NodePosition,
         TargetLatitude,
         TargetLongitude,
-        NodePositionName,
+        TargetPositionName,
         NodeLatitude,
         NodeLongitude
     } = addressData;
@@ -40,7 +40,7 @@ const AddressCard = ({ addressData }) => {
 
             <div className="pt-2 grid grid-rows-3">
                 <h3 className="text-sm text-red-500">Target Position </h3>
-                <h2 className="text-xs text-[#5178a6]">Location: {location}</h2>
+                <h2 className="text-xs text-[#5178a6]">Location: {TargetPositionName}</h2>
                 <h2 className="text-xs text-[#5178a6]">Latitude: {TargetLatitude}</h2>
                 <h2 className="text-xs text-[#5178a6] ">Longitude: {TargetLongitude}</h2>
             </div>
@@ -48,7 +48,7 @@ const AddressCard = ({ addressData }) => {
 
             <div className="pt-2 grid grid-rows-3">
                 <h3 className="text-sm text-blue-500">Node Position </h3>
-                <h2 className="text-xs text-[#5178a6]">Location: {NodePositionName}</h2>
+                <h2 className="text-xs text-[#5178a6]">Location: {NodePosition}</h2>
                 <h2 className="text-xs text-[#5178a6]">Latitude: {NodeLatitude}</h2>
                 <h2 className="text-xs text-[#5178a6]">Longitude: {NodeLongitude}</h2>
             </div>
