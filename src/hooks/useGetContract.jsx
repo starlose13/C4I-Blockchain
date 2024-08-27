@@ -81,7 +81,7 @@ export const useSimulateTargetLocation = () => {
             const receipt = await data.wait();
             console.log('Transaction confirmed in block:', receipt.blockNumber);
         } catch (err) {
-            console.error('Error interacting with the contract:', err);
+            // console.error('Error interacting with the contract:', err);
             setError(err);
         }
     };
@@ -108,7 +108,7 @@ export const useConsensusExecution = () => {
 
             setData(receipt); 
         } catch (err) {
-            console.error('Error interacting with the contract:', err);
+            // console.error('Error interacting with the contract:', err);
             setError(err);
         }
     };

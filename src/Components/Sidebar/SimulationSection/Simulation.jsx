@@ -11,21 +11,26 @@ const Simulation = () => {
     const { simulateTargetLocation } = useSimulateTargetLocation();
     const { executeConsensus, data, error } = useConsensusExecution();
     const [fetchAddress, setFetchAddresses] = useState([]);
-    
+
     useEffect(() => {
         if (fetchAddress.length !== 0 && clickedData.length !== 0) {
-            simulateTargetLocation(fetchAddress, clickedData);
+            simulateTargetLocation(fetchAddress, clickedData)
+                .then(() => {
+                    setTimeout(() => {
+                        executeConsensus();
+                    }, 60000);
+                })
+                .catch((err) => {
+                    console.error("Error in simulating target location:", err);
+                });
         }
-    }, [fetchAddress, clickedData, simulateTargetLocation]);
+    }, [fetchAddress, clickedData, simulateTargetLocation, executeConsensus]);
+
 
     const handleRunSimulationClick = () => {
-        
         const addresses = resultObj.map((res) => res);
         setFetchAddresses(addresses);
-        setTimeout(() => {
-            executeConsensus();
-        }, 60000);
-    };
+    }
 
     return (
         <div className="w-[40rem] p-4">

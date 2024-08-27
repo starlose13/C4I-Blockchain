@@ -5,6 +5,7 @@ import Map from "./Components/MapComponent/Map.jsx";
 import { MainContext } from "./hooks/useSimulationContext.jsx";
 import React, { useState, useEffect } from "react";
 import { useConsensusExecution } from './hooks/useGetContract.jsx'
+import Loader from './Components/StyledComponent/StyledComponent.jsx'
 
 
 function App() {
@@ -107,6 +108,8 @@ function App() {
                 </div>
             </div>
         </MainContext.Provider>
+        // <Loader />
+
     )
 }
 

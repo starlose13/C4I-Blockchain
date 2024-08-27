@@ -17,8 +17,8 @@ const __dirname = dirname(__filename);
 /*//////////////////////////////////////////////////////////////
             Define the source and destination directories
     //////////////////////////////////////////////////////////////*/
-const sourceDir = resolve(__dirname, '../out/NodeManager.sol');  // Adjust the path to your out directory
-const destDir = resolve(__dirname, '../src/utils/NodeManagerABI');  // Copy ABI files to the public/abi directory
+const sourceDir = resolve(__dirname, '../out/ConsensusMechanism.sol');  // Adjust the path to your out directory
+const destDir = resolve(__dirname, '../src/utils/ConsensusMechanismABI');  // Copy ABI files to the public/abi directory
 
 /*//////////////////////////////////////////////////////////////
                        Log paths for debugging

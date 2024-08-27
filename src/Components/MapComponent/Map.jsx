@@ -128,7 +128,7 @@ const Map = () => {
 
   const handleAreaClick = (area, index, event) => {
     setClickedData((prevData) => {
-      if (prevData.length < 100) {
+      if (prevData.length < 7) {
         const newData = [...prevData, area.name];
         return newData;
       } else {

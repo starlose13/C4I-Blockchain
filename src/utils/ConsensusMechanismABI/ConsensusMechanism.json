@@ -76,6 +76,11 @@
         "name": "upkeepNeeded",
         "type": "bool",
         "internalType": "bool"
+      },
+      {
+        "name": "",
+        "type": "bytes",
+        "internalType": "bytes"
       }
     ],
     "stateMutability": "view"
@@ -144,6 +149,19 @@
         "name": "zones",
         "type": "uint8[]",
         "internalType": "enum DataTypes.TargetZone[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "fetchEpochStatus",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "status",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
@@ -365,19 +383,6 @@
   },
   {
     "type": "function",
-    "name": "isEpochNotStarted",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "modifyConsensusThreshold",
     "inputs": [
       {
@@ -504,19 +509,6 @@
   },
   {
     "type": "function",
-    "name": "s_lastTimeStamp",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "supportsInterface",
     "inputs": [
       {
@@ -621,9 +613,9 @@
       },
       {
         "name": "epochStatus",
-        "type": "bool",
+        "type": "uint8",
         "indexed": false,
-        "internalType": "bool"
+        "internalType": "enum DataTypes.EpochVoteState"
       }
     ],
     "anonymous": false
@@ -845,12 +837,7 @@
   },
   {
     "type": "error",
-    "name": "ConsensusMechanism__TIME_IS_NOT_REACHED",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "ConsensusMechanism__VOTING_IS_INPROGRESS",
+    "name": "ConsensusMechanism__UPKEEP_NOT_NEEDED",
     "inputs": []
   },
   {
