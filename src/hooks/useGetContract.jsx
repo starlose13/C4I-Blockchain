@@ -38,9 +38,7 @@ export const useFetchNodeAddresses = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // const data = await NodeManagerContract.retrieveAllRegisteredNodeData();
                 const data = await NodeManagerContract.getNodeAddresses();
-                // console.log("getnodeAddresses is: ", data);
                 setResult(data);
             } catch (err) {
                 setError(err);
@@ -51,8 +49,6 @@ export const useFetchNodeAddresses = () => {
     }, []);
     return { result, error };
 }
-
-
 
 
 export const useFormatAndFetchURIData = async (ad) => {
@@ -71,35 +67,51 @@ export const useFormatAndFetchURIData = async (ad) => {
 //////////////////////////////////////////////////////////////*/
 
 
-
-export const useSimulateTargetLocation = (addresses, positions) => {
-
+export const useSimulateTargetLocation = () => {
     const [error, setError] = useState(null);
-    useEffect(() => {
-        const fetchData = async () => {
 
-            if (addresses.length === 0 || positions.length === 0) return;
+    const simulateTargetLocation = async (fetchAddress, clickedData) => {
+        if (fetchAddress.length === 0) return;
 
+        try {
+            // console.log(fetchAddress);
+            // console.log(clickedData);
+            const data = await ConsensusMechanismContract.TargetLocationSimulation(fetchAddress, clickedData);
+            console.log('TargetLocationSimulation Transaction sent :', data.hash);
+            const receipt = await data.wait();
+            console.log('Transaction confirmed in block:', receipt.blockNumber);
+        } catch (err) {
+            console.error('Error interacting with the contract:', err);
+            setError(err);
+        }
+    };
 
-            try {
-                console.log(addresses)
-                console.log(positions)
-
-                const data = await ConsensusMechanismContract.TargetLocationSimulation(addresses, positions);
-                // const data = await ConsensusMechanismContract.TargetLocationSimulation(s_agents,s_announceTargets);
-                // console.log(data);
-                console.log('Transaction sent:', data.hash);
-                const receipt = await data.wait();
-                console.log('Transaction confirmed in block:', receipt.blockNumber);
-            } catch (err) {
-                console.error('Error interacting with the contract:', err);
-                setError(err);
-            }
-        };
-        fetchData();
-    }, [addresses, positions]);
-
-    return { error };
-}
+    return { simulateTargetLocation, error };
+};
 
 
+
+
+// walletAddress => one of JSON privateKey (runner, executer)
+//Consensus.consensusAutomationExecution();
+
+export const useConsensusExecution = () => {
+    const [error, setError] = useState(null);
+    const [data, setData] = useState(null);
+
+    const executeConsensus = async () => {
+        try {
+            const transaction = await ConsensusMechanismContract.consensusAutomationExecution();
+            console.log('useConsensusExecution Transaction sent:', transaction.hash);
+            const receipt = await transaction.wait(); 
+            console.log('Transaction confirmed in block:', receipt.blockNumber);
+
+            setData(receipt); 
+        } catch (err) {
+            console.error('Error interacting with the contract:', err);
+            setError(err);
+        }
+    };
+
+    return { executeConsensus, data, error };
+};
