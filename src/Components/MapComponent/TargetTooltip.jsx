@@ -1,5 +1,5 @@
 import React from 'react';
-import dataArea from './areas.json';
+import dataArea from './JsonData/areas.json';
 
 const TargetTooltip = ({areaId, visible, position }) => {
     if (!visible) return null;

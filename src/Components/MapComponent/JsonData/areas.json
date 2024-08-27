@@ -19,7 +19,7 @@
     "TargetLongitude": 0.39446185997952454,
     "TargetPositionName": "Main Square",
     "NodeLatitude": "48.8584° N",
-    "NodeLongitude":"3.2945° E",
+    "NodeLongitude": "3.2945° E",
     "NodePositionName": "Main Square, Paris, France"
   },
   {
@@ -69,7 +69,7 @@
     "NodePositionName": "City Hall, Paris, France"
   },
   {
-    "name": 4,
+    "name": 1,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
@@ -92,7 +92,7 @@
     "NodePositionName": "Library, Paris, France"
   },
   {
-    "name": 5,
+    "name": 2,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
@@ -115,7 +115,7 @@
     "NodePositionName": "Museum, Paris, France"
   },
   {
-    "name": 6,
+    "name": 3,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
@@ -138,19 +138,19 @@
     "NodePositionName": "University, Paris, France"
   },
   {
-    "name": 7,
+    "name":1,
     "shape": "poly",
     "preFillColor": "transparent",
     "fillColor": "transparent",
     "coords": [
-      0.5507507507507508,
-      0.4284221525600836,
-      0.6324324324324324,
-      0.4284221525600836,
+      0.38738738738738737,
+      0.49634273772204807,
       0.6324324324324324,
       0.49634273772204807,
-      0.5507507507507508,
-      0.49634273772204807
+      0.6324324324324324,
+      0.5642633228840125,
+      0.38738738738738737,
+      0.5642633228840125
     ],
     "publicAddress": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
     "TargetLatitude": 0.5915915915915916,
