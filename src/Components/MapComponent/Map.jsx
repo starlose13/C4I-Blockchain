@@ -16,7 +16,7 @@ const Map = () => {
 
   const { address, setAddresses } = useContext(MainContext);
   const [formattedData, setFormattedData] = useState([]);
-  const mappedDataRef = useRef([]);  // Store mappedData here
+  const mappedDataRef = useRef([]);
   const { result: addressResult } = useFetchNodeAddresses();
 
   const decodeBase64Data = (dataObject) => {
@@ -44,7 +44,7 @@ const Map = () => {
     if (addressResult) {
       setAddresses(addressResult);
     }
-  }, [addressResult]);
+  }, [addressResult, setAddresses]);
 
   useEffect(() => {
     const fetchAndFormatData = async () => {
@@ -66,13 +66,13 @@ const Map = () => {
   useEffect(() => {
     if (formattedData.length > 0) {
       const newMappedData = formattedData.map((data, index) => {
-        let template = targetData[index];
+        let template = targetData[index] || {}; 
         let temp = {
           address: data.ad,
-          NodePosition: data.data.position,
-          unitName: data.data.unit.name,
-          NodeLatitude: data.data.location.latitude,
-          NodeLongitude: data.data.location.longitude,
+          NodePosition: data.data?.position,
+          unitName: data.data?.unit?.name,
+          NodeLatitude: data.data?.location?.latitude,
+          NodeLongitude: data.data?.location?.longitude,
         };
 
         return Object.assign(
@@ -83,10 +83,10 @@ const Map = () => {
 
       });
 
-      mappedDataRef.current = newMappedData; // Update the ref value
-      setTargetData(newMappedData); // Update targetData once
+      mappedDataRef.current = newMappedData;
+      setTargetData(newMappedData);
     }
-  }, [formattedData, targetData]);
+  }, [formattedData]); 
 
   const URL = "/x.jpg";
   const width = 2100;
@@ -118,7 +118,6 @@ const Map = () => {
         TargetLatitude: area.TargetLatitude,
         TargetLongitude: area.TargetLongitude,
         TargetPositionName: area.TargetPositionName,
-
         fillColor: area.fillColor,
         coords: scaleCoords(area.coords, imgWidth, imgHeight),
       };
@@ -126,9 +125,6 @@ const Map = () => {
   };
 
   const handleAreaClick = (area, index, event) => {
-
-
-
     setClickedData((prevData) => {
       if (prevData.length < 7) {
         const newData = [...prevData, area.name];
@@ -145,16 +141,11 @@ const Map = () => {
     setTargetData((prevData) => {
       const updatedData = prevData.map((node, idx) => {
         if (idx === selectedNode - 1) {
-          console.log(area.TargetLatitude)
-          console.log("hora")
           return {
             ...node,
             TargetLatitude: area.TargetLatitude,
             TargetLongitude: area.TargetLongitude,
             TargetPositionName: area.TargetPositionName,
-            // NodeLatitude: area.NodeLatitude,
-            // NodeLongitude: area.NodeLongitude,
-            // NodePositionName: area.NodePositionName,
           };
         }
         return node;
@@ -188,9 +179,10 @@ const Map = () => {
             area={targetData[index]?.NodePosition}
             visible={true}
             position={{ x: scaledX, y: scaledY }}
-            nodeLan={targetData[index].NodeLongitude}
-            nodeLat={targetData[index].NodeLatitude}
-            address={targetData[index].address}
+            unitName={targetData[index]?.unitName}
+            nodeLan={targetData[index]?.NodeLongitude}
+            nodeLat={targetData[index]?.NodeLatitude}
+            address={targetData[index]?.address}
             radius={node.coords[2]}
           />
         </div>
