@@ -25,8 +25,8 @@ library Utils {
     ) external pure returns (uint256, uint256) {
         require(numbers.length > 0, "Array must not be empty");
 
-        uint256 maxNumber;
-        uint256 maxIndex;
+        uint256 maxNumber = 0;
+        uint256 maxIndex = 0;
         bool hasDuplicates = false;
 
         for (uint256 i = 0; i < numbers.length; i++) {

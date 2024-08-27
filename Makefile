@@ -4,7 +4,7 @@
 HOLESKY_NETWORK_ARGS := --rpc-url $(HOLESKY_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) 
 FANTOM_NETWORK_ARGS := --rpc-url $(FANTOM_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -vvvv --verify --etherscan-api-key $(FANTOMSCAN_API_KEY) 
 AMOY_NETWORK_ARGS := --rpc-url $(AMOY_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast -vvvv --verify --etherscan-api-key $(ETHERSCAN_API_KEY) 
-LOCAL_NETWORK_ARGS := --rpc-url $(VITE_RPC_URL) --private-key $(VITE_PRIVATE_KEY) --broadcast -vvvv
+LOCAL_NETWORK_ARGS := --rpc-url $(LOCAL_RPC_URL) --private-key $(ANVIL_PRIVATE_KEY) --broadcast -vvvv
 # Default network
 NETWORK_ARGS := $(HOLESKY_NETWORK_ARGS)
 
@@ -33,7 +33,7 @@ deploy-nm:
 deploy-cm:
 	@forge script ./script/ConsensusMechanismScript.s.sol:ConsensusMechanismScript $(NETWORK_ARGS)
 deploy-contract:
-	@forge script ./script/IntegratedScripts/IntegratedDeploymentScript.s.sol:IntegratedDeploymentScript $(NETWORK_ARGS)
+	@forge script ./script/IntegratedScripts/IntegratedDeploymentScript.s.sol $(NETWORK_ARGS)
 git-add:
 	@git add .
 

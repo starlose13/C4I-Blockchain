@@ -12,6 +12,8 @@ contract ConsensusMechanismTest is Test {
     ConsensusMechanism private consensusMechanism;
     NodeManager private nodeManager;
     IntegratedDeploymentScript private deploymentScript;
+    uint256 private constant TIME_CONSENSUS_DURATION = 5 seconds;
+    uint256 private constant INSUFFICIANT_CONSENSUS_DURATION = 1 seconds;
 
     // Initialize the Target's Regions
     DataTypes.TargetZone private noTarget = DataTypes.TargetZone.None;
@@ -65,13 +67,13 @@ contract ConsensusMechanismTest is Test {
             .fetchStartTime();
         uint256 epochDuration = ConsensusMechanism(consensusProxyContract)
             .fetchConsensusEpochTimeDuration();
-        uint256 expectedTimeMoved = block.timestamp + 1 minutes;
+        uint256 expectedTimeMoved = block.timestamp + TIME_CONSENSUS_DURATION;
         uint256 acctualTimeMoved = startTimeOfContract + epochDuration;
         vm.warp(acctualTimeMoved);
         console.log("startTime :", startTime);
         console.log("startTimeOfContract:", startTimeOfContract);
         assertEq(startTimeOfContract, startTime);
-        assertEq(epochDuration, 1 minutes);
+        assertEq(epochDuration, TIME_CONSENSUS_DURATION);
         console.log("acctualTimeMoved:", acctualTimeMoved);
         console.log("expectedTimeMoved :", expectedTimeMoved);
         assertEq(acctualTimeMoved, expectedTimeMoved);
@@ -328,7 +330,7 @@ contract ConsensusMechanismTest is Test {
 
     function testMakingConsensusAutomationExecutionNotAtTime() public {
         testConsensusReachedWithAllVote();
-        vm.warp(block.timestamp + 30 seconds);
+        vm.warp(block.timestamp + INSUFFICIANT_CONSENSUS_DURATION);
 
         vm.expectRevert();
         ConsensusMechanism(consensusProxyContract)
@@ -442,9 +444,10 @@ contract ConsensusMechanismTest is Test {
             ConsensusMechanism(consensusProxyContract).fetchNumberOfEpoch(),
             1
         );
-        // assertTrue(
-        //     ConsensusMechanism(consensusProxyContract).fetchEpochStatus()
-        // );
+        uint256 acctualEpcohVoteStatus = ConsensusMechanism(
+            consensusProxyContract
+        ).fetchEpochStatus();
+        assertEq(acctualEpcohVoteStatus, 0);
     }
 
     function testFetchPolicyCustodinAreSameInBothContracts() public {
@@ -454,15 +457,27 @@ contract ConsensusMechanismTest is Test {
         );
     }
 
+    // t should write a unit tests for checkUpKeep function
+
     function testCheckUpkeep() public {
-        (bool upkeepNeeded, ) = ConsensusMechanism(consensusProxyContract)
+        testReportTargetLocationAuthorizeNodes();
+        bool upkeepNeeded;
+        (upkeepNeeded, ) = ConsensusMechanism(consensusProxyContract)
             .checkUpkeep("");
         assertFalse(upkeepNeeded);
 
-        vm.warp(block.timestamp + 11 minutes);
+        vm.warp(block.timestamp + TIME_CONSENSUS_DURATION);
         (upkeepNeeded, ) = ConsensusMechanism(consensusProxyContract)
             .checkUpkeep("");
         assertTrue(upkeepNeeded);
+        (bool isReached, uint256 finalTarget) = ConsensusMechanism(
+            consensusProxyContract
+        ).consensusAutomationExecution();
+        assertEq(finalTarget, 0);
+        assertEq(isReached, false);
+        (upkeepNeeded, ) = ConsensusMechanism(consensusProxyContract)
+            .checkUpkeep("");
+        assertFalse(upkeepNeeded);
     }
 
     function testFetchEpochCounter() public {
@@ -476,7 +491,7 @@ contract ConsensusMechanismTest is Test {
         assertEq(
             ConsensusMechanism(consensusProxyContract)
                 .fetchConsensusEpochTimeDuration(),
-            1 minutes
+            TIME_CONSENSUS_DURATION
         );
     }
 
@@ -507,5 +522,56 @@ contract ConsensusMechanismTest is Test {
         ).consensusAutomationExecution();
         assertTrue(isReached);
         assertEq(target, uint256(DataTypes.TargetZone.EnemyBunkers));
+    }
+
+    function testMultipleTargetSimulationRuns() public {
+        uint lenghtOfArray = NodeManager(nodeManagerProxyContract)
+            .numberOfPresentNodes();
+
+        DataTypes.RegisteredNodes[] memory nodes = NodeManager(
+            nodeManagerProxyContract
+        ).retrieveAllRegisteredNodeData();
+        address[] memory listOfAddresses = new address[](lenghtOfArray);
+        DataTypes.TargetZone[]
+            memory listOfTargets = new DataTypes.TargetZone[](lenghtOfArray);
+        for (uint i = 0; i < listOfAddresses.length; i++) {
+            listOfAddresses[i] = nodes[i].nodeAddress;
+        }
+        for (uint i = 0; i < listOfTargets.length; i++) {
+            listOfTargets[i] = target1;
+        }
+        ConsensusMechanism(consensusProxyContract).TargetLocationSimulation(
+            listOfAddresses,
+            listOfTargets
+        );
+        vm.warp(block.timestamp + TIME_CONSENSUS_DURATION);
+        ConsensusMechanism(consensusProxyContract)
+            .consensusAutomationExecution();
+        ConsensusMechanism(consensusProxyContract).TargetLocationSimulation(
+            listOfAddresses,
+            listOfTargets
+        );
+        vm.warp(block.timestamp + INSUFFICIANT_CONSENSUS_DURATION);
+        vm.expectRevert(Errors.ConsensusMechanism__UPKEEP_NOT_NEEDED.selector);
+        ConsensusMechanism(consensusProxyContract)
+            .consensusAutomationExecution();
+        vm.warp(block.timestamp + TIME_CONSENSUS_DURATION);
+        ConsensusMechanism(consensusProxyContract)
+            .consensusAutomationExecution();
+
+        uint256 actualEpochNumber = ConsensusMechanism(consensusProxyContract)
+            .fetchNumberOfEpoch();
+        uint256 expectedEpochNumber = 2;
+
+        uint256 resultOfFirstEpoch = ConsensusMechanism(consensusProxyContract)
+            .fetchResultOfEachEpoch(expectedEpochNumber - 1);
+        uint256 resultOfSecondEpoch = ConsensusMechanism(consensusProxyContract)
+            .fetchResultOfEachEpoch(expectedEpochNumber);
+        console.log("first result", resultOfFirstEpoch);
+        console.log("second result", resultOfSecondEpoch);
+        console.log("current epoch number", actualEpochNumber);
+        assertEq(expectedEpochNumber, actualEpochNumber);
+        assertEq(uint256(target1), resultOfFirstEpoch);
+        assertEq(uint256(target1), resultOfSecondEpoch);
     }
 }
