@@ -10,14 +10,16 @@ import {
   useFormatAndFetchURIData,
 } from "../../hooks/useGetContract";
 
-const Map = () => {
-  const { targetData, setTargetData, selectedNode, setClickedData } =
-    useContext(MainContext);
 
-  const { address, setAddresses } = useContext(MainContext);
+
+
+const Map = () => {
+  const { targetData, setTargetData, selectedNode, setClickedData, address, setAddresses } = useContext(MainContext);
   const [formattedData, setFormattedData] = useState([]);
   const mappedDataRef = useRef([]);
   const { result: addressResult } = useFetchNodeAddresses();
+
+
 
   const decodeBase64Data = (dataObject) => {
     try {
@@ -66,7 +68,7 @@ const Map = () => {
   useEffect(() => {
     if (formattedData.length > 0) {
       const newMappedData = formattedData.map((data, index) => {
-        let template = targetData[index] || {}; 
+        let template = targetData[index] || {};
         let temp = {
           address: data.ad,
           NodePosition: data.data?.position,
@@ -86,7 +88,7 @@ const Map = () => {
       mappedDataRef.current = newMappedData;
       setTargetData(newMappedData);
     }
-  }, [formattedData]); 
+  }, [formattedData]);
 
   const URL = "/x.jpg";
   const width = 2100;
@@ -126,7 +128,7 @@ const Map = () => {
 
   const handleAreaClick = (area, index, event) => {
     setClickedData((prevData) => {
-      if (prevData.length < 7) {
+      if (prevData.length < 100) {
         const newData = [...prevData, area.name];
         return newData;
       } else {

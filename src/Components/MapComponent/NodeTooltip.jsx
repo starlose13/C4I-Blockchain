@@ -8,7 +8,7 @@ const NodeTooltip = ({ address, area, nodeLat, nodeLan, visible, position, radiu
       style={{ top: position.y, left: position.x }}
     >
       <div className="node-item">
-        <div className="bg-[#1f426f] pb-2">
+        <div className="bg-[#1f426f] pb-1">
           <div className="text-[#298BFE] text-3xl font-bold p-3">
             {unitName}
           </div>
@@ -21,7 +21,7 @@ const NodeTooltip = ({ address, area, nodeLat, nodeLan, visible, position, radiu
                 {address}
               </div>
             </div>
-            <div className="mt-2">
+            <div>
               <div className="text-sm font-bold">Position</div>
               <div className="text-xs font-bold text-[#5a6b6d]">
                 Location: {area}
