@@ -69,17 +69,39 @@ export const useFormatAndFetchURIData = async (ad) => {
 
 export const useSimulateTargetLocation = () => {
     const [error, setError] = useState(null);
+    const [data, setData] = useState(null);
+
 
     const simulateTargetLocation = async (fetchAddress, clickedData) => {
         if (fetchAddress.length === 0) return;
 
         try {
+              // Initiating the transaction
+              const transaction = await ConsensusMechanismContract.TargetLocationSimulation(fetchAddress, clickedData);
+              console.log('useSimulateTargetLocation Transaction sent:', transaction.hash);
+  
+              // Waiting for the transaction to be confirmed in a block
+              const receipt = await transaction.wait();
+              console.log('Transaction confirmed in block:', receipt.blockNumber);
+  
+              // Logging detailed transaction information
+              console.log('Transaction Hash:', receipt.transactionHash);
+              console.log('Gas used:', receipt.gasUsed.toString());
+              console.log('Block Number:', receipt.blockNumber);
+              console.log('Block Hash:', receipt.blockHash);
+  
+              // Fetching the block to get the timestamp
+              const block = await transaction.provider.getBlock(receipt.blockNumber);
+              console.log('Block Time:', new Date(block.timestamp * 1000).toUTCString());
+  
+              // Storing the receipt data
+              setData(receipt);
             // console.log(fetchAddress);
-            // console.log(clickedData);
-            const data = await ConsensusMechanismContract.TargetLocationSimulation(fetchAddress, clickedData);
-            console.log('TargetLocationSimulation Transaction sent :', data.hash);
-            const receipt = await data.wait();
-            console.log('Transaction confirmed in block:', receipt.blockNumber);
+            // // console.log(clickedData);
+            // const data = await ConsensusMechanismContract.TargetLocationSimulation(fetchAddress, clickedData);
+            // console.log('TargetLocationSimulation Transaction sent :', data.hash);
+            // const receipt = await data.wait();
+            // console.log('Transaction confirmed in block:', receipt.blockNumber);
         } catch (err) {
             // console.error('Error interacting with the contract:', err);
             setError(err);
@@ -101,12 +123,26 @@ export const useConsensusExecution = () => {
 
     const executeConsensus = async () => {
         try {
-            const transaction = await ConsensusMechanismContract.consensusAutomationExecution();
-            console.log('useConsensusExecution Transaction sent:', transaction.hash);
-            const receipt = await transaction.wait(); 
-            console.log('Transaction confirmed in block:', receipt.blockNumber);
-
-            setData(receipt); 
+              // Initiating the transaction
+              const transaction = await ConsensusMechanismContract.consensusAutomationExecution();
+              console.log('useConsensusExecution Transaction sent:', transaction.hash);
+  
+              // Waiting for the transaction to be confirmed in a block
+              const receipt = await transaction.wait();
+              console.log('Transaction confirmed in block:', receipt.blockNumber);
+  
+              // Logging detailed transaction information
+              console.log('Transaction Hash:', receipt.transactionHash);
+              console.log('Gas used:', receipt.gasUsed.toString());
+              console.log('Block Number:', receipt.blockNumber);
+              console.log('Block Hash:', receipt.blockHash);
+  
+              // Fetching the block to get the timestamp
+              const block = await transaction.provider.getBlock(receipt.blockNumber);
+              console.log('Block Time:', new Date(block.timestamp * 1000).toUTCString());
+  
+              // Storing the receipt data
+              setData(receipt);
         } catch (err) {
             // console.error('Error interacting with the contract:', err);
             setError(err);
