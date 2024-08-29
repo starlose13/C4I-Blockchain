@@ -203,7 +203,7 @@ const Map = () => {
           height={height}
           imgWidth={imgWidth}
           imgHeight={imgHeight}
-          strokeColor={"transparent"}
+          strokeColor={"blue"}
           alt="Map Image"
         />
         {renderNodes()}
