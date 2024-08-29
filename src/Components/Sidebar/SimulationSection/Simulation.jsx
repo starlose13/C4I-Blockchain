@@ -5,21 +5,24 @@ import { useContext, useState, useEffect } from "react";
 import { useFetchNodeAddresses, useSimulateTargetLocation, useConsensusExecution } from "../../../hooks/useGetContract.jsx";
 
 const Simulation = () => {
-    const { clickedData, targetData } = useContext(MainContext);
+    const { clickedData, targetData ,loading, setLoading} = useContext(MainContext);
 
     const { result: resultObj } = useFetchNodeAddresses();
     const { simulateTargetLocation } = useSimulateTargetLocation();
     const { executeConsensus, data, error } = useConsensusExecution();
     const [fetchAddress, setFetchAddresses] = useState([]);
 
+
     useEffect(() => {
         const runSimulation = async () => {
             try {
                 if (fetchAddress.length !== 0 && clickedData.length !== 0) {
                     await simulateTargetLocation(fetchAddress, clickedData);
+                    setLoading(true);
                     setTimeout(async () => {
                         await executeConsensus();
-                    }, 6000);
+                        setLoading(false);
+                    }, 7000);
                 }
             } catch (err) {
                 console.error("Error in simulating target location:", err);
