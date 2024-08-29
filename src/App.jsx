@@ -3,8 +3,7 @@ import Navbar from "./Components/Navbar.jsx";
 import Sidebar from "./Components/Sidebar.jsx";
 import Map from "./Components/MapComponent/Map.jsx";
 import { MainContext } from "./hooks/useSimulationContext.jsx";
-import React, { useState, useEffect } from "react";
-import { useConsensusExecution } from './hooks/useGetContract.jsx'
+import React, { useState } from "react";
 import Loader from './Components/StyledComponent/StyledComponent.jsx'
 
 
@@ -92,24 +91,42 @@ function App() {
 
     const [clickedData, setClickedData] = useState([]);
     const [address, setAddresses] = useState([])
+    const [loading, setLoading] = useState(false);
+
 
     return (
         <MainContext.Provider
-            value={{ selectedNode, setSelectedNode, targetData, setTargetData, clickedData, setClickedData, address, setAddresses }}>
-            <div className=" w-screen h-screen relative bg-[#00030c]">
-                <Navbar />
-                <div className="flex">
-                    <div>
-                        <Sidebar />
-                    </div>
-                    <div className="flex-grow mx-2 ">
-                        <Map />
-                    </div>
-                </div>
+            value={{
+                selectedNode,
+                setSelectedNode,
+                targetData,
+                setTargetData,
+                clickedData,
+                setClickedData,
+                address,
+                setAddresses,
+                loading,
+                setLoading,
+            }}
+        >
+            <div className="w-screen h-screen relative bg-[#00030c]">
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        <Navbar />
+                        <div className="flex">
+                            <div>
+                                <Sidebar />
+                            </div>
+                            <div className="flex-grow mx-2 w-screen h-screen relative bg-[#00030c]">
+                                <Map />
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
         </MainContext.Provider>
-        // <Loader />
-
     )
 }
 
