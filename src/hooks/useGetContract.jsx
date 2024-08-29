@@ -96,12 +96,6 @@ export const useSimulateTargetLocation = () => {
   
               // Storing the receipt data
               setData(receipt);
-            // console.log(fetchAddress);
-            // // console.log(clickedData);
-            // const data = await ConsensusMechanismContract.TargetLocationSimulation(fetchAddress, clickedData);
-            // console.log('TargetLocationSimulation Transaction sent :', data.hash);
-            // const receipt = await data.wait();
-            // console.log('Transaction confirmed in block:', receipt.blockNumber);
         } catch (err) {
             // console.error('Error interacting with the contract:', err);
             setError(err);
@@ -111,11 +105,6 @@ export const useSimulateTargetLocation = () => {
     return { simulateTargetLocation, error };
 };
 
-
-
-
-// walletAddress => one of JSON privateKey (runner, executer)
-//Consensus.consensusAutomationExecution();
 
 export const useConsensusExecution = () => {
     const [error, setError] = useState(null);
@@ -135,7 +124,7 @@ export const useConsensusExecution = () => {
               console.log('Transaction Hash:', receipt.transactionHash);
               console.log('Gas used:', receipt.gasUsed.toString());
               console.log('Block Number:', receipt.blockNumber);
-              console.log('Block Hash:', receipt.blockHash);
+              console.log('Block Hash:', receipt.transactionHash);
   
               // Fetching the block to get the timestamp
               const block = await transaction.provider.getBlock(receipt.blockNumber);
