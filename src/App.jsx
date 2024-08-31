@@ -20,6 +20,7 @@ function App() {
             TargetPositionName: '',
             NodeLatitude: '48.8584° N',
             NodeLongitude: '2.2945° E',
+            TargetId: '',
         },
         {
             id: 2,
@@ -31,6 +32,8 @@ function App() {
             TargetPositionName: '',
             NodeLatitude: '48.8584° N',
             NodeLongitude: '2.2945° E',
+            TargetId: '',
+
         },
         {
             id: 3,
@@ -42,6 +45,8 @@ function App() {
             TargetPositionName: '',
             NodeLatitude: '48.8584° N',
             NodeLongitude: '2.2945° E',
+            TargetId: '',
+
         },
         {
             id: 4,
@@ -53,6 +58,8 @@ function App() {
             TargetPositionName: '',
             NodeLatitude: '48.8584° N',
             NodeLongitude: '2.2945° E',
+            TargetId: '',
+
         },
         {
             id: 5,
@@ -64,6 +71,8 @@ function App() {
             TargetPositionName: '',
             NodeLatitude: '48.8584° N',
             NodeLongitude: '2.2945° E',
+            TargetId: '',
+
         },
         {
             id: 6,
@@ -74,7 +83,8 @@ function App() {
             unitName: '',
             TargetPositionName: '',
             NodeLatitude: '48.8584° N',
-            NodeLongitude: '2.2945° E',
+            NodeLongitude: '2.2945° E', TargetId: '',
+
         },
         {
             id: 7,
@@ -85,9 +95,11 @@ function App() {
             unitName: '',
             TargetPositionName: '',
             NodeLatitude: '48.8584° N',
-            NodeLongitude: '2.2945° E',
+            NodeLongitude: '2.2945° E', TargetId: '',
+
         },
     ])
+
 
     const [clickedData, setClickedData] = useState([]);
     const [address, setAddresses] = useState([])
