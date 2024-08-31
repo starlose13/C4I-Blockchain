@@ -77,18 +77,22 @@ const Map = () => {
           NodeLongitude: data.data?.location?.longitude,
         };
 
+
+
         return Object.assign(
           {},
           template,
           ...Object.keys(template).map(k => k in temp && { [k]: temp[k] })
         );
 
-      });
-
+      }
+      );
       mappedDataRef.current = newMappedData;
       setTargetData(newMappedData);
     }
   }, [formattedData]);
+
+
 
   const URL = "/x.jpg";
   const width = 2100;
@@ -128,19 +132,14 @@ const Map = () => {
 
   const handleAreaClick = (area, index, event) => {
     setClickedData((prevData) => {
-      if (prevData.length < 7) {
-        const newData = [...prevData, area.name];
-        return newData;
-      } else {
-        alert("Length of clickedData is already enough. No new item added.");
-        return prevData;
-      }
+      const newData = [...prevData, area.name];
+      return newData;
     });
-
     const x = event.clientX - 25;
     const y = event.clientY;
 
     setTargetData((prevData) => {
+
       const updatedData = prevData.map((node, idx) => {
         if (idx === selectedNode - 1) {
           return {
@@ -148,6 +147,7 @@ const Map = () => {
             TargetLatitude: area.TargetLatitude,
             TargetLongitude: area.TargetLongitude,
             TargetPositionName: area.TargetPositionName,
+            TargetId: area.name,
           };
         }
         return node;
