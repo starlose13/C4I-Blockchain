@@ -5,7 +5,7 @@ import { useContext, useState, useEffect } from "react";
 import { useFetchNodeAddresses, useSimulateTargetLocation, useConsensusExecution } from "../../../hooks/useGetContract.jsx";
 
 const Simulation = () => {
-    const { clickedData, targetData ,loading, setLoading} = useContext(MainContext);
+    const { clickedData, targetData, setLoading } = useContext(MainContext);
 
     const { result: resultObj } = useFetchNodeAddresses();
     const { simulateTargetLocation } = useSimulateTargetLocation();
@@ -13,11 +13,16 @@ const Simulation = () => {
     const [fetchAddress, setFetchAddresses] = useState([]);
 
 
+
     useEffect(() => {
         const runSimulation = async () => {
             try {
                 if (fetchAddress.length !== 0 && clickedData.length !== 0) {
+
+                    // await simulateTargetLocation(fetchAddress, clickedData);
                     await simulateTargetLocation(fetchAddress, clickedData);
+                    // console.log(typeof(fetchAddress),typeof(clickedData)); 
+
                     setLoading(true);
                     setTimeout(async () => {
                         await executeConsensus();
@@ -35,9 +40,24 @@ const Simulation = () => {
     }, [fetchAddress, clickedData]);
 
     const handleRunSimulationClick = () => {
+        let address = targetData.map((target, id) => {
+            if (target.TargetId !==  '') {
+                return target.address
+            }
+        })
+
+        let position = targetData.map((target, id) => {
+            if (target.TargetId !==  '') {
+            return target.TargetId
+            }
+        })
+        console.log(address)
+        console.log(position)
+
         const addresses = resultObj.map((res) => res);
         setFetchAddresses(addresses);
     }
+
 
     return (
         <div className="w-[40rem] p-4">
