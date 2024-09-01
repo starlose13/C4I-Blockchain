@@ -6,23 +6,12 @@ const ripple = keyframes`
   100% { transform: scale(1); box-shadow: rgba(57, 154, 179, 0.3) 0px 10px 10px -0px; }
 `;
 
-const colorChange = keyframes`
-  0% { fill: #399AB3; }
-  50% { fill: white; }
-  100% { fill: #399AB3; }
-`;
-
 const LoaderContainer = styled.div`
   height: 300px;
   aspect-ratio: 1;
-  position: relative;
-  
-  // Centering with Flexbox
   display: flex;
   justify-content: center;
   align-items: center;
-
-  // Absolute centering in viewport (for full-page use)
   position: absolute;
   top: 50%;
   left: 50%;
@@ -37,6 +26,7 @@ const Box = styled.div`
   box-shadow: rgba(57, 154, 179, 0.3) 0px 10px 10px -0px;
   backdrop-filter: blur(5px);
   animation: ${ripple} 2s infinite ease-in-out;
+  will-change: transform, box-shadow; // Optimization
 
   &:nth-child(1) {
     inset: 40%;
@@ -72,11 +62,11 @@ const Box = styled.div`
 const Loader = () => {
   return (
     <LoaderContainer>
-      <Box></Box>
-      <Box></Box>
-      <Box></Box>
-      <Box></Box>
-      <Box></Box>
+      <Box/>
+      <Box/>
+      <Box/>
+      <Box/>
+      <Box/>
     </LoaderContainer>
   );
 };

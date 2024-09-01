@@ -99,11 +99,11 @@ function App() {
 
         },
     ])
-
-
     const [clickedData, setClickedData] = useState([]);
     const [address, setAddresses] = useState([])
     const [loading, setLoading] = useState(false);
+
+    // const {result} = useSimulationNumberOfEpoch()
 
 
     return (
@@ -123,15 +123,16 @@ function App() {
         >
             <div className="w-screen h-screen relative bg-[#00030c]">
                 {loading ? (
-                    <Loader />
+                    <>
+                        <div className="bg-[url('/background.png')] bg-cover bg-fixed bg-repeat blur-xl flex items-center justify-center h-full"></div>
+                        <Loader />
+                    </>
                 ) : (
                     <>
                         <Navbar />
                         <div className="flex">
-                            <div>
-                                <Sidebar />
-                            </div>
-                            <div className="flex-grow mx-2 w-screen h-screen relative bg-[#00030c]">
+                            <Sidebar />
+                            <div className="flex-grow mx-2 h-full bg-[#00030c]">
                                 <Map />
                             </div>
                         </div>
@@ -139,7 +140,8 @@ function App() {
                 )}
             </div>
         </MainContext.Provider>
-    )
+    );
+
 }
 
 
