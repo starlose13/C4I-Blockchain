@@ -1,8 +1,8 @@
 const Navbar = () => {
     return (
-        <div className={"h-22 w-full bg-[#1c2a42]"}>
+        <div className={" bg-[#1c2a42]"}>
             <div className={"flex"}>
-                <img width={70} height={70} src="/z.png" alt="djkfhnkjdf" className={"pt-1.5"}/>
+                <img width={70} height={70} src="/z.png" alt="logoInstiutdeReasech" className={"pt-1.5"}/>
                 <div>
                     <h1 className={"text-blue-200 pt-2 text-xl font-bold"}>Sun Air Research
                         Institute</h1>

@@ -124,7 +124,9 @@ function App() {
             <div className="w-screen h-screen relative bg-[#00030c]">
                 {loading ? (
                     <>
-                        <div className="bg-[url('/background.png')] bg-cover bg-fixed bg-repeat blur-xl flex items-center justify-center h-full"></div>
+                        <div className="bg-[url('/background.png')] bg-cover bg-fixed bg-repeat blur-3xl flex items-center justify-center h-full">
+
+                        </div>
                         <Loader />
                     </>
                 ) : (
@@ -132,7 +134,7 @@ function App() {
                         <Navbar />
                         <div className="flex">
                             <Sidebar />
-                            <div className="flex-grow mx-2 h-full bg-[#00030c]">
+                            <div className="flex-grow mx-2 h-full bg-[#00030c] relative">
                                 <Map />
                             </div>
                         </div>
