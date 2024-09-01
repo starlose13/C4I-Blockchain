@@ -2,31 +2,118 @@ import AddressCard from './AddressCard';
 import "./scrollbar.css";
 import { MainContext } from "../../../hooks/useSimulationContext.jsx";
 import { useContext, useState, useEffect } from "react";
-import { useFetchNodeAddresses, useSimulateTargetLocation, useConsensusExecution } from "../../../hooks/useGetContract.jsx";
+import { useSimulateTargetLocation, useConsensusExecution } from "../../../hooks/useGetContract.jsx";
 
 const Simulation = () => {
-    const { clickedData, targetData, setLoading } = useContext(MainContext);
-
-    const { result: resultObj } = useFetchNodeAddresses();
+    const { targetData, setTargetData, setLoading } = useContext(MainContext);
     const { simulateTargetLocation } = useSimulateTargetLocation();
     const { executeConsensus, data, error } = useConsensusExecution();
-    const [fetchAddress, setFetchAddresses] = useState([]);
 
 
+    const [address, setAddress] = useState([]);
+    const [position, setPosition] = useState([]);
 
     useEffect(() => {
         const runSimulation = async () => {
             try {
-                if (fetchAddress.length !== 0 && clickedData.length !== 0) {
+                if (address.length !== 0 && position.length !== 0) {
+                    await simulateTargetLocation(address, position);
+                    setLoading(true)
 
-                    // await simulateTargetLocation(fetchAddress, clickedData);
-                    await simulateTargetLocation(fetchAddress, clickedData);
-                    // console.log(typeof(fetchAddress),typeof(clickedData)); 
-
-                    setLoading(true);
                     setTimeout(async () => {
                         await executeConsensus();
-                        setLoading(false);
+                        setTargetData([
+                            {
+                                id: 1,
+                                address: '0x13c857...a2297d22256',
+                                NodePosition: '',
+                                TargetLatitude: '',
+                                TargetLongitude: '',
+                                unitName: '',
+                                TargetPositionName: '',
+                                NodeLatitude: '48.8584° N',
+                                NodeLongitude: '2.2945° E',
+                                TargetId: '',
+                            },
+                            {
+                                id: 2,
+                                address: '0x13c857...a2297d22256',
+                                NodePosition: '',
+                                TargetLatitude: '',
+                                TargetLongitude: '',
+                                unitName: '',
+                                TargetPositionName: '',
+                                NodeLatitude: '48.8584° N',
+                                NodeLongitude: '2.2945° E',
+                                TargetId: '',
+
+                            },
+                            {
+                                id: 3,
+                                address: '0x13c857...a2297d22256',
+                                NodePosition: '',
+                                TargetLatitude: '',
+                                TargetLongitude: '',
+                                unitName: '',
+                                TargetPositionName: '',
+                                NodeLatitude: '48.8584° N',
+                                NodeLongitude: '2.2945° E',
+                                TargetId: '',
+
+                            },
+                            {
+                                id: 4,
+                                address: '0x13c857...a2297d22256',
+                                NodePosition: '',
+                                TargetLatitude: '',
+                                TargetLongitude: '',
+                                unitName: '',
+                                TargetPositionName: '',
+                                NodeLatitude: '48.8584° N',
+                                NodeLongitude: '2.2945° E',
+                                TargetId: '',
+
+                            },
+                            {
+                                id: 5,
+                                address: '0x13c857...a2297d22256',
+                                NodePosition: '',
+                                TargetLatitude: '',
+                                TargetLongitude: '',
+                                unitName: '',
+                                TargetPositionName: '',
+                                NodeLatitude: '48.8584° N',
+                                NodeLongitude: '2.2945° E',
+                                TargetId: '',
+
+                            },
+                            {
+                                id: 6,
+                                address: '0x13c857...a2297d22256',
+                                NodePosition: '',
+                                TargetLatitude: '',
+                                TargetLongitude: '',
+                                unitName: '',
+                                TargetPositionName: '',
+                                NodeLatitude: '48.8584° N',
+                                NodeLongitude: '2.2945° E', TargetId: '',
+
+                            },
+                            {
+                                id: 7,
+                                address: '0x13c857...a2297d22256',
+                                NodePosition: '',
+                                TargetLatitude: '',
+                                TargetLongitude: '',
+                                unitName: '',
+                                TargetPositionName: '',
+                                NodeLatitude: '48.8584° N',
+                                NodeLongitude: '2.2945° E', TargetId: '',
+
+                            },
+                        ])
+                        setLoading(false)
+                        
                     }, 7000);
                 }
             } catch (err) {
@@ -34,30 +121,28 @@ const Simulation = () => {
             }
         };
 
-        if (fetchAddress.length !== 0 && clickedData.length !== 0) {
+        if (address.length !== 0 && position.length !== 0) {
             runSimulation();
         }
-    }, [fetchAddress, clickedData]);
+    }, [address, position]);
 
     const handleRunSimulationClick = () => {
-        let address = targetData.map((target, id) => {
-            if (target.TargetId !==  '') {
-                return target.address
-            }
-        })
 
-        let position = targetData.map((target, id) => {
-            if (target.TargetId !==  '') {
-            return target.TargetId
-            }
-        })
-        console.log(address)
-        console.log(position)
+        const addressData = targetData
+            .map((target) => target.TargetId !== '' ? target.address : undefined)
+            .filter((addr) => addr !== undefined);
 
-        const addresses = resultObj.map((res) => res);
-        setFetchAddresses(addresses);
-    }
+        const positionData = targetData
+            .map((target) => target.TargetId !== '' ? target.TargetId : undefined)
+            .filter((pos) => pos !== undefined);
 
+        console.log('address is', addressData);
+        console.log('position is', positionData);
+
+
+        setAddress(addressData);
+        setPosition(positionData);
+    };
 
     return (
         <div className="w-[40rem] p-4">
