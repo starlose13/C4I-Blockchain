@@ -140,3 +140,28 @@ export const useConsensusExecution = () => {
 
     return { executeConsensus, data, error };
 };
+
+
+
+
+/*//////////////////////////////////////////////////////////////
+                            Epoch section
+    //////////////////////////////////////////////////////////////*/
+
+    export const useSimulationNumberOfEpoch = () => {
+        const [result, setResult] = useState()
+        const [error, setError] = useState()
+        useEffect(() => {
+            const fetchData = async () => {
+                try {
+                    const data = await ConsensusMechanismContract.fetchNumberOfEpoch();
+                    setResult(data);
+                } catch (err) {
+                    setError(err);
+                    console.error('Error interacting with the contract:', err);
+                }
+            };
+            fetchData();
+        }, []);
+        return { result, error };
+    }
