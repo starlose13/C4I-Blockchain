@@ -2,26 +2,39 @@ import AddressCard from './AddressCard';
 import "./scrollbar.css";
 import { MainContext } from "../../../hooks/useSimulationContext.jsx";
 import { useContext, useState, useEffect } from "react";
-import { useSimulateTargetLocation, useConsensusExecution } from "../../../hooks/useGetContract.jsx";
+
+import {
+    useSimulateTargetLocation, useConsensusExecution,
+    useSimulationNumberOfEpoch, useSimulationNumberOfEachEpoch
+} from "../../../hooks/useGetContract.jsx";
+
 
 const Simulation = () => {
+
     const { targetData, setTargetData, setLoading } = useContext(MainContext);
+
     const { simulateTargetLocation } = useSimulateTargetLocation();
+
     const { executeConsensus, data, error } = useConsensusExecution();
 
+    const { result: numberOfEpoch } = useSimulationNumberOfEpoch()
+
+    const { result: numberOfEachEpoch } = useSimulationNumberOfEachEpoch(numberOfEpoch)
 
     const [address, setAddress] = useState([]);
+    
     const [position, setPosition] = useState([]);
 
     useEffect(() => {
         const runSimulation = async () => {
             try {
-                if (address.length !== 0 && position.length !== 0) {
+                if (address.length > 0 && position.length > 0) {
                     await simulateTargetLocation(address, position);
-                    setLoading(true)
-
+                    setLoading(true);
                     setTimeout(async () => {
                         await executeConsensus();
+                        console.log('Number of Epoch:', numberOfEpoch);
+                        console.log('Number of Each Epoch:', numberOfEachEpoch);
                         setTargetData([
                             {
                                 id: 1,
@@ -112,37 +125,38 @@ const Simulation = () => {
 
                             },
                         ])
-                        setLoading(false)
-                        
+                        setLoading(false);
                     }, 7000);
                 }
             } catch (err) {
                 console.error("Error in simulating target location:", err);
             }
         };
-
-        if (address.length !== 0 && position.length !== 0) {
+        if (address.length > 0 && position.length > 0) {
             runSimulation();
         }
-    }, [address, position]);
+    }, [address, position, numberOfEpoch, numberOfEachEpoch]);
+
+
+
 
     const handleRunSimulationClick = () => {
-
         const addressData = targetData
             .map((target) => target.TargetId !== '' ? target.address : undefined)
-            .filter((addr) => addr !== undefined);
+            .filter(Boolean);
 
         const positionData = targetData
             .map((target) => target.TargetId !== '' ? target.TargetId : undefined)
-            .filter((pos) => pos !== undefined);
+            .filter(Boolean);
 
         console.log('address is', addressData);
         console.log('position is', positionData);
 
-
         setAddress(addressData);
         setPosition(positionData);
     };
+
+
 
     return (
         <div className="w-[40rem] p-4">

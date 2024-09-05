@@ -1,6 +1,7 @@
 /*//////////////////////////////////////////////////////////////
                                IMPORTS
 //////////////////////////////////////////////////////////////*/
+
 import { ethers } from 'ethers';
 import { useEffect, useState } from "react";
 import NodeManagerABI from "../utils/NodeManagerABI/NodeManager.json"
@@ -57,7 +58,7 @@ export const useFormatAndFetchURIData = async (ad) => {
         return data;
     } catch (err) {
         console.error('Error interacting with the contract:', err);
-        return null; 
+        return null;
     }
 }
 
@@ -72,36 +73,30 @@ export const useSimulateTargetLocation = () => {
     const [data, setData] = useState(null);
 
 
+
+
     const simulateTargetLocation = async (fetchAddress, clickedData) => {
         if (fetchAddress.length === 0) return;
 
         try {
-              // Initiating the transaction
-              const transaction = await ConsensusMechanismContract.TargetLocationSimulation(fetchAddress, clickedData);
-              console.log('useSimulateTargetLocation Transaction sent:', transaction.hash);
-  
-              // Waiting for the transaction to be confirmed in a block
-              const receipt = await transaction.wait();
-              console.log('Transaction confirmed in block:', receipt.blockNumber);
-  
-              // Logging detailed transaction information
-              console.log('Transaction Hash:', receipt.transactionHash);
-              console.log('Gas used:', receipt.gasUsed.toString());
-              console.log('Block Number:', receipt.blockNumber);
-              console.log('Block Hash:', receipt.blockHash);
-  
-              // Fetching the block to get the timestamp
-              const block = await transaction.provider.getBlock(receipt.blockNumber);
-              console.log('Block Time:', new Date(block.timestamp * 1000).toUTCString());
-  
-              // Storing the receipt data
-              setData(receipt);
+
+            const transaction = await ConsensusMechanismContract.TargetLocationSimulation(fetchAddress, clickedData);
+            const receipt = await transaction.wait();
+            const block = await transaction.provider.getBlock(receipt.blockNumber);
+
+            console.log('useSimulateTargetLocation Transaction sent:', transaction.hash);
+            console.log('Transaction confirmed in block:', receipt.blockNumber);
+            console.log('Transaction Hash:', receipt.transactionHash);
+            console.log('Gas used:', receipt.gasUsed.toString());
+            console.log('Block Number:', receipt.blockNumber);
+            console.log('Block Hash:', receipt.blockHash);
+            console.log('Block Time:', new Date(block.timestamp * 1000).toUTCString());
+
+            setData(receipt);
         } catch (err) {
-            // console.error('Error interacting with the contract:', err);
             setError(err);
         }
     };
-
     return { simulateTargetLocation, error };
 };
 
@@ -112,56 +107,72 @@ export const useConsensusExecution = () => {
 
     const executeConsensus = async () => {
         try {
-              // Initiating the transaction
-              const transaction = await ConsensusMechanismContract.consensusAutomationExecution();
-              console.log('useConsensusExecution Transaction sent:', transaction.hash);
-  
-              // Waiting for the transaction to be confirmed in a block
-              const receipt = await transaction.wait();
-              console.log('Transaction confirmed in block:', receipt.blockNumber);
-  
-              // Logging detailed transaction information
-              console.log('Transaction Hash:', receipt.transactionHash);
-              console.log('Gas used:', receipt.gasUsed.toString());
-              console.log('Block Number:', receipt.blockNumber);
-              console.log('Block Hash:', receipt.transactionHash);
-  
-              // Fetching the block to get the timestamp
-              const block = await transaction.provider.getBlock(receipt.blockNumber);
-              console.log('Block Time:', new Date(block.timestamp * 1000).toUTCString());
-  
-              // Storing the receipt data
-              setData(receipt);
+            
+            const transaction = await ConsensusMechanismContract.consensusAutomationExecution();
+            const receipt = await transaction.wait();
+            const block = await transaction.provider.getBlock(receipt.blockNumber);
+
+            console.log('useConsensusExecution Transaction sent:', transaction.hash);
+            console.log('Transaction confirmed in block:', receipt.blockNumber);
+            console.log('Transaction Hash:', receipt.transactionHash);
+            console.log('Gas used:', receipt.gasUsed.toString());
+            console.log('Block Number:', receipt.blockNumber);
+            console.log('Block Hash:', receipt.transactionHash);
+            console.log('Block Time:', new Date(block.timestamp * 1000).toUTCString());
+
+            setData(receipt);
         } catch (err) {
-            // console.error('Error interacting with the contract:', err);
             setError(err);
         }
     };
-
     return { executeConsensus, data, error };
+};
+
+
+/*//////////////////////////////////////////////////////////////
+                            Epoch section
+//////////////////////////////////////////////////////////////*/
+
+
+
+export const useSimulationNumberOfEpoch = () => {
+    const [result, setResult] = useState();
+    const [error, setError] = useState();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await ConsensusMechanismContract.fetchNumberOfEpoch();
+                setResult(data);
+            } catch (err) {
+                setError(err);
+                console.error('Error interacting with the contract:', err);
+            }
+        };
+        fetchData();
+    }, []);
+    return { result, error };
 };
 
 
 
 
-/*//////////////////////////////////////////////////////////////
-                            Epoch section
-    //////////////////////////////////////////////////////////////*/
+export const useSimulationNumberOfEachEpoch = (dataNumberOfEpoch) => {
+    const [result, setResult] = useState();
+    const [error, setError] = useState();
 
-    export const useSimulationNumberOfEpoch = () => {
-        const [result, setResult] = useState()
-        const [error, setError] = useState()
-        useEffect(() => {
-            const fetchData = async () => {
-                try {
-                    const data = await ConsensusMechanismContract.fetchNumberOfEpoch();
-                    setResult(data);
-                } catch (err) {
-                    setError(err);
-                    console.error('Error interacting with the contract:', err);
-                }
-            };
-            fetchData();
-        }, []);
-        return { result, error };
-    }
+    useEffect(() => {
+        if (!dataNumberOfEpoch) return;
+        const fetchData = async () => {
+            try {
+                const resultData = await ConsensusMechanismContract.fetchResultOfEachEpoch(dataNumberOfEpoch);
+                setResult(resultData);
+            } catch (err) {
+                setError(err);
+                console.error('Error interacting with the contract:', err);
+            }
+        };
+        fetchData();
+    }, [dataNumberOfEpoch]);
+    return { result, error };
+};
