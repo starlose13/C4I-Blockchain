@@ -1,0 +1,285 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, SunAir Institute
+# This file is distributed under the same license as the Decentralized
+# Communication Framework package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Decentralized Communication Framework 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-16 13:41+0330\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: ../docs_chainlink_automation_contract.rst:3
+msgid "ChainlinkAutomation Contract Documentation"
+msgstr "مستندات قرارداد ChainlinkAutomation"
+
+#: ../docs_chainlink_automation_contract.rst:6
+msgid "Overview"
+msgstr "بررسی کلی"
+
+#: ../docs_chainlink_automation_contract.rst:8
+msgid ""
+"The `ChainlinkAutomation` contract is a pivotal component designed to "
+"interface with Chainlink's automation services. This contract leverages "
+"Chainlink’s decentralized oracle network to execute predefined functions "
+"at specified intervals, enabling automated execution of periodic tasks. "
+"It is engineered to enhance the reliability and efficiency of task "
+"scheduling in smart contract environments."
+msgstr ""
+"قرارداد `ChainlinkAutomation` یکی از اجزای کلیدی است که برای ارتباط با "
+"خدمات اتوماسیون Chainlink طراحی شده است. این قرارداد از شبکه غیرمتمرکز "
+"اوراکل Chainlink برای اجرای توابع از پیش تعریف شده در فواصل زمانی مشخص "
+"استفاده می‌کند و به اجرای خودکار وظایف دوره‌ای کمک می‌کند. این قرارداد "
+"برای بهبود قابلیت اطمینان و کارایی برنامه‌ریزی وظایف در محیط‌های قرارداد "
+"های هوشمند طراحی شده است."
+
+#: ../docs_chainlink_automation_contract.rst:11
+msgid "Key Components"
+msgstr "اجزای کلیدی"
+
+#: ../docs_chainlink_automation_contract.rst:13
+msgid "**State Variables:**"
+msgstr "**متغیرهای وضعیت:**"
+
+#: ../docs_chainlink_automation_contract.rst:15
+msgid ""
+"`s_lastTimeStamp` (uint256): - Records the timestamp of the last "
+"successful Chainlink automation execution. This variable is critical for "
+"determining the elapsed time since the last execution and ensuring "
+"adherence to the defined schedule."
+msgstr ""
+"`s_lastTimeStamp` (uint256): - زمان‌سنج آخرین اجرای موفق Chainlink automation "
+"را ثبت می‌کند. این متغیر برای تعیین زمان گذشته از آخرین اجرا و اطمینان از "
+"رعایت برنامه‌ریزی تعریف شده ضروری است."
+
+#: ../docs_chainlink_automation_contract.rst:18
+msgid ""
+"`s_interval` (uint256): - Specifies the interval (in seconds) between "
+"successive executions. This parameter governs the frequency of automation"
+" tasks and is crucial for scheduling tasks effectively."
+msgstr ""
+"`s_interval` (uint256): - فاصله زمانی (بر حسب ثانیه) بین اجراهای متوالی را "
+"مشخص می‌کند. این پارامتر فرکانس وظایف اتوماسیون را تنظیم می‌کند و برای "
+"برنامه‌ریزی مؤثر وظایف بسیار مهم است."
+
+#: ../docs_chainlink_automation_contract.rst:21
+msgid ""
+"`CHAINLINK_JOB_ID` (bytes32): - Represents the unique job identifier for "
+"Chainlink automation. This ID is used to link the contract with a "
+"specific Chainlink job configured to trigger automation."
+msgstr ""
+"`CHAINLINK_JOB_ID` (bytes32): - شناسه منحصر به فرد شغل برای اتوماسیون Chainlink "
+"را نمایندگی می‌کند. این شناسه برای پیوند قرارداد با یک شغل خاص Chainlink که "
+"برای تحریک اتوماسیون پیکربندی شده است، استفاده می‌شود."
+
+#: ../docs_chainlink_automation_contract.rst:24
+msgid ""
+"`CHAINLINK_ORACLE_ADDRESS` (address): - Contains the address of the "
+"Chainlink oracle responsible for executing the automation tasks. Ensuring"
+" the correctness of this address is vital for successful integration with"
+" Chainlink services."
+msgstr ""
+"`CHAINLINK_ORACLE_ADDRESS` (address): - آدرس اوراکل Chainlink که مسئول اجرای "
+"وظایف اتوماسیون است را در بر دارد. اطمینان از صحت این آدرس برای ادغام موفق "
+"با خدمات Chainlink حیاتی است."
+
+#: ../docs_chainlink_automation_contract.rst:-1
+msgid "Description of the image"
+msgstr "توضیحات تصویر"
+
+#: ../docs_chainlink_automation_contract.rst:34
+msgid "**Functions:**"
+msgstr "**توابع:**"
+
+#: ../docs_chainlink_automation_contract.rst:36
+msgid ""
+"**Set Interval** ```solidity function setInterval(uint256 interval) "
+"external ``` - Sets the time interval between automation executions. The "
+"interval must be defined in seconds and should be configured considering "
+"both operational needs and resource constraints."
+msgstr ""
+"**تنظیم فاصله زمانی** ```solidity function setInterval(uint256 interval) "
+"external ``` - فاصله زمانی بین اجرای وظایف اتوماسیون را تنظیم می‌کند. این "
+"فاصله باید بر حسب ثانیه تعریف شود و باید با توجه به نیازهای عملیاتی و "
+"محدودیت‌های منابع پیکربندی شود."
+
+#: ../docs_chainlink_automation_contract.rst:42
+msgid ""
+"**Perform Automation** ```solidity function performAutomation() external "
+"``` - Executes the automation tasks based on the configured interval and "
+"current timestamp. This function is triggered by Chainlink's oracle "
+"service and is responsible for performing the scheduled tasks."
+msgstr ""
+"**اجرای اتوماسیون** ```solidity function performAutomation() external ``` - "
+"وظایف اتوماسیون را بر اساس فاصله زمانی پیکربندی شده و زمان‌سنج فعلی اجرا "
+"می‌کند. این تابع توسط سرویس اوراکل Chainlink تحریک می‌شود و مسئول انجام "
+"وظایف برنامه‌ریزی شده است."
+
+#: ../docs_chainlink_automation_contract.rst:48
+msgid ""
+"**Update Job ID** ```solidity function updateJobID(bytes32 jobId) "
+"external ``` - Updates the Chainlink job ID used for automation. This "
+"function allows for reconfiguration of the job link, enabling adjustments"
+" in the Chainlink job configuration if required."
+msgstr ""
+"**به‌روزرسانی شناسه شغل** ```solidity function updateJobID(bytes32 jobId) "
+"external ``` - شناسه شغل Chainlink مورد استفاده برای اتوماسیون را به‌روزرسانی "
+"می‌کند. این تابع امکان پیکربندی مجدد پیوند شغل را فراهم می‌کند و به شما "
+"اجازه می‌دهد در صورت لزوم تنظیمات شغل Chainlink را تغییر دهید."
+
+#: ../docs_chainlink_automation_contract.rst:55
+msgid "Application"
+msgstr "کاربرد"
+
+#: ../docs_chainlink_automation_contract.rst:57
+msgid ""
+"The `ChainlinkAutomation` contract is designed to automate routine tasks "
+"by utilizing Chainlink’s decentralized oracle network. Its applications "
+"include:"
+msgstr ""
+"قرارداد `ChainlinkAutomation` برای خودکارسازی وظایف روتین با استفاده از "
+"شبکه غیرمتمرکز اوراکل Chainlink طراحی شده است. کاربردهای آن شامل موارد "
+"زیر است:"
+
+#: ../docs_chainlink_automation_contract.rst:59
+msgid ""
+"**Data Feed Updates:** Automated updates to data feeds, ensuring that "
+"smart contracts interact with the most recent data."
+msgstr ""
+"**به‌روزرسانی‌های داده‌ای:** به‌روزرسانی‌های خودکار به داده‌ها، اطمینان از "
+"اینکه قراردادهای هوشمند با جدیدترین داده‌ها تعامل دارند."
+
+#: ../docs_chainlink_automation_contract.rst:60
+msgid ""
+"**Routine Functions:** Execution of periodic functions, such as "
+"recalculating values or triggering events on a regular basis."
+msgstr ""
+"**توابع دوره‌ای:** اجرای توابع دوره‌ای، مانند محاسبه مجدد مقادیر یا تحریک "
+"رویدادها به‌طور منظم."
+
+#: ../docs_chainlink_automation_contract.rst:61
+msgid ""
+"**Scheduled Interactions:** Interaction with other smart contracts on a "
+"defined schedule, facilitating complex multi-contract operations without "
+"manual intervention."
+msgstr ""
+"**تعاملات زمان‌بندی شده:** تعامل با سایر قراردادهای هوشمند طبق یک برنامه "
+"تعریف شده، تسهیل عملیات پیچیده چندقراردادی بدون نیاز به مداخله دستی."
+
+#: ../docs_chainlink_automation_contract.rst:64
+msgid "Security Considerations"
+msgstr "ملاحظات امنیتی"
+
+#: ../docs_chainlink_automation_contract.rst:66
+msgid ""
+"**Chainlink Integration:** Ensure accurate configuration of the Chainlink"
+" job ID and oracle address to avoid failures in automation tasks. Verify "
+"the integrity of these parameters to maintain reliable operation."
+msgstr ""
+"**ادغام Chainlink:** از پیکربندی صحیح شناسه شغل و آدرس اوراکل Chainlink "
+"اطمینان حاصل کنید تا از بروز خطا در وظایف اتوماسیون جلوگیری شود. صحت این "
+"پارامترها را بررسی کنید تا عملکرد قابل اطمینان حفظ شود."
+
+#: ../docs_chainlink_automation_contract.rst:69
+msgid ""
+"**Interval Management:** Carefully balance the interval settings to "
+"optimize resource utilization. A short interval may lead to increased "
+"transaction costs and excessive oracle calls, whereas a long interval "
+"might delay important updates. Analyze the system's requirements to "
+"determine an optimal interval."
+msgstr ""
+"**مدیریت فاصله زمانی:** تنظیمات فاصله زمانی را به دقت متعادل کنید تا از "
+"استفاده بهینه از منابع اطمینان حاصل شود. فاصله زمانی کوتاه ممکن است به "
+"افزایش هزینه‌های تراکنش و تماس‌های اضافی با اوراکل منجر شود، در حالی که "
+"فاصله زمانی طولانی ممکن است به تأخیر در به‌روزرسانی‌های مهم منجر شود. "
+"نیازهای سیستم را تجزیه و تحلیل کنید تا فاصله زمانی بهینه را تعیین کنید."
+
+#: ../docs_chainlink_automation_contract.rst:72
+msgid ""
+"**Access Control:** Implement robust access control mechanisms to "
+"safeguard the contract from unauthorized modifications. Ensure that only "
+"trusted and authorized entities can adjust the interval or job ID to "
+"prevent malicious interference."
+msgstr ""
+"**کنترل دسترسی:** مکانیزم‌های کنترل دسترسی قوی را پیاده‌سازی کنید تا از "
+"قرارداد در برابر تغییرات غیرمجاز محافظت کنید. اطمینان حاصل کنید که تنها "
+"اشخاص مورد اعتماد و مجاز بتوانند فاصله زمانی یا شناسه شغل را تنظیم کنند "
+"تا از دخالت‌های مخرب جلوگیری شود."
+
+#: ../docs_chainlink_automation_contract.rst:75
+msgid ""
+"**Error Handling:** Incorporate comprehensive error handling and logging "
+"to manage potential issues during automation execution. Enable mechanisms"
+" to capture and address any errors that arise, ensuring the system’s "
+"resilience and reliability."
+msgstr ""
+"**مدیریت خطا:** شامل مدیریت و ثبت خطاهای جامع برای مدیریت مشکلات احتمالی "
+"در حین اجرای اتوماسیون باشید. مکانیزم‌هایی را فعال کنید تا هر خطای بروز "
+"یافته را شناسایی و رسیدگی کنید و از تاب‌آوری و قابلیت اطمینان سیستم اطمینان "
+"حاصل کنید."
+
+#: ../docs_chainlink_automation_contract.rst:79
+msgid "Additional Expert Insights"
+msgstr "بینش‌های اضافی کارشناسان"
+
+#: ../docs_chainlink_automation_contract.rst:81
+msgid ""
+"**Chainlink Job Configuration:** When configuring Chainlink jobs, ensure "
+"that the job specifications align with the automation requirements. "
+"Consider setting up monitoring for job performance and execution metrics "
+"to proactively address any anomalies."
+msgstr ""
+"**پیکربندی شغل Chainlink:** هنگام پیکربندی شغل‌های Chainlink، اطمینان حاصل "
+"کنید که مشخصات شغل با نیازهای اتوماسیون همخوانی داشته باشد. در نظر داشته "
+"باشید که نظارت بر عملکرد شغل و شاخص‌های اجرایی را راه‌اندازی کنید تا به‌طور "
+"پیشگیرانه به هرگونه ناهنجاری رسیدگی کنید."
+
+#: ../docs_chainlink_automation_contract.rst:84
+msgid ""
+"**Oracle Fees:** Be aware of the fees associated with Chainlink oracles. "
+"Configure the contract to handle variations in fee structures and ensure "
+"sufficient funds are available for uninterrupted automation."
+msgstr ""
+"**هزینه‌های اوراکل:** از هزینه‌های مربوط به اوراکل‌های Chainlink آگاه باشید. "
+"قرارداد را به‌گونه‌ای پیکربندی کنید که بتواند تغییرات در ساختار هزینه‌ها را "
+"مدیریت کند و اطمینان حاصل کنید که وجوه کافی برای اتوماسیون بدون وقفه موجود "
+"باشد."
+
+#: ../docs_chainlink_automation_contract.rst:87
+msgid ""
+"**Testing and Simulation:** Before deploying the `ChainlinkAutomation` "
+"contract to a production environment, conduct thorough testing and "
+"simulation in a controlled environment. Validate the contract’s behavior "
+"under various conditions to ensure reliable operation."
+msgstr ""
+"**آزمایش و شبیه‌سازی:** قبل از استقرار قرارداد `ChainlinkAutomation` در "
+"محیط تولید، آزمایش و شبیه‌سازی کاملی را در محیط کنترل شده انجام دهید. "
+"رفتار قرارداد را تحت شرایط مختلف تأیید کنید تا از عملکرد قابل اعتماد "
+"اطمینان حاصل کنید."
+
+#: ../docs_chainlink_automation_contract.rst:90
+msgid ""
+"**Versioning and Upgrades:** Consider implementing mechanisms for "
+"versioning and upgrading the contract to accommodate future enhancements "
+"or changes in Chainlink’s services. This approach will help maintain the "
+"contract’s relevance and functionality over time."
+msgstr ""
+"**نسخه‌بندی و به‌روزرسانی‌ها:** در نظر داشته باشید که مکانیزم‌های نسخه‌بندی و "
+"به‌روزرسانی قرارداد را پیاده‌سازی کنید تا به بهبودهای آینده یا تغییرات در "
+"خدمات Chainlink پاسخگو باشید. این رویکرد به حفظ مربوط بودن و عملکرد قرارداد "
+"در طول زمان کمک می‌کند."
+
+#: ../docs_chainlink_automation_contract.rst:92
+msgid "```"
+msgstr "```"

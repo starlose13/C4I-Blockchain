@@ -63,12 +63,31 @@ the documentation for consistency and reference."""
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.ifconfig',
+    'sphinx.ext.githubpages',
+    # 'sphinx.ext.i18n',
+]
 
-extensions = []
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+# -- Internationalization (i18n) configuration ---------------------------------
+# Add multi-language support
 
+# Set the default language of the documentation
+language = 'en'  # The default language, 'en' for English
+
+# Directory where translation files will be stored
+locale_dirs = ['locale/']  # This is where Sphinx will look for translations
+
+# Whether to build .mo files with gettext compact option
+gettext_compact = False
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -80,4 +99,10 @@ html_static_path = ['_static']
 html_css_files = [
     'custom.css',
 ]
-
+html_theme_options = {
+    'language_switcher': True,  # If the theme supports it
+    'languages': [
+        ('en', 'English'),
+        ('fa', 'فارسی'),
+    ],
+}

@@ -1,0 +1,250 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, SunAir Institute
+# This file is distributed under the same license as the Decentralized
+# Communication Framework package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Decentralized Communication Framework 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-16 13:41+0330\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: ../docs_upgradable_contract.rst:3
+msgid "Upgradable Smart Contracts"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:6
+msgid "Introduction"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:8
+msgid ""
+"This document provides an overview of the upgradable smart contracts used"
+" in the project. By leveraging OpenZeppelin and Chainlink libraries, "
+"these contracts ensure secure and efficient upgrades, address management,"
+" access control, and initialization. Key components include:"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:10
+msgid "**UUPSUpgradeable** from OpenZeppelin"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:11
+msgid "**AddressUpgradeable** from Chainlink"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:12
+msgid "**AccessControlUpgradeable** from OpenZeppelin"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:13
+msgid "**Initializable** from OpenZeppelin"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:16
+msgid "Key Components"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:18
+msgid "**UUPSUpgradeable**"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:20
+msgid ""
+"*Purpose*: The `UUPSUpgradeable` contract from OpenZeppelin supports "
+"upgradability by adhering to the Universal Upgradeable Proxy Standard "
+"(UUPS). This allows updating the contract's logic while preserving its "
+"state."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:23
+msgid ""
+"*Functionality*: - **Upgradability**: Enables updating contract logic "
+"through a delegated upgrade mechanism, maintaining the contract's state "
+"during upgrades."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:26
+msgid ""
+"*Integration*: Implemented in both the Node Manager and Consensus "
+"Mechanism contracts to manage contract upgrades effectively."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:-1
+msgid "Description of the image"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:34
+msgid "**AddressUpgradeable**"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:36
+msgid ""
+"*Purpose*: The `AddressUpgradeable` contract from Chainlink provides "
+"utilities for managing addresses securely and efficiently."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:39
+msgid ""
+"*Functionality*: - **Address Validation**: Includes functions to ensure "
+"address operations are secure and correct, preventing the use of invalid "
+"or malicious addresses."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:42
+msgid ""
+"*Integration*: Used across smart contracts to manage and validate "
+"addresses."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:45
+msgid "**AccessControlUpgradeable**"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:47
+msgid ""
+"*Purpose*: The `AccessControlUpgradeable` contract from OpenZeppelin "
+"provides a role-based access control mechanism, ensuring secure and "
+"controlled access to contract functions."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:50
+msgid ""
+"*Functionality*: - **Role Management**: Manages roles and permissions "
+"within the contract, restricting access based on assigned roles."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:53
+msgid ""
+"*Integration*: Incorporated in the Node Manager and Consensus Mechanism "
+"contracts for managing access and enforcing security policies."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:56
+msgid "**Initializable**"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:58
+msgid ""
+"*Purpose*: The `Initializable` contract from OpenZeppelin manages the "
+"initialization of upgradable contracts, ensuring initialization occurs "
+"only once."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:61
+msgid ""
+"*Functionality*: - **Initialization Management**: Prevents "
+"reinitialization by providing mechanisms for safe setup of contract state"
+" variables."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:64
+msgid ""
+"*Integration*: Used in both Node Manager and Consensus Mechanism "
+"contracts for proper initialization during deployment or upgrades."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:68
+msgid "Contract Relationships and Workflow"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:70
+msgid "**Node Manager Contract**"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:72
+msgid ""
+"*Function*: Manages nodes within the network, including node registration"
+" and maintenance of node-related data."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:75 ../docs_upgradable_contract.rst:110
+msgid "*Initialization*:"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:102
+msgid ""
+"**Details**: Initializes the Node Manager with node addresses, regions, "
+"and geographical data. Sets up the contract admin, upgrade role "
+"management, and initializes nodes."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:103
+msgid ""
+"**Integration**: Utilizes `Initializable` for setup, `UUPSUpgradeable` "
+"for upgradability, and `Ownable` for ownership management."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:105
+msgid "**Consensus Mechanism Contract**"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:107
+msgid ""
+"*Function*: Handles the consensus process, including managing consensus "
+"thresholds and epochs."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:132
+msgid ""
+"**Details**: Sets up the Consensus Mechanism with threshold values, node "
+"manager address, and policy custodian. Configures upgrade roles, epoch "
+"settings, and consensus state management."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:133
+msgid ""
+"**Integration**: Employs `Initializable` for initialization, "
+"`UUPSUpgradeable` for contract upgrades, `AccessControlUpgradeable` for "
+"role management, and `Ownable` for ownership."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:136
+msgid "Ownership and Role Management"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:138
+msgid "**Policy Custodian**"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:140
+msgid ""
+"**Role**: The Policy Custodian address is the owner of the UUPS address. "
+"This role is crucial for managing contract upgrades and maintaining "
+"control over the upgrade process."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:143
+msgid "Summary"
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:145
+msgid ""
+"The upgradable smart contracts in this project are designed to support "
+"ongoing enhancements while maintaining operational integrity. By "
+"incorporating `UUPSUpgradeable`, `AddressUpgradeable`, "
+"`AccessControlUpgradeable`, and `Initializable`, these contracts provide "
+"a secure and efficient framework for managing upgrades, addresses, and "
+"access controls."
+msgstr ""
+
+#: ../docs_upgradable_contract.rst:147
+msgid ""
+"The **Policy Custodian** address, as the owner of the UUPS address, "
+"ensures proper management of upgrades. The `initialize` functions in both"
+" the Node Manager and Consensus Mechanism contracts set up the necessary "
+"parameters and roles, ensuring that each contract is configured correctly"
+" for its role within the system."
+msgstr ""
+

@@ -50,3 +50,11 @@ deploy-and-commit-nodeManager: deploy git-add-commit-push
 
 html: 
 	@sphinx-build -b html docs/ docs/_build/html/
+
+slither :; slither . --config-file slither.config.json --checklist 
+
+scope :; tree ./src/ | sed 's/└/#/g; s/──/--/g; s/├/#/g; s/│ /|/g; s/│/|/g'
+
+scopefile :; @tree ./src/ | sed 's/└/#/g' | awk -F '── ' '!/\.sol$$/ { path[int((length($$0) - length($$2))/2)] = $$2; next } { p = "src"; for(i=2; i<=int((length($$0) - length($$2))/2); i++) if (path[i] != "") p = p "/" path[i]; print p "/" $$2; }' > scope.txt
+
+aderyn :; aderyn .

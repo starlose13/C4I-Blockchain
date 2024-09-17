@@ -1,0 +1,65 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, SunAir Institute
+# This file is distributed under the same license as the Decentralized Communication Framework package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Decentralized Communication Framework 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-16 13:59+0330\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../source/contracts_structure.rst:3
+msgid "General Structure of Solidity Smart Contracts"
+msgstr ""
+
+#: ../source/contracts_structure.rst:6
+msgid "Contracts Structure and Architecture"
+msgstr ""
+
+#: ../source/contracts_structure.rst:9
+msgid "**Introduction**"
+msgstr ""
+
+#: ../source/contracts_structure.rst:11
+msgid "This document elucidates the architecture and structural design of the smart contracts employed within the project. The system has been meticulously crafted to support decentralized functionalities such as consensus automation, target location reporting, and contract upgradability. Each smart contract within the system serves a specialized purpose, and their interactions are pivotal to achieving the project's strategic goals."
+msgstr ""
+
+#: ../source/contracts_structure.rst:-1
+msgid "Description of the image"
+msgstr ""
+
+#: ../source/contracts_structure.rst:22
+msgid "**1. Contract Overview**"
+msgstr ""
+
+#: ../source/contracts_structure.rst:24
+msgid "The project encompasses a suite of interrelated smart contracts, each engineered to execute specific roles. The principal contracts are as follows:"
+msgstr ""
+
+#: ../source/contracts_structure.rst:26
+msgid "**Upgradable Contract** - Manages the upgradability of the contract system, facilitating modifications and enhancements without disrupting existing operations."
+msgstr ""
+
+#: ../source/contracts_structure.rst:29
+msgid "**Node Manager Contract** - Oversees the management of nodes within the network, ensuring their proper configuration, registration, and maintenance."
+msgstr ""
+
+#: ../source/contracts_structure.rst:32
+msgid "**Consensus Mechanism Contract** - Implements the consensus algorithm, orchestrating the agreement protocol among nodes to validate transactions and maintain the integrity of the decentralized system."
+msgstr ""
+
+#: ../source/contracts_structure.rst:35
+msgid "**Minimal Account Abstraction Contract** - Provides a simplified account abstraction layer, streamlining interactions and reducing complexity in user account management."
+msgstr ""
+
+#: ../source/contracts_structure.rst:45
+msgid "Each of these contracts is integral to the overall functionality and efficiency of the decentralized system, and their orchestration is crucial for the seamless execution of the project's objectives. ```"
+msgstr ""

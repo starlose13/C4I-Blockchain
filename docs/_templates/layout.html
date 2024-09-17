@@ -1,0 +1,9 @@
+{% extends "!layout.html" %}
+{% block extrahead %}
+<link rel="stylesheet" href="{{ pathto('_static/language_switcher.css', 1) }}">
+{% endblock %}
+{% block extrafooter %}
+<div id="language-switcher">
+    <a href="{{ pathto('index.html', 1) }}">English</a> | <a href="{{ pathto('index.fa.html', 1) }}">فارسی</a>
+</div>
+{% endblock %}
