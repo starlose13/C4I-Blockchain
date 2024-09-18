@@ -38,7 +38,7 @@ Functions
 
 - **`setInterval(uint256 interval)`**:
   
-  .. code-block:: solidity
+  .. code-block:: javascript
   
       function setInterval(uint256 interval) external
   
@@ -49,7 +49,7 @@ Functions
 
 - **`performAutomation()`**:
   
-  .. code-block:: solidity
+  .. code-block:: javascript
   
       function performAutomation() external
   
@@ -58,7 +58,7 @@ Functions
 
 - **`updateJobID(bytes32 jobId)`**:
   
-  .. code-block:: solidity
+  .. code-block:: javascript
   
       function updateJobID(bytes32 jobId) external
   
