@@ -14,8 +14,7 @@ The `ChainlinkAutomation` contract is a crucial component designed to interface 
 Key Components
 --------------
 
-State Variables
-~~~~~~~~~~~~~~~
+### State Variables
 
 - **`s_lastTimeStamp` (uint256):**
   - **Purpose:** Records the timestamp of the last successful Chainlink automation execution.
@@ -33,36 +32,34 @@ State Variables
   - **Purpose:** Contains the address of the Chainlink oracle responsible for executing automation tasks.
   - **Usage:** Accurate configuration is vital for successful integration with Chainlink services.
 
-Functions
-~~~~~~~~~
+### Functions
 
 - **`setInterval(uint256 interval)`**:
-  
+
   .. code-block:: javascript
 
-    function setInterval(uint256 interval) external
+      function setInterval(uint256 interval) external
 
-  
   - **Description:** Sets the time interval between automation executions.
   - **Parameters:** 
     - `interval`: Time in seconds.
   - **Considerations:** Should be set based on operational needs and resource constraints.
 
 - **`performAutomation()`**:
-  
+
   .. code-block:: javascript
-  
+
       function performAutomation() external
-  
+
   - **Description:** Executes the automation tasks based on the configured interval and current timestamp.
   - **Execution:** Triggered by Chainlink's oracle service, responsible for performing scheduled tasks.
 
 - **`updateJobID(bytes32 jobId)`**:
-  
+
   .. code-block:: javascript
-  
+
       function updateJobID(bytes32 jobId) external
-  
+
   - **Description:** Updates the Chainlink job ID used for automation.
   - **Usage:** Allows for reconfiguration of the job link, enabling adjustments in the Chainlink job configuration if necessary.
 
@@ -76,7 +73,7 @@ The `ChainlinkAutomation` contract is designed to automate routine tasks by util
 - **Scheduled Interactions:** Interaction with other smart contracts on a defined schedule, facilitating complex multi-contract operations without manual intervention.
 
 Security Considerations
-------------------------
+-----------------------
 
 - **Chainlink Integration:**
   - Ensure accurate configuration of the Chainlink job ID and oracle address to avoid failures in automation tasks. Verify the integrity of these parameters to maintain reliable operation.
