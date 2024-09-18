@@ -79,6 +79,7 @@ To maintain a consistent state across the network, a consensus mechanism is empl
 4. **Final Outcome**: If a consensus is reached, the agreed-upon target or data is broadcast to all participants. If not, the network indicates that either the votes did not meet the quorum or no consensus was achieved in that epoch.
 
 The following diagram provides an overview of the consensus process:
+
 .. image:: ./_static/consensusProcess.png
    :alt: Consensus Process Diagram
    :width: 600px
