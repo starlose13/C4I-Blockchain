@@ -3,21 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. raw:: html
-
-   <table style="width: 100%;">
-       <tr>
-           <td style="width: 30%; text-align: left;">
-               <img src="_static/logo.png" alt="Logo" style="width: 60%;">
-           </td>
-           <td style="width: 70%; text-align: right;">
-               <img src="_static/cover_image.png" alt="Cover Image" style="width: 100%;">
-           </td>
-       </tr>
-   </table>
-
 Welcome to Decentralized Communication's Documentation!
 =======================================================
+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 0
+
+   * - .. image:: _static/logo.png
+         :alt: Logo
+         :width: 60%
+     - .. image:: _static/cover_image.png
+         :alt: Cover Image
+         :width: 100%
 
 **Empowering Secure and Private Communication in a Decentralized World**
 
