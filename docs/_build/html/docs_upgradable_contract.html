@@ -141,27 +141,27 @@ Used in both Node Manager and Consensus Mechanism contracts for proper initializ
 <p><em>Function</em>:
 Manages nodes within the network, including node registration and maintenance of node-related data.</p>
 <p><em>Initialization</em>:</p>
-<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="kt">function</span><span class="w"> </span><span class="nv">initialize</span><span class="p">(</span>
-<span class="w">    </span><span class="kt">address</span><span class="p">[]</span><span class="w"> </span><span class="kt">memory</span><span class="w"> </span>_nodeAddresses<span class="p">,</span>
-<span class="w">    </span>DataTypes<span class="p">.</span>NodeRegion<span class="p">[]</span><span class="w"> </span><span class="kt">memory</span><span class="w"> </span>_currentPosition<span class="p">,</span>
-<span class="w">    </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="kt">memory</span><span class="w"> </span>nodePosition<span class="p">,</span>
-<span class="w">    </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="kt">memory</span><span class="w"> </span>latitude<span class="p">,</span>
-<span class="w">    </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="kt">memory</span><span class="w"> </span>longitude
-<span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>initializer<span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kt">if</span><span class="w"> </span><span class="p">(</span>_nodeAddresses<span class="p">.</span>length<span class="w"> </span><span class="o">!=</span><span class="w"> </span>_currentPosition<span class="p">.</span>length<span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span>revert<span class="w"> </span>Errors<span class="p">.</span>ARRAYS_LENGTH_IS_NOT_EQUAL<span class="p">();</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">initialize</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">address</span><span class="p">[]</span><span class="w"> </span><span class="nx">memory</span><span class="w"> </span><span class="nx">_nodeAddresses</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">DataTypes</span><span class="p">.</span><span class="nx">NodeRegion</span><span class="p">[]</span><span class="w"> </span><span class="nx">memory</span><span class="w"> </span><span class="nx">_currentPosition</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">string</span><span class="p">[]</span><span class="w"> </span><span class="nx">memory</span><span class="w"> </span><span class="nx">nodePosition</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">string</span><span class="p">[]</span><span class="w"> </span><span class="nx">memory</span><span class="w"> </span><span class="nx">latitude</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">string</span><span class="p">[]</span><span class="w"> </span><span class="nx">memory</span><span class="w"> </span><span class="nx">longitude</span>
+<span class="p">)</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">initializer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">_nodeAddresses</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nx">_currentPosition</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">revert</span><span class="w"> </span><span class="nx">Errors</span><span class="p">.</span><span class="nx">ARRAYS_LENGTH_IS_NOT_EQUAL</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span>CONTRACT_ADMIN<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">msg.sender</span><span class="p">;</span>
-<span class="w">    </span>UPGRADER_ROLE<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">keccak256</span><span class="p">(</span><span class="s2">&quot;UPGRADER_ROLE&quot;</span><span class="p">);</span>
-<span class="w">    </span>__Ownable_init<span class="p">(</span>CONTRACT_ADMIN<span class="p">);</span>
-<span class="w">    </span>_initializeNodes<span class="p">(</span>
-<span class="w">        </span>_nodeAddresses<span class="p">,</span>
-<span class="w">        </span>_currentPosition<span class="p">,</span>
-<span class="w">        </span>nodePosition<span class="p">,</span>
-<span class="w">        </span>latitude<span class="p">,</span>
-<span class="w">        </span>longitude
+<span class="w">    </span><span class="nx">CONTRACT_ADMIN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">UPGRADER_ROLE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">keccak256</span><span class="p">(</span><span class="s2">&quot;UPGRADER_ROLE&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">__Ownable_init</span><span class="p">(</span><span class="nx">CONTRACT_ADMIN</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">_initializeNodes</span><span class="p">(</span>
+<span class="w">        </span><span class="nx">_nodeAddresses</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">_currentPosition</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">nodePosition</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">latitude</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">longitude</span>
 <span class="w">    </span><span class="p">);</span>
-<span class="w">    </span>__UUPSUpgradeable_init<span class="p">();</span>
+<span class="w">    </span><span class="nx">__UUPSUpgradeable_init</span><span class="p">();</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -173,22 +173,22 @@ Manages nodes within the network, including node registration and maintenance of
 <p><em>Function</em>:
 Handles the consensus process, including managing consensus thresholds and epochs.</p>
 <p><em>Initialization</em>:</p>
-<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="kt">function</span><span class="w"> </span><span class="nv">initialize</span><span class="p">(</span>
-<span class="w">    </span><span class="kt">uint8</span><span class="w"> </span><span class="nv">_s_consensusThreshold</span><span class="p">,</span>
-<span class="w">    </span><span class="kt">address</span><span class="w"> </span><span class="nv">nodeManagerContractAddress</span><span class="p">,</span>
-<span class="w">    </span><span class="kt">address</span><span class="w"> </span><span class="nv">policyCustodian</span>
-<span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>initializer<span class="w"> </span><span class="p">{</span>
-<span class="w">    </span>__Ownable_init<span class="p">(</span>policyCustodian<span class="p">);</span>
-<span class="w">    </span>__UUPSUpgradeable_init<span class="p">();</span>
-<span class="w">    </span>__AccessControl_init<span class="p">();</span>
-<span class="w">    </span>UPGRADER_ROLE<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">keccak256</span><span class="p">(</span><span class="s2">&quot;UPGRADER_ROLE&quot;</span><span class="p">);</span>
-<span class="w">    </span>CONSENSUS_NOT_REACHED<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">0</span><span class="p">;</span>
-<span class="w">    </span>isEpochNotStarted<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">true</span><span class="p">;</span>
-<span class="w">    </span>consensusEpochTimeDuration<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m m-Decimal">1</span><span class="w"> </span>minutes<span class="p">;</span>
-<span class="w">    </span>POLICY_CUSTODIAN<span class="w"> </span><span class="o">=</span><span class="w"> </span>policyCustodian<span class="p">;</span>
-<span class="w">    </span>s_lastTimeStamp<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">block.timestamp</span><span class="p">;</span>
-<span class="w">    </span>s_consensusThreshold<span class="w"> </span><span class="o">=</span><span class="w"> </span>_s_consensusThreshold<span class="p">;</span>
-<span class="w">    </span>nodeManager<span class="w"> </span><span class="o">=</span><span class="w"> </span>INodeManager<span class="p">(</span>nodeManagerContractAddress<span class="p">);</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">initialize</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">uint8</span><span class="w"> </span><span class="nx">_s_consensusThreshold</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">address</span><span class="w"> </span><span class="nx">nodeManagerContractAddress</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">address</span><span class="w"> </span><span class="nx">policyCustodian</span>
+<span class="p">)</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">initializer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">__Ownable_init</span><span class="p">(</span><span class="nx">policyCustodian</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">__UUPSUpgradeable_init</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">__AccessControl_init</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">UPGRADER_ROLE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">keccak256</span><span class="p">(</span><span class="s2">&quot;UPGRADER_ROLE&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">CONSENSUS_NOT_REACHED</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">isEpochNotStarted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">consensusEpochTimeDuration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="nx">minutes</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">POLICY_CUSTODIAN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">policyCustodian</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">s_lastTimeStamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">block</span><span class="p">.</span><span class="nx">timestamp</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">s_consensusThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_s_consensusThreshold</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">nodeManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">INodeManager</span><span class="p">(</span><span class="nx">nodeManagerContractAddress</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>

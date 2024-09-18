@@ -163,7 +163,7 @@ Maintains consensus results for each epoch, providing a historical record of con
 <section id="initialization">
 <h3>Initialization<a class="headerlink" href="#initialization" title="Permalink to this heading"></a></h3>
 <p>The <cite>initialize</cite> function is critical for setting up the contract during its deployment or upgrade phase. It initializes the contract’s state and ensures that all necessary parameters and dependencies are correctly configured.</p>
-<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="kt">function</span><span class="w"> </span><span class="nv">initialize</span><span class="p">(</span><span class="kt">uint8</span><span class="w"> </span><span class="nv">_s_consensusThreshold</span><span class="p">,</span><span class="w"> </span><span class="kt">address</span><span class="w"> </span><span class="nv">nodeManagerContractAddress</span><span class="p">,</span><span class="w"> </span><span class="kt">address</span><span class="w"> </span><span class="nv">policyCustodian</span><span class="p">)</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>initializer
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">initialize</span><span class="p">(</span><span class="nx">uint8</span><span class="w"> </span><span class="nx">_s_consensusThreshold</span><span class="p">,</span><span class="w"> </span><span class="nx">address</span><span class="w"> </span><span class="nx">nodeManagerContractAddress</span><span class="p">,</span><span class="w"> </span><span class="nx">address</span><span class="w"> </span><span class="nx">policyCustodian</span><span class="p">)</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">initializer</span>
 </pre></div>
 </div>
 </section>
@@ -192,7 +192,7 @@ The address of the policy custodian responsible for overseeing policy decisions 
 <section id="reporting-target-location">
 <h3>Reporting Target Location<a class="headerlink" href="#reporting-target-location" title="Permalink to this heading"></a></h3>
 <p>The <cite>reportTargetLocation</cite> function enables users to report the location of a target associated with their address. This function captures and records positional data, which is vital for system operations.</p>
-<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="kt">function</span><span class="w"> </span><span class="nv">reportTargetLocation</span><span class="p">(</span><span class="kt">address</span><span class="w"> </span><span class="nv">agent</span><span class="p">,</span><span class="w"> </span>DataTypes<span class="p">.</span>TargetZone<span class="w"> </span>announceTarget<span class="p">)</span><span class="w"> </span><span class="kt">public</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">reportTargetLocation</span><span class="p">(</span><span class="nx">address</span><span class="w"> </span><span class="nx">agent</span><span class="p">,</span><span class="w"> </span><span class="nx">DataTypes</span><span class="p">.</span><span class="nx">TargetZone</span><span class="w"> </span><span class="nx">announceTarget</span><span class="p">)</span><span class="w"> </span><span class="kr">public</span>
 </pre></div>
 </div>
 </section>
@@ -226,7 +226,7 @@ An enumerated type or struct representing the target zone or location being repo
 <section id="consensus-automation-execution">
 <h3>Consensus Automation Execution<a class="headerlink" href="#consensus-automation-execution" title="Permalink to this heading"></a></h3>
 <p>The <cite>consensusAutomationExecution</cite> function automates the execution of consensus tasks, triggered by Chainlink Automation after a defined epoch duration.</p>
-<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="kt">function</span><span class="w"> </span><span class="nv">consensusAutomationExecution</span><span class="p">()</span><span class="w"> </span><span class="kt">external</span><span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="nv">isReached</span><span class="p">,</span><span class="w"> </span><span class="kt">uint256</span><span class="w"> </span><span class="nv">target</span><span class="p">)</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">consensusAutomationExecution</span><span class="p">()</span><span class="w"> </span><span class="nx">external</span><span class="w"> </span><span class="nx">returns</span><span class="w"> </span><span class="p">(</span><span class="nx">bool</span><span class="w"> </span><span class="nx">isReached</span><span class="p">,</span><span class="w"> </span><span class="nx">uint256</span><span class="w"> </span><span class="nx">target</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -264,10 +264,10 @@ Represents the final target value determined by the consensus process.</p></li>
 <section id="targetlocationsimulation">
 <h3>TargetLocationSimulation<a class="headerlink" href="#targetlocationsimulation" title="Permalink to this heading"></a></h3>
 <p>The <cite>TargetLocationSimulation</cite> function facilitates bulk reporting of target locations for testing and simulation purposes. It allows multiple agents to report target locations in a single transaction, aiding in the validation of target reporting mechanisms.</p>
-<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="kt">function</span><span class="w"> </span><span class="nv">TargetLocationSimulation</span><span class="p">(</span>
-<span class="w">    </span><span class="kt">address</span><span class="p">[]</span><span class="w"> </span><span class="kt">memory</span><span class="w"> </span>agents<span class="p">,</span>
-<span class="w">    </span>DataTypes<span class="p">.</span>TargetZone<span class="p">[]</span><span class="w"> </span><span class="kt">memory</span><span class="w"> </span>announceTargets
-<span class="p">)</span><span class="w"> </span><span class="kt">public</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">TargetLocationSimulation</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">address</span><span class="p">[]</span><span class="w"> </span><span class="nx">memory</span><span class="w"> </span><span class="nx">agents</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">DataTypes</span><span class="p">.</span><span class="nx">TargetZone</span><span class="p">[]</span><span class="w"> </span><span class="nx">memory</span><span class="w"> </span><span class="nx">announceTargets</span>
+<span class="p">)</span><span class="w"> </span><span class="kr">public</span>
 </pre></div>
 </div>
 </section>

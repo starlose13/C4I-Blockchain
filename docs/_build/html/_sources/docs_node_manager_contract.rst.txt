@@ -28,9 +28,9 @@ Register Node
 
 The `registerNode` function facilitates the registration of new nodes in the network. This operation is essential for onboarding and expanding the network.
 
-```solidity
-function registerNode(address nodeAddress) external
-```
+.. code-block:: javascript
+  function registerNode(address nodeAddress) external
+
 
 *Parameters:*
 
@@ -51,9 +51,8 @@ Update Node Status
 
 The `updateNodeStatus` function modifies a node’s registration status, allowing it to be set as active or inactive, thereby reflecting its current state.
 
-```solidity
-function updateNodeStatus(address nodeAddress, bool status) external
-```
+.. code-block:: javascript
+  function updateNodeStatus(address nodeAddress, bool status) external
 
 *Parameters:*
 
@@ -77,9 +76,8 @@ Get Node Status
 
 The `getNodeStatus` function queries the current registration status of a node, providing essential information about the network's state.
 
-```solidity
-function getNodeStatus(address nodeAddress) external view returns (bool)
-```
+.. code-block:: javascript
+  function getNodeStatus(address nodeAddress) external view returns (bool)
 
 *Parameters:*
 

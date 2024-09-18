@@ -115,10 +115,11 @@ Allows the function to be executed by either the entry point contract or the con
 </section>
 <section id="validation-of-user-operations">
 <h2>Validation of User Operations<a class="headerlink" href="#validation-of-user-operations" title="Permalink to this heading"></a></h2>
-<p>The <cite>validateUserOp</cite> function is crucial for validating user operations before execution. It checks the legitimacy of user operations to ensure they comply with predefined rules and constraints.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
-<span class="pre">function</span> <span class="pre">validateUserOp(PackedUserOperation</span> <span class="pre">calldata</span> <span class="pre">userOp,</span> <span class="pre">bytes32</span> <span class="pre">userOpHash,</span> <span class="pre">uint256</span> <span class="pre">missingAccountFunds)</span> <span class="pre">external</span> <span class="pre">requireFromEntryPoint</span> <span class="pre">returns</span> <span class="pre">(uint256</span> <span class="pre">validationData)</span>
-<span class="pre">`</span></code></p>
+<p>The <cite>validateUserOp</cite> function is crucial for validating user operations before execution. It checks the legitimacy of user operations to ensure they comply with predefined rules and constraints.
+.. code-block:: javascript</p>
+<blockquote>
+<div><p>function validateUserOp(PackedUserOperation calldata userOp, bytes32 userOpHash, uint256 missingAccountFunds) external requireFromEntryPoint returns (uint256 validationData)</p>
+</div></blockquote>
 <p><em>Parameters:</em></p>
 <ul class="simple">
 <li><p><strong>`userOp`</strong> (<cite>PackedUserOperation calldata</cite>):
@@ -144,9 +145,6 @@ Returns data related to the validation outcome, indicating whether the user oper
 <section id="execution-of-transactions">
 <h2>Execution of Transactions<a class="headerlink" href="#execution-of-transactions" title="Permalink to this heading"></a></h2>
 <p>The <cite>execute</cite> function manages the execution of transactions based on validated user operations. It allows transactions to be executed by either the entry point or the contract owner.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
-<span class="pre">function</span> <span class="pre">execute(address</span> <span class="pre">dest,</span> <span class="pre">uint256</span> <span class="pre">value,</span> <span class="pre">bytes</span> <span class="pre">calldata</span> <span class="pre">functionData)</span> <span class="pre">external</span> <span class="pre">requireFromEntryPointOrOwner</span>
-<span class="pre">`</span></code></p>
 <p><em>Parameters:</em></p>
 <ul class="simple">
 <li><p><strong>`dest`</strong> (<cite>address</cite>):

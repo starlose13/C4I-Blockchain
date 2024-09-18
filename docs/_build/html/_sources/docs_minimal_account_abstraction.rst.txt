@@ -29,10 +29,9 @@ Validation of User Operations
 ------------------------------
 
 The `validateUserOp` function is crucial for validating user operations before execution. It checks the legitimacy of user operations to ensure they comply with predefined rules and constraints.
+.. code-block:: javascript
 
-```solidity
-function validateUserOp(PackedUserOperation calldata userOp, bytes32 userOpHash, uint256 missingAccountFunds) external requireFromEntryPoint returns (uint256 validationData)
-```
+  function validateUserOp(PackedUserOperation calldata userOp, bytes32 userOpHash, uint256 missingAccountFunds) external requireFromEntryPoint returns (uint256 validationData)
 
 *Parameters:*
 
@@ -64,9 +63,8 @@ Execution of Transactions
 
 The `execute` function manages the execution of transactions based on validated user operations. It allows transactions to be executed by either the entry point or the contract owner.
 
-```solidity
-function execute(address dest, uint256 value, bytes calldata functionData) external requireFromEntryPointOrOwner
-```
+.. code-block:: javascript
+  function execute(address dest, uint256 value, bytes calldata functionData) external requireFromEntryPointOrOwner
 
 *Parameters:*
 

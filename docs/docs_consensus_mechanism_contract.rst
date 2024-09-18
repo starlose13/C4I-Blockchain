@@ -57,7 +57,7 @@ Initialization
 
 The `initialize` function is critical for setting up the contract during its deployment or upgrade phase. It initializes the contract’s state and ensures that all necessary parameters and dependencies are correctly configured.
 
-.. code-block:: solidity
+.. code-block:: javascript
 
    function initialize(uint8 _s_consensusThreshold, address nodeManagerContractAddress, address policyCustodian) public initializer
 
@@ -89,7 +89,7 @@ Reporting Target Location
 
 The `reportTargetLocation` function enables users to report the location of a target associated with their address. This function captures and records positional data, which is vital for system operations.
 
-.. code-block:: solidity
+.. code-block:: javascript
 
    function reportTargetLocation(address agent, DataTypes.TargetZone announceTarget) public
 
@@ -124,7 +124,7 @@ Consensus Automation Execution
 
 The `consensusAutomationExecution` function automates the execution of consensus tasks, triggered by Chainlink Automation after a defined epoch duration.
 
-.. code-block:: solidity
+.. code-block:: javascript
 
    function consensusAutomationExecution() external returns (bool isReached, uint256 target)
 
@@ -167,7 +167,7 @@ TargetLocationSimulation
 
 The `TargetLocationSimulation` function facilitates bulk reporting of target locations for testing and simulation purposes. It allows multiple agents to report target locations in a single transaction, aiding in the validation of target reporting mechanisms.
 
-.. code-block:: solidity
+.. code-block:: javascript
 
    function TargetLocationSimulation(
        address[] memory agents,

@@ -115,9 +115,6 @@ The address of the contract administrator who holds exclusive rights to perform 
 <section id="register-node">
 <h2>Register Node<a class="headerlink" href="#register-node" title="Permalink to this heading"></a></h2>
 <p>The <cite>registerNode</cite> function facilitates the registration of new nodes in the network. This operation is essential for onboarding and expanding the network.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
-<span class="pre">function</span> <span class="pre">registerNode(address</span> <span class="pre">nodeAddress)</span> <span class="pre">external</span>
-<span class="pre">`</span></code></p>
 <p><em>Parameters:</em></p>
 <ul class="simple">
 <li><p><strong>`nodeAddress`</strong> (<cite>address</cite>):
@@ -134,9 +131,6 @@ The address of the node to be registered. It must be unique and comply with netw
 <section id="update-node-status">
 <h2>Update Node Status<a class="headerlink" href="#update-node-status" title="Permalink to this heading"></a></h2>
 <p>The <cite>updateNodeStatus</cite> function modifies a node’s registration status, allowing it to be set as active or inactive, thereby reflecting its current state.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
-<span class="pre">function</span> <span class="pre">updateNodeStatus(address</span> <span class="pre">nodeAddress,</span> <span class="pre">bool</span> <span class="pre">status)</span> <span class="pre">external</span>
-<span class="pre">`</span></code></p>
 <p><em>Parameters:</em></p>
 <ul class="simple">
 <li><p><strong>`nodeAddress`</strong> (<cite>address</cite>):
@@ -155,9 +149,6 @@ The new status of the node. <cite>true</cite> indicates active, while <cite>fals
 <section id="get-node-status">
 <h2>Get Node Status<a class="headerlink" href="#get-node-status" title="Permalink to this heading"></a></h2>
 <p>The <cite>getNodeStatus</cite> function queries the current registration status of a node, providing essential information about the network’s state.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`solidity</span>
-<span class="pre">function</span> <span class="pre">getNodeStatus(address</span> <span class="pre">nodeAddress)</span> <span class="pre">external</span> <span class="pre">view</span> <span class="pre">returns</span> <span class="pre">(bool)</span>
-<span class="pre">`</span></code></p>
 <p><em>Parameters:</em></p>
 <ul class="simple">
 <li><p><strong>`nodeAddress`</strong> (<cite>address</cite>):

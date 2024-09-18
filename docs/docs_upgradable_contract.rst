@@ -74,7 +74,7 @@ Manages nodes within the network, including node registration and maintenance of
 
 *Initialization*:
 
-.. code-block:: solidity
+.. code-block:: javascript
 
     function initialize(
         address[] memory _nodeAddresses,
@@ -109,7 +109,7 @@ Handles the consensus process, including managing consensus thresholds and epoch
 
 *Initialization*:
 
-.. code-block:: solidity
+.. code-block:: javascript
 
     function initialize(
         uint8 _s_consensusThreshold,
