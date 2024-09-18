@@ -97,6 +97,13 @@ project_metadata = {
     'last_updated': html_last_updated_fmt,
     'project_url': project_url,
 }
+latex_elements = {
+    'papersize': 'a4paper',
+    'pointsize': '10pt',
+    'preamble': '',
+    'figure_align': 'htbp',
+}
+
 # The 'project_metadata' dictionary consolidates all the key metadata about the project.
 # This structured format allows for easy access and consistent use of project information
 # across various parts of the documentation, ensuring uniformity and clarity.
@@ -105,7 +112,7 @@ project_metadata = {
 # This section contains general settings that affect the overall behavior of Sphinx during
 # the documentation build process.
 
-extensions = []
+extensions = ['sphinxcontrib.pdfconverter']
 # The 'extensions' variable is a list where you can specify additional Sphinx extensions
 # to enhance the documentation's functionality. Extensions can provide extra features
 # such as syntax highlighting, additional document formats, or custom roles. Leave this list
