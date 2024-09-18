@@ -112,7 +112,7 @@ latex_elements = {
 # This section contains general settings that affect the overall behavior of Sphinx during
 # the documentation build process.
 
-extensions = ['sphinxcontrib.pdfconverter']
+extensions = []
 # The 'extensions' variable is a list where you can specify additional Sphinx extensions
 # to enhance the documentation's functionality. Extensions can provide extra features
 # such as syntax highlighting, additional document formats, or custom roles. Leave this list
