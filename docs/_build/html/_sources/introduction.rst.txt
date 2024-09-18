@@ -15,7 +15,8 @@ Public Key Management and Security
 
 In this network, every participating agent or device must have its public key registered within the smart contract's authorized agent list. This requirement restricts access to only verified participants, maintaining network integrity and security.
 
-### Asymmetric Cryptography Mechanism
+Asymmetric Cryptography Mechanism
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Asymmetric cryptography is the cornerstone of the network's security architecture. Messages and interactions are encrypted using the agent's private key, ensuring that only the intended recipient can decrypt the data using the corresponding public key. This process not only secures the information but also serves as a digital signature, verifying the sender's identity.
 
@@ -26,7 +27,8 @@ Each agent has a unique cryptographic address, derived from their public key, en
    :width: 600px
    :align: center
 
-### Ensuring Transaction Integrity
+Ensuring Transaction Integrity
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this cryptographic model, each transaction is digitally signed by the agent's private key, creating an immutable record. In blockchain technology, even though messages encrypted with a user's private key are accessible through their public key, the network achieves consensus without exposing private keys, which significantly enhances security. The network's decentralized nature, which increases with more participating agents, contributes to its robustness and security.
 
@@ -46,7 +48,8 @@ Refer to the diagram below for a visual representation of the transaction proces
    :width: 600px
    :align: center
 
-### Data Collection and Broadcast
+Data Collection and Broadcast
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Each agent autonomously collects environmental data, based on its sensors and situational awareness. This data is processed to form local decisions, which are then broadcasted to the network. This decentralized approach allows for efficient and secure data dissemination, even in dynamic environments.
 
@@ -82,7 +85,8 @@ The following diagram provides an overview of the consensus process:
    :width: 600px
    :align: center
 
-### Advanced Network Features
+Advanced Network Features
+-------------------------
 
 - **Fault Tolerance**: The consensus mechanism is designed to handle network faults, allowing operations to continue even if some agents are compromised or non-functional.
 - **Scalability**: The system is built to accommodate a growing number of agents, ensuring the network can scale without performance degradation.

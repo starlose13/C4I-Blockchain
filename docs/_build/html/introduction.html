@@ -53,9 +53,17 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Next-Generation Command and Control</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#network-architecture">Network Architecture</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#public-key-management-and-security">Public Key Management and Security</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#transaction-workflow">Transaction Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#public-key-management-and-security">Public Key Management and Security</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#asymmetric-cryptography-mechanism">Asymmetric Cryptography Mechanism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensuring-transaction-integrity">Ensuring Transaction Integrity</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#transaction-workflow">Transaction Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-collection-and-broadcast">Data Collection and Broadcast</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#consensus-mechanism">Consensus Mechanism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-network-features">Advanced Network Features</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting Started</a></li>
@@ -105,12 +113,16 @@
 <section id="public-key-management-and-security">
 <h2>Public Key Management and Security<a class="headerlink" href="#public-key-management-and-security" title="Permalink to this heading"></a></h2>
 <p>In this network, every participating agent or device must have its public key registered within the smart contract’s authorized agent list. This requirement restricts access to only verified participants, maintaining network integrity and security.</p>
-<p>### Asymmetric Cryptography Mechanism</p>
+<section id="asymmetric-cryptography-mechanism">
+<h3>Asymmetric Cryptography Mechanism<a class="headerlink" href="#asymmetric-cryptography-mechanism" title="Permalink to this heading"></a></h3>
 <p>Asymmetric cryptography is the cornerstone of the network’s security architecture. Messages and interactions are encrypted using the agent’s private key, ensuring that only the intended recipient can decrypt the data using the corresponding public key. This process not only secures the information but also serves as a digital signature, verifying the sender’s identity.</p>
 <p>Each agent has a unique cryptographic address, derived from their public key, enabling other network members to interact securely. The diagram below illustrates the communication concept within this secure framework:</p>
 <a class="reference internal image-reference" href="_images/communication-concept.png"><img alt="Communication Concept Diagram" class="align-center" src="_images/communication-concept.png" style="width: 600px;" /></a>
-<p>### Ensuring Transaction Integrity</p>
+</section>
+<section id="ensuring-transaction-integrity">
+<h3>Ensuring Transaction Integrity<a class="headerlink" href="#ensuring-transaction-integrity" title="Permalink to this heading"></a></h3>
 <p>In this cryptographic model, each transaction is digitally signed by the agent’s private key, creating an immutable record. In blockchain technology, even though messages encrypted with a user’s private key are accessible through their public key, the network achieves consensus without exposing private keys, which significantly enhances security. The network’s decentralized nature, which increases with more participating agents, contributes to its robustness and security.</p>
+</section>
 </section>
 <section id="transaction-workflow">
 <h2>Transaction Workflow<a class="headerlink" href="#transaction-workflow" title="Permalink to this heading"></a></h2>
@@ -122,8 +134,10 @@
 </ol>
 <p>Refer to the diagram below for a visual representation of the transaction process:</p>
 <a class="reference internal image-reference" href="_images/Transaction-process.png"><img alt="Transaction Process Diagram" class="align-center" src="_images/Transaction-process.png" style="width: 600px;" /></a>
-<p>### Data Collection and Broadcast</p>
+<section id="data-collection-and-broadcast">
+<h3>Data Collection and Broadcast<a class="headerlink" href="#data-collection-and-broadcast" title="Permalink to this heading"></a></h3>
 <p>Each agent autonomously collects environmental data, based on its sensors and situational awareness. This data is processed to form local decisions, which are then broadcasted to the network. This decentralized approach allows for efficient and secure data dissemination, even in dynamic environments.</p>
+</section>
 </section>
 <section id="consensus-mechanism">
 <h2>Consensus Mechanism<a class="headerlink" href="#consensus-mechanism" title="Permalink to this heading"></a></h2>
@@ -146,7 +160,9 @@
 </ol>
 <p>The following diagram provides an overview of the consensus process:</p>
 <a class="reference internal image-reference" href="_images/consensusProcess.png"><img alt="Consensus Process Diagram" class="align-center" src="_images/consensusProcess.png" style="width: 600px;" /></a>
-<p>### Advanced Network Features</p>
+</section>
+<section id="advanced-network-features">
+<h2>Advanced Network Features<a class="headerlink" href="#advanced-network-features" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p><strong>Fault Tolerance</strong>: The consensus mechanism is designed to handle network faults, allowing operations to continue even if some agents are compromised or non-functional.</p></li>
 <li><p><strong>Scalability</strong>: The system is built to accommodate a growing number of agents, ensuring the network can scale without performance degradation.</p></li>
