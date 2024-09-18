@@ -1,3 +1,6 @@
+# The above code is a configuration file for the Sphinx documentation builder in Python. It sets
+# various settings and metadata for generating documentation using Sphinx. Here is a summary of what
+# the code is doing:
 # Configuration file for the Sphinx documentation builder.
 # This file contains settings for generating documentation using Sphinx.
 # For comprehensive documentation on configuration options, visit:
@@ -13,7 +16,8 @@ project = 'Decentralized Communication Framework'
 # understand what the documentation pertains to. It's used in the title of the generated
 # documentation and various metadata fields.
 
-copyright = '2024, SunAir Institute'
+
+copyright = '© 2024 SunAir Institute. All rights reserved.'
 # The 'copyright' variable indicates the copyright statement for the documentation.
 # It typically includes the year of publication and the name of the organization or
 # individual holding the copyright. This information is crucial for legal purposes and
@@ -24,7 +28,26 @@ author =  'Parisa Tavakoli ,Pouya Nasehi , Parisa Sarraf'
 # This field should include the name of the person or team responsible for the content.
 # It helps in attributing authorship and can be used in the documentation's header or footer.
 
-release = 'v1.0'
+# Release information
+release_version = '1.0'  # Major release version
+release_codename = 'Genesis'  # Codename for this release
+release_date = '2024-09-01'  # Release date
+
+# Highlights and compatibility as plain text for display in the documentation
+release_highlights = (
+    'Comprehensive overview of the Decentralized Communication Framework. '
+    'Detailed guides on smart contract structure and consensus mechanisms. '
+    'In-depth tutorials and a quickstart guide for new users.'
+)
+
+release_compatibility = 'Compatible with framework version 1.0 and API level v1.'
+
+# Additional release notes
+release_notes = 'This is the first stable release, providing a full set of features for the initial launch.'
+
+# Set the release string used by Sphinx
+release = f'{release_version} "{release_codename}" ({release_date})'
+
 # The 'release' variable specifies the release version of the documentation.
 # This version should correspond to the version of the software or project being documented,
 # making it easier for users to identify which version of the documentation matches their
