@@ -745,6 +745,12 @@ The address of the contract administrator who holds exclusive rights to perform 
 \label{\detokenize{docs_node_manager_contract:register-node}}
 \sphinxAtStartPar
 The \sphinxtitleref{registerNode} function facilitates the registration of new nodes in the network. This operation is essential for onboarding and expanding the network.
+.. code\sphinxhyphen{}block:: javascript
+\begin{quote}
+
+\sphinxAtStartPar
+function registerNode(address nodeAddress) external
+\end{quote}
 
 \sphinxAtStartPar
 \sphinxstyleemphasis{Parameters:}
@@ -780,6 +786,10 @@ Invoke this function to register a new node. It updates the \sphinxtitleref{s\_r
 \label{\detokenize{docs_node_manager_contract:update-node-status}}
 \sphinxAtStartPar
 The \sphinxtitleref{updateNodeStatus} function modifies a node’s registration status, allowing it to be set as active or inactive, thereby reflecting its current state.
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{function}\PYG{+w}{ }\PYG{n+nx}{updateNodeStatus}\PYG{p}{(}\PYG{n+nx}{address}\PYG{+w}{ }\PYG{n+nx}{nodeAddress}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{bool}\PYG{+w}{ }\PYG{n+nx}{status}\PYG{p}{)}\PYG{+w}{ }\PYG{n+nx}{external}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstyleemphasis{Parameters:}
@@ -1740,6 +1750,10 @@ Invoke this function to validate user operations before execution. Proper valida
 \label{\detokenize{docs_minimal_account_abstraction:execution-of-transactions}}
 \sphinxAtStartPar
 The \sphinxtitleref{execute} function manages the execution of transactions based on validated user operations. It allows transactions to be executed by either the entry point or the contract owner.
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kd}{function}\PYG{+w}{ }\PYG{n+nx}{execute}\PYG{p}{(}\PYG{n+nx}{address}\PYG{+w}{ }\PYG{n+nx}{dest}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{uint256}\PYG{+w}{ }\PYG{n+nx}{value}\PYG{p}{,}\PYG{+w}{ }\PYG{n+nx}{bytes}\PYG{+w}{ }\PYG{n+nx}{calldata}\PYG{+w}{ }\PYG{n+nx}{functionData}\PYG{p}{)}\PYG{+w}{ }\PYG{n+nx}{external}\PYG{+w}{ }\PYG{n+nx}{requireFromEntryPointOrOwner}
+\end{sphinxVerbatim}
 
 \sphinxAtStartPar
 \sphinxstyleemphasis{Parameters:}

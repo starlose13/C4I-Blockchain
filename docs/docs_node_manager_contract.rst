@@ -27,10 +27,9 @@ Register Node
 ----------------
 
 The `registerNode` function facilitates the registration of new nodes in the network. This operation is essential for onboarding and expanding the network.
-
 .. code-block:: javascript
-  function registerNode(address nodeAddress) external
 
+    function registerNode(address nodeAddress) external
 
 *Parameters:*
 
@@ -52,7 +51,8 @@ Update Node Status
 The `updateNodeStatus` function modifies a node’s registration status, allowing it to be set as active or inactive, thereby reflecting its current state.
 
 .. code-block:: javascript
-  function updateNodeStatus(address nodeAddress, bool status) external
+
+    function updateNodeStatus(address nodeAddress, bool status) external
 
 *Parameters:*
 

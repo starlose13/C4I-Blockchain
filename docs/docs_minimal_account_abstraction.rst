@@ -64,7 +64,8 @@ Execution of Transactions
 The `execute` function manages the execution of transactions based on validated user operations. It allows transactions to be executed by either the entry point or the contract owner.
 
 .. code-block:: javascript
-  function execute(address dest, uint256 value, bytes calldata functionData) external requireFromEntryPointOrOwner
+
+   function execute(address dest, uint256 value, bytes calldata functionData) external requireFromEntryPointOrOwner
 
 *Parameters:*
 

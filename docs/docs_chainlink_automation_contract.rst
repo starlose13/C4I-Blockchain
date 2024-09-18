@@ -39,8 +39,9 @@ Functions
 - **`setInterval(uint256 interval)`**:
   
   .. code-block:: javascript
-  
-      function setInterval(uint256 interval) external
+
+    function setInterval(uint256 interval) external
+
   
   - **Description:** Sets the time interval between automation executions.
   - **Parameters:** 
